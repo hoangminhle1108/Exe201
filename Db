@@ -1,0 +1,60 @@
+-- Tạo database và chọn context
+CREATE DATABASE NutritionApp;
+GO
+USE NutritionApp;
+GO
+
+-- Bảng Role (Free, Premium, Admin)
+CREATE TABLE Role (
+    RoleId INT IDENTITY PRIMARY KEY,
+    RoleName NVARCHAR(50) NOT NULL UNIQUE -- Free, Premium, Admin
+);
+
+-- Bảng User (Khách hàng sử dụng app)
+CREATE TABLE [User] (
+    UserId INT IDENTITY PRIMARY KEY,
+    Email NVARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(255) NOT NULL,
+    FullName NVARCHAR(100),
+    AvatarUrl NVARCHAR(255),
+    DateOfBirth DATE,
+    IsGoogle BIT NOT NULL DEFAULT 0, -- true nếu login bằng Google
+    RoleId INT NOT NULL, -- Free, Premium (Role)
+    TermsAcceptedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    PremiumExpiry DATETIME NULL, -- ngày hết hạn gói premium
+    IsPremium AS (CASE WHEN PremiumExpiry IS NOT NULL AND PremiumExpiry > GETDATE() THEN 1 ELSE 0 END) PERSISTED,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    UpdatedAt DATETIME NULL,
+    FOREIGN KEY(RoleId) REFERENCES Role(RoleId)
+);
+
+-- Bảng PremiumPackage (Các gói dịch vụ trả phí)
+CREATE TABLE PremiumPackage (
+    PackageId INT IDENTITY PRIMARY KEY,
+    PackageName NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(500),
+    Price DECIMAL(10,2) NOT NULL,
+    DurationDays INT NOT NULL -- số ngày kích hoạt gói
+);
+
+-- Bảng PaymentMethod (Phương thức thanh toán)
+CREATE TABLE PaymentMethod (
+    PaymentMethodId INT IDENTITY PRIMARY KEY,
+    MethodName NVARCHAR(50) NOT NULL -- Ví dụ: VNPAY, MoMo, ApplePay
+);
+
+-- Bảng Transaction (lịch sử mua gói premium)
+CREATE TABLE [Transaction] (
+    TransactionId INT IDENTITY PRIMARY KEY,
+    UserId INT NOT NULL,
+    PackageId INT NOT NULL,
+    PaymentMethodId INT NOT NULL,
+    TransactionCode NVARCHAR(100) NOT NULL UNIQUE,
+    Amount DECIMAL(10,2) NOT NULL,
+    Status NVARCHAR(50) NOT NULL, -- Pending, Success, Failed
+    PurchasedAt DATETIME NOT NULL DEFAULT GETDATE(),
+    FOREIGN KEY(UserId) REFERENCES [User](UserId),
+    FOREIGN KEY(PackageId) REFERENCES PremiumPackage(PackageId),
+    FOREIGN KEY(PaymentMethodId) REFERENCES PaymentMethod(PaymentMethodId)
+);
