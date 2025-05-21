@@ -57,3 +57,32 @@ CREATE TABLE [Transaction] (
     FOREIGN KEY(PackageId) REFERENCES PremiumPackage(PackageId),
     FOREIGN KEY(PaymentMethodId) REFERENCES PaymentMethod(PaymentMethodId)
 );
+-- Role
+INSERT INTO Role (RoleName) VALUES 
+('Free'),
+('Premium'),
+('Admin');
+
+-- User
+INSERT INTO [User] (Email, PasswordHash, FullName, AvatarUrl, DateOfBirth, IsGoogle, RoleId, TermsAcceptedAt, PremiumExpiry)
+VALUES
+('user1@example.com', 'hashed_pwd_123', 'Nguyễn Văn A', NULL, '1995-04-10', 0, 1, GETDATE(), NULL), -- Free
+('user2@example.com', 'hashed_pwd_456', 'Trần Thị B', NULL, '1990-08-15', 1, 2, GETDATE(), DATEADD(DAY, 30, GETDATE())), -- Premium
+('admin@example.com', 'admin_hashed_pwd', 'Admin C', NULL, '1985-01-01', 0, 3, GETDATE(), NULL); -- Admin
+
+-- PremiumPackage
+INSERT INTO PremiumPackage (PackageName, Description, Price, DurationDays) VALUES
+('Gói 30 Ngày', N'Tư vấn dinh dưỡng đầy đủ trong 30 ngày', 99000, 30),
+('Gói 90 Ngày', N'Tư vấn dinh dưỡng và theo dõi sức khỏe trong 90 ngày', 249000, 90);
+
+-- PaymentMethod
+INSERT INTO PaymentMethod (MethodName) VALUES 
+('Banking'),
+('MoMo'),
+('Banking');
+
+-- Transaction
+INSERT INTO [Transaction] (UserId, PackageId, PaymentMethodId, TransactionCode, Amount, Status, PurchasedAt)
+VALUES
+(2, 1, 1, 'TXN001', 99000, 'Success', GETDATE()), -- user2 mua Gói 30 ngày bằng VNPAY
+(2, 2, 2, 'TXN002', 249000, 'Pending', GETDATE()); -- user2 thử mua Gói 90 ngày bằng MoMo
