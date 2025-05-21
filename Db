@@ -10,7 +10,7 @@ CREATE TABLE Role (
     RoleName NVARCHAR(50) NOT NULL UNIQUE -- Free, Premium, Admin
 );
 
--- Bảng User (Khách hàng sử dụng app)
+-- Bảng User
 CREATE TABLE [User] (
     UserId INT IDENTITY PRIMARY KEY,
     Email NVARCHAR(100) NOT NULL UNIQUE,
@@ -19,17 +19,16 @@ CREATE TABLE [User] (
     AvatarUrl NVARCHAR(255),
     DateOfBirth DATE,
     IsGoogle BIT NOT NULL DEFAULT 0, -- true nếu login bằng Google
-    RoleId INT NOT NULL, -- Free, Premium (Role)
+    RoleId INT NOT NULL, -- Free / Premium / Admin
     TermsAcceptedAt DATETIME NOT NULL DEFAULT GETDATE(),
     PremiumExpiry DATETIME NULL, -- ngày hết hạn gói premium
-    IsPremium AS (CASE WHEN PremiumExpiry IS NOT NULL AND PremiumExpiry > GETDATE() THEN 1 ELSE 0 END) PERSISTED,
     IsActive BIT NOT NULL DEFAULT 1,
     CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
     UpdatedAt DATETIME NULL,
     FOREIGN KEY(RoleId) REFERENCES Role(RoleId)
 );
 
--- Bảng PremiumPackage (Các gói dịch vụ trả phí)
+-- Bảng PremiumPackage (gói dịch vụ trả phí)
 CREATE TABLE PremiumPackage (
     PackageId INT IDENTITY PRIMARY KEY,
     PackageName NVARCHAR(100) NOT NULL,
@@ -38,13 +37,13 @@ CREATE TABLE PremiumPackage (
     DurationDays INT NOT NULL -- số ngày kích hoạt gói
 );
 
--- Bảng PaymentMethod (Phương thức thanh toán)
+-- Bảng PaymentMethod (phương thức thanh toán)
 CREATE TABLE PaymentMethod (
     PaymentMethodId INT IDENTITY PRIMARY KEY,
-    MethodName NVARCHAR(50) NOT NULL -- Ví dụ: VNPAY, MoMo, ApplePay
+    MethodName NVARCHAR(50) NOT NULL -- VNPAY, MoMo, ApplePay...
 );
 
--- Bảng Transaction (lịch sử mua gói premium)
+-- Bảng Transaction (lịch sử thanh toán)
 CREATE TABLE [Transaction] (
     TransactionId INT IDENTITY PRIMARY KEY,
     UserId INT NOT NULL,
@@ -52,7 +51,7 @@ CREATE TABLE [Transaction] (
     PaymentMethodId INT NOT NULL,
     TransactionCode NVARCHAR(100) NOT NULL UNIQUE,
     Amount DECIMAL(10,2) NOT NULL,
-    Status NVARCHAR(50) NOT NULL, -- Pending, Success, Failed
+    Status NVARCHAR(50) NOT NULL, -- Success, Failed, Pending
     PurchasedAt DATETIME NOT NULL DEFAULT GETDATE(),
     FOREIGN KEY(UserId) REFERENCES [User](UserId),
     FOREIGN KEY(PackageId) REFERENCES PremiumPackage(PackageId),
