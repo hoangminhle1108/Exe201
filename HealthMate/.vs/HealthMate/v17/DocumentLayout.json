@@ -1,7 +1,16 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Summer 2025\\HealthMate\\HealthMate\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C9A86C10-76C8-4BA0-AD8F-7379EABC1017}|HealthMate\\HealthMate.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate\\healthmate\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C9A86C10-76C8-4BA0-AD8F-7379EABC1017}|HealthMate\\HealthMate.csproj|solutionrelative:healthmate\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C9A86C10-76C8-4BA0-AD8F-7379EABC1017}|HealthMate\\HealthMate.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate\\healthmate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{C9A86C10-76C8-4BA0-AD8F-7379EABC1017}|HealthMate\\HealthMate.csproj|solutionrelative:healthmate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,8 +18,16 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 13,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
@@ -18,10 +35,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Bookmark",
@@ -49,10 +62,6 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
@@ -62,6 +71,32 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate\\HealthMate\\Program.cs",
+              "RelativeDocumentMoniker": "HealthMate\\Program.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate\\HealthMate\\Program.cs",
+              "RelativeToolTip": "HealthMate\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-21T06:03:20.305Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate\\HealthMate\\appsettings.json",
+              "RelativeDocumentMoniker": "HealthMate\\appsettings.json",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate\\HealthMate\\appsettings.json",
+              "RelativeToolTip": "HealthMate\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-21T06:02:58.657Z",
+              "EditorCaption": ""
             }
           ]
         },
@@ -69,6 +104,10 @@
           "DockedWidth": 505,
           "SelectedChildIndex": -1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
