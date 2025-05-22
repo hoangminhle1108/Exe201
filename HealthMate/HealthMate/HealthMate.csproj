@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HealthMateRepository\HealthMateRepository.csproj" />
+    <ProjectReference Include="..\HealthMateServices\HealthMateServices.csproj" />
   </ItemGroup>
 
 </Project>
