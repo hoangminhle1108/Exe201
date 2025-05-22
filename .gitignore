@@ -53,3 +53,7 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 *.vsidx
+/HealthMate/HealthMate/appsettings.json
+/HealthMate/HealthMateRepository/efpt.config.json
+/HealthMate/.vs/
+.vs/
