@@ -10,7 +10,7 @@ CREATE TABLE Role (
     RoleName NVARCHAR(50) NOT NULL UNIQUE -- Free, Premium, Admin
 );
 
--- Bảng User (Khách hàng sử dụng app)
+-- Bảng User
 CREATE TABLE [User] (
     UserId INT IDENTITY PRIMARY KEY,
     Email NVARCHAR(100) NOT NULL UNIQUE,
@@ -19,32 +19,31 @@ CREATE TABLE [User] (
     AvatarUrl NVARCHAR(255),
     DateOfBirth DATE,
     IsGoogle BIT NOT NULL DEFAULT 0, -- true nếu login bằng Google
-    RoleId INT NOT NULL, -- Free, Premium (Role)
+    RoleId INT NOT NULL, -- Free / Premium / Admin
     TermsAcceptedAt DATETIME NOT NULL DEFAULT GETDATE(),
     PremiumExpiry DATETIME NULL, -- ngày hết hạn gói premium
-    IsPremium AS (CASE WHEN PremiumExpiry IS NOT NULL AND PremiumExpiry > GETDATE() THEN 1 ELSE 0 END) PERSISTED,
     IsActive BIT NOT NULL DEFAULT 1,
     CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
     UpdatedAt DATETIME NULL,
     FOREIGN KEY(RoleId) REFERENCES Role(RoleId)
 );
 
--- Bảng PremiumPackage (Các gói dịch vụ trả phí)
+-- Bảng PremiumPackage
 CREATE TABLE PremiumPackage (
     PackageId INT IDENTITY PRIMARY KEY,
     PackageName NVARCHAR(100) NOT NULL,
     Description NVARCHAR(500),
     Price DECIMAL(10,2) NOT NULL,
-    DurationDays INT NOT NULL -- số ngày kích hoạt gói
+    DurationDays INT NOT NULL
 );
 
--- Bảng PaymentMethod (Phương thức thanh toán)
+-- Bảng PaymentMethod
 CREATE TABLE PaymentMethod (
     PaymentMethodId INT IDENTITY PRIMARY KEY,
-    MethodName NVARCHAR(50) NOT NULL -- Ví dụ: VNPAY, MoMo, ApplePay
+    MethodName NVARCHAR(50) NOT NULL
 );
 
--- Bảng Transaction (lịch sử mua gói premium)
+-- Bảng Transaction
 CREATE TABLE [Transaction] (
     TransactionId INT IDENTITY PRIMARY KEY,
     UserId INT NOT NULL,
@@ -52,9 +51,41 @@ CREATE TABLE [Transaction] (
     PaymentMethodId INT NOT NULL,
     TransactionCode NVARCHAR(100) NOT NULL UNIQUE,
     Amount DECIMAL(10,2) NOT NULL,
-    Status NVARCHAR(50) NOT NULL, -- Pending, Success, Failed
+    Status NVARCHAR(50) NOT NULL,
     PurchasedAt DATETIME NOT NULL DEFAULT GETDATE(),
     FOREIGN KEY(UserId) REFERENCES [User](UserId),
     FOREIGN KEY(PackageId) REFERENCES PremiumPackage(PackageId),
     FOREIGN KEY(PaymentMethodId) REFERENCES PaymentMethod(PaymentMethodId)
 );
+
+-- Dữ liệu mẫu
+
+-- Role
+INSERT INTO Role (RoleName) VALUES 
+('Free'),
+('Premium'),
+('Admin');
+
+-- User
+INSERT INTO [User] (Email, PasswordHash, FullName, AvatarUrl, DateOfBirth, IsGoogle, RoleId, TermsAcceptedAt, PremiumExpiry, CreatedAt)
+VALUES
+('user1@example.com', 'hashed_pwd_123', N'Nguyễn Văn A', NULL, '1995-04-10', 0, 1, '2024-01-01 09:00:00', NULL, '2024-01-01 09:00:00'), -- Free
+('user2@example.com', 'hashed_pwd_456', N'Trần Thị B', NULL, '1990-08-15', 1, 2, '2024-02-01 08:30:00', '2024-08-01 00:00:00', '2024-02-01 08:30:00'), -- Premium
+('admin@example.com', 'admin_hashed_pwd', 'Admin C', NULL, '1985-01-01', 0, 3, '2024-03-01 10:00:00', NULL, '2024-03-01 10:00:00'); -- Admin
+
+-- PremiumPackage
+INSERT INTO PremiumPackage (PackageName, Description, Price, DurationDays) VALUES
+(N'Gói 30 Ngày', N'Tư vấn dinh dưỡng đầy đủ trong 30 ngày', 99000, 30),
+(N'Gói 90 Ngày', N'Tư vấn dinh dưỡng và theo dõi sức khỏe trong 90 ngày', 249000, 90);
+
+-- PaymentMethod
+INSERT INTO PaymentMethod (MethodName) VALUES 
+('Banking'),
+('MoMo'),
+('Banking');
+
+-- Transaction
+INSERT INTO [Transaction] (UserId, PackageId, PaymentMethodId, TransactionCode, Amount, Status, PurchasedAt)
+VALUES
+(2, 1, 1, 'TXN001', 99000, 'Success', '2024-02-01 08:45:00'),
+(2, 2, 2, 'TXN002', 249000, 'Pending', '2024-03-01 09:00:00');
