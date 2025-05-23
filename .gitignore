@@ -54,3 +54,5 @@ TestResult.xml
 nunit-*.xml
 *.vsidx
 /HealthMate/HealthMate/appsettings.json
+/HealthMate/.vs/
+.vs/
