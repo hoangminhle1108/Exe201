@@ -56,3 +56,4 @@ nunit-*.xml
 /HealthMate/HealthMate/appsettings.json
 /HealthMate/.vs/
 .vs/
+/HealthMate/HealthMateRepository/efpt.config.json
