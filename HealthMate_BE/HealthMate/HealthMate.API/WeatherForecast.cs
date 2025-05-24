@@ -1,4 +1,4 @@
-namespace HealthMate
+namespace HealthMate.API
 {
     public class WeatherForecast
     {
