@@ -1,5 +1,5 @@
-﻿using HealthMate.Repository.Models;
-using HealthMate.Repository.Repositories;
+﻿using HealthMate.Repository.Interface.User;
+using HealthMate.Repository.Models;
 using Microsoft.EntityFrameworkCore.Storage;
 
 
