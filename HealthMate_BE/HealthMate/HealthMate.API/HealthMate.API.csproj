@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HealthMate.Repository\HealthMate.Repository.csproj" />
     <ProjectReference Include="..\HealthMate.Services\HealthMate.Services.csproj" />
   </ItemGroup>
 
