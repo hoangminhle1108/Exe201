@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace HealthMate.Controllers
+namespace HealthMate.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]

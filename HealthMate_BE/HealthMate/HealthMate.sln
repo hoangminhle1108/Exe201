@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMate.Repository", "HealthMate.Repository\HealthMate.Repository.csproj", "{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMate.Services", "HealthMate.Services\HealthMate.Services.csproj", "{94717268-98BE-401C-9342-63E1BF181114}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMate.API", "HealthMate.API\HealthMate.API.csproj", "{84A0E26C-3244-49DC-8F80-92825658BD9C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94717268-98BE-401C-9342-63E1BF181114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94717268-98BE-401C-9342-63E1BF181114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94717268-98BE-401C-9342-63E1BF181114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94717268-98BE-401C-9342-63E1BF181114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A0E26C-3244-49DC-8F80-92825658BD9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A0E26C-3244-49DC-8F80-92825658BD9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A0E26C-3244-49DC-8F80-92825658BD9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A0E26C-3244-49DC-8F80-92825658BD9C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16B6B4BF-E2FC-4BAD-BF1F-7BD4B60434E0}
+	EndGlobalSection
+EndGlobal
