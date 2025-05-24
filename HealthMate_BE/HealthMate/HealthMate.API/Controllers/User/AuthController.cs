@@ -34,7 +34,7 @@ namespace HealthMate.API.Controllers.User
         [HttpGet("google-response")]
         public async Task<IActionResult> GoogleResponse()
         {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var result = await HttpContext.AuthenticateAsync("Google");
             if (!result.Succeeded || result.Principal == null)
                 return Unauthorized();
 
