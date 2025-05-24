@@ -56,7 +56,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = "Google";
 })
 .AddJwtBearer(options =>
 {
@@ -72,7 +71,11 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 })
-.AddCookie()
+.AddCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+})
 .AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
@@ -96,7 +99,7 @@ app.UseHttpsRedirection();
 // Use CORS
 app.UseCors("AllowAll");
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
