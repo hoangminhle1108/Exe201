@@ -1,15 +1,25 @@
 using HealthMate.Repository.Interface.User;
 using HealthMate.Repository.Models;
 using HealthMate.Repository.Repository.User;
+using HealthMate.Services.Interface.User;
+using HealthMate.Services.Service.User;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using HealthMate.Services.Interface.User;
-using HealthMate.Services.Service.User;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Using HTTPS for teting local
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(7015, listenOptions =>
+    {
+        listenOptions.UseHttps(); 
+    });
+});
 
 // Add services to the container.
 
@@ -45,6 +55,8 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "Google";
 })
 .AddJwtBearer(options =>
 {
@@ -59,6 +71,14 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtConfig["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
+})
+.AddCookie()
+.AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    // Optional: set callback path if different from default
+    googleOptions.CallbackPath = "/api/Auth/google-response";
 });
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -75,6 +95,7 @@ app.UseHttpsRedirection();
 
 // Use CORS
 app.UseCors("AllowAll");
+
 
 app.UseAuthorization();
 

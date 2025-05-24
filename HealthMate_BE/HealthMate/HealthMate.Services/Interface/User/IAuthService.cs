@@ -10,5 +10,6 @@ namespace HealthMate.Services.Interface.User
     public interface IAuthService
     {
         Task<LoginResponse> AuthenticateAsync(LoginRequest request);
+        Task<LoginResponse> AuthenticateGoogleAsync(string email, string fullName);
     }
 }

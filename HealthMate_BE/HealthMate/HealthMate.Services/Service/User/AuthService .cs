@@ -38,7 +38,42 @@ namespace HealthMate.Services.Service.User
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Role,    user.Role.RoleName) 
+                new Claim(ClaimTypes.Role,    user.Role.RoleName)
+            };
+
+            var expires = DateTime.UtcNow.AddMinutes(int.Parse(jwtSection["DurationMinutes"]));
+            var token = new JwtSecurityToken(
+                issuer: jwtSection["Issuer"],
+                audience: jwtSection["Audience"],
+                claims: claims,
+                expires: expires,
+                signingCredentials: creds
+            );
+
+            return new LoginResponse
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expires = expires
+            };
+        }
+        public async Task<LoginResponse> AuthenticateGoogleAsync(string email, string fullName)
+        {
+            var user = await _repo.GetByEmailAsync(email);
+            if (user == null)
+            {
+                // Create a new user for Google login
+                user = await _repo.CreateGoogleUserAsync(email, fullName);
+            }
+            // Generate JWT as before
+            var jwtSection = _config.GetSection("Jwt");
+            var keyBytes = Encoding.UTF8.GetBytes(jwtSection["Key"]);
+            var creds = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.RoleName)
             };
 
             var expires = DateTime.UtcNow.AddMinutes(int.Parse(jwtSection["DurationMinutes"]));
