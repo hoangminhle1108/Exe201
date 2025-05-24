@@ -1,4 +1,16 @@
--- Tạo database và chọn context
+-- Chuyển về master để đảm bảo có quyền xóa database
+USE master;
+GO
+
+-- Nếu database đã tồn tại thì xóa
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'NutritionApp')
+BEGIN
+    ALTER DATABASE NutritionApp SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE NutritionApp;
+END
+GO
+
+-- Tạo database và chuyển context
 CREATE DATABASE NutritionApp;
 GO
 USE NutritionApp;
@@ -6,86 +18,138 @@ GO
 
 -- Bảng Role (Free, Premium, Admin)
 CREATE TABLE Role (
-    RoleId INT IDENTITY PRIMARY KEY,
-    RoleName NVARCHAR(50) NOT NULL UNIQUE -- Free, Premium, Admin
+    RoleId    INT IDENTITY PRIMARY KEY,
+    RoleName  NVARCHAR(50) NOT NULL UNIQUE  -- Free, Premium, Admin
 );
+GO
 
 -- Bảng User
 CREATE TABLE [User] (
-    UserId INT IDENTITY PRIMARY KEY,
-    Email NVARCHAR(100) NOT NULL UNIQUE,
-    PasswordHash NVARCHAR(255) NOT NULL,
-    FullName NVARCHAR(100),
-    AvatarUrl NVARCHAR(255),
-    DateOfBirth DATE,
-    IsGoogle BIT NOT NULL DEFAULT 0, -- true nếu login bằng Google
-    RoleId INT NOT NULL, -- Free / Premium / Admin
+    UserId          INT IDENTITY PRIMARY KEY,
+    Email           NVARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash    NVARCHAR(255) NOT NULL,
+    FullName        NVARCHAR(100),
+    AvatarUrl       NVARCHAR(255),
+    DateOfBirth     DATE,
+    IsGoogle        BIT NOT NULL DEFAULT 0,           -- true nếu login bằng Google
+    RoleId          INT NOT NULL,                     -- Free / Premium / Admin
     TermsAcceptedAt DATETIME NOT NULL DEFAULT GETDATE(),
-    PremiumExpiry DATETIME NULL, -- ngày hết hạn gói premium
-    IsActive BIT NOT NULL DEFAULT 1,
-    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
-    UpdatedAt DATETIME NULL,
+    PremiumExpiry   DATETIME NULL,                    -- ngày hết hạn gói premium
+    IsActive        BIT NOT NULL DEFAULT 1,
+    CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
+    UpdatedAt       DATETIME NULL,
     FOREIGN KEY(RoleId) REFERENCES Role(RoleId)
 );
+GO
 
 -- Bảng PremiumPackage
 CREATE TABLE PremiumPackage (
-    PackageId INT IDENTITY PRIMARY KEY,
-    PackageName NVARCHAR(100) NOT NULL,
-    Description NVARCHAR(500),
-    Price DECIMAL(10,2) NOT NULL,
+    PackageId    INT IDENTITY PRIMARY KEY,
+    PackageName  NVARCHAR(100) NOT NULL,
+    Description  NVARCHAR(500),
+    Price        DECIMAL(10,2) NOT NULL,
     DurationDays INT NOT NULL
 );
+GO
 
 -- Bảng PaymentMethod
 CREATE TABLE PaymentMethod (
     PaymentMethodId INT IDENTITY PRIMARY KEY,
-    MethodName NVARCHAR(50) NOT NULL
+    MethodName      NVARCHAR(50) NOT NULL
 );
+GO
 
 -- Bảng Transaction
 CREATE TABLE [Transaction] (
-    TransactionId INT IDENTITY PRIMARY KEY,
-    UserId INT NOT NULL,
-    PackageId INT NOT NULL,
-    PaymentMethodId INT NOT NULL,
-    TransactionCode NVARCHAR(100) NOT NULL UNIQUE,
-    Amount DECIMAL(10,2) NOT NULL,
-    Status NVARCHAR(50) NOT NULL,
-    PurchasedAt DATETIME NOT NULL DEFAULT GETDATE(),
-    FOREIGN KEY(UserId) REFERENCES [User](UserId),
-    FOREIGN KEY(PackageId) REFERENCES PremiumPackage(PackageId),
+    TransactionId    INT IDENTITY PRIMARY KEY,
+    UserId           INT NOT NULL,
+    PackageId        INT NOT NULL,
+    PaymentMethodId  INT NOT NULL,
+    TransactionCode  NVARCHAR(100) NOT NULL UNIQUE,
+    Amount           DECIMAL(10,2) NOT NULL,
+    Status           NVARCHAR(50) NOT NULL,
+    PurchasedAt      DATETIME NOT NULL DEFAULT GETDATE(),
+    FOREIGN KEY(UserId)          REFERENCES [User](UserId),
+    FOREIGN KEY(PackageId)       REFERENCES PremiumPackage(PackageId),
     FOREIGN KEY(PaymentMethodId) REFERENCES PaymentMethod(PaymentMethodId)
 );
+GO
 
--- Dữ liệu mẫu
+-- Bảng Article
+CREATE TABLE Article (
+    ArticleId    INT IDENTITY PRIMARY KEY,
+    Title        NVARCHAR(200) NOT NULL,
+    Content      NTEXT      NOT NULL,
+    Author       NVARCHAR(100)    NULL,
+    PublishedAt  DATETIME   NOT NULL DEFAULT GETDATE(),
+    UpdatedAt    DATETIME   NULL
+);
+GO
+
+-- Bảng HealthMetric
+CREATE TABLE HealthMetric (
+    MetricId    INT IDENTITY PRIMARY KEY,
+    UserId      INT         NOT NULL,
+    MetricDate  DATE        NOT NULL,
+    Weight      DECIMAL(5,2) NULL,   -- kg
+    Height      DECIMAL(5,2) NULL,   -- cm
+    BodyFat     DECIMAL(5,2) NULL,   -- %
+    Note        NVARCHAR(500) NULL,
+    CreatedAt   DATETIME    NOT NULL DEFAULT GETDATE(),
+    FOREIGN KEY(UserId) REFERENCES [User](UserId)
+);
+GO
+
+-- =======================
+-- Dữ liệu mẫu (Mock Data)
+-- =======================
 
 -- Role
 INSERT INTO Role (RoleName) VALUES 
-('Free'),
-('Premium'),
-('Admin');
+    ('Free'),
+    ('Premium'),
+    ('Admin');
+GO
 
--- User
-INSERT INTO [User] (Email, PasswordHash, FullName, AvatarUrl, DateOfBirth, IsGoogle, RoleId, TermsAcceptedAt, PremiumExpiry, CreatedAt)
+-- User (mật khẩu mock = '12345')
+INSERT INTO [User] 
+    (Email, PasswordHash, FullName, AvatarUrl, DateOfBirth, IsGoogle, RoleId, TermsAcceptedAt, PremiumExpiry, CreatedAt)
 VALUES
-('user1@example.com', 'hashed_pwd_123', N'Nguyễn Văn A', NULL, '1995-04-10', 0, 1, '2024-01-01 09:00:00', NULL, '2024-01-01 09:00:00'), -- Free
-('user2@example.com', 'hashed_pwd_456', N'Trần Thị B', NULL, '1990-08-15', 1, 2, '2024-02-01 08:30:00', '2024-08-01 00:00:00', '2024-02-01 08:30:00'), -- Premium
-('admin@example.com', 'admin_hashed_pwd', 'Admin C', NULL, '1985-01-01', 0, 3, '2024-03-01 10:00:00', NULL, '2024-03-01 10:00:00'); -- Admin
+    ('user1@example.com', '12345', N'Nguyễn Văn A', NULL, '1995-04-10', 0, 1, '2024-01-01 09:00:00', NULL, '2024-01-01 09:00:00'),
+    ('user2@example.com', '12345', N'Trần Thị B', NULL, '1990-08-15', 1, 2, '2024-02-01 08:30:00', '2024-08-01 00:00:00', '2024-02-01 08:30:00'),
+    ('admin@example.com',  '12345', 'Admin C', NULL, '1985-01-01', 0, 3, '2024-03-01 10:00:00', NULL, '2024-03-01 10:00:00');
+GO
 
 -- PremiumPackage
 INSERT INTO PremiumPackage (PackageName, Description, Price, DurationDays) VALUES
-(N'Gói 30 Ngày', N'Tư vấn dinh dưỡng đầy đủ trong 30 ngày', 99000, 30),
-(N'Gói 90 Ngày', N'Tư vấn dinh dưỡng và theo dõi sức khỏe trong 90 ngày', 249000, 90);
+    (N'Gói 30 Ngày', N'Tư vấn dinh dưỡng đầy đủ trong 30 ngày',  99000, 30),
+    (N'Gói 90 Ngày', N'Tư vấn dinh dưỡng và theo dõi sức khỏe trong 90 ngày', 249000, 90);
+GO
 
 -- PaymentMethod
 INSERT INTO PaymentMethod (MethodName) VALUES 
-('Banking'),
-('MoMo'),
-('Banking');
+    ('Banking'),
+    ('MoMo'),
+    ('Banking');
+GO
 
 -- Transaction
-INSERT INTO [Transaction] (UserId, PackageId, PaymentMethodId, TransactionCode, Amount, Status, PurchasedAt)
+INSERT INTO [Transaction] 
+    (UserId, PackageId, PaymentMethodId, TransactionCode, Amount, Status, PurchasedAt)
 VALUES
-(2, 1, 1, 'TXN001', 99000, 'Success', '2024-02-01 08:45:00'),
-(2, 2, 2, 'TXN002', 249000, 'Pending', '2024-03-01 09:00:00');
+    (2, 1, 1, 'TXN001',  99000, 'Success', '2024-02-01 08:45:00'),
+    (2, 2, 2, 'TXN002', 249000, 'Pending', '2024-03-01 09:00:00');
+GO
+
+-- Article (data mẫu)
+INSERT INTO Article (Title, Content, Author, PublishedAt) VALUES
+    (N'5 Mẹo Dinh Dưỡng', N'Bạn nên ăn đủ rau xanh và...', N'Dr. Lê Thị X', '2024-04-01 10:00:00'),
+    (N'Lợi Ích Tập Yoga',   N'Yoga giúp cải thiện độ dẻo...',   N'PT Nguyễn Văn Y', '2024-05-01 14:30:00');
+GO
+
+-- HealthMetric (data mẫu)
+INSERT INTO HealthMetric (UserId, MetricDate, Weight, Height, BodyFat, Note) VALUES
+    (1, '2024-04-01', 68.5, 172.0, 20.3, N'Khởi đầu tracking'),
+    (1, '2024-05-01', 67.0, 172.0, 19.8, N'Tiếp tục giảm cân'),
+    (2, '2024-04-15', 72.0, 165.0, 22.5, N'Sau khi sử dụng gói Premium');
+GO
