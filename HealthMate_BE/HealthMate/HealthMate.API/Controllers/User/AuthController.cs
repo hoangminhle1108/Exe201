@@ -34,31 +34,81 @@ namespace HealthMate.API.Controllers.User
         [HttpGet("google-response")]
         public async Task<IActionResult> GoogleResponse()
         {
-            var result = await HttpContext.AuthenticateAsync("Google");
-            if (!result.Succeeded || result.Principal == null)
-                return Unauthorized();
+            try 
+            {
+                var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                if (!result.Succeeded)
+                {
+                    return Unauthorized(new { message = "Google authentication failed" });
+                }
+                
+                if (result.Principal == null)
+                {
+                    return Unauthorized(new { message = "No principal found in Google authentication" });
+                }
 
-            // Extract user info from Google claims
-            var email = result.Principal.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value;
-            var name = result.Principal.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Name)?.Value;
+                // Extract user info from Google claims
+                var email = result.Principal.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value;
+                var name = result.Principal.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Name)?.Value;
+                var googleId = result.Principal.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-            if (string.IsNullOrEmpty(email))
-                return BadRequest("Google account did not provide an email.");
+                if (string.IsNullOrEmpty(email))
+                {
+                    return BadRequest(new { message = "Google account did not provide an email" });
+                }
 
-            // Optionally: Check if user exists in your DB, create if not (pseudo-code)
-            // await _auth.EnsureUserExistsAsync(email, name);
+                // Authenticate with Google info
+                var resp = await _auth.AuthenticateGoogleAsync(email, name);
+                if (resp == null)
+                {
+                    return Unauthorized(new { message = "Unable to authenticate Google user" });
+                }
 
-            // Generate JWT token for this user (you may need to adapt this)
-            //var loginRequest = new LoginRequest { Email = email, Password = "" };  Password may not be needed for Google users
-            var resp = await _auth.AuthenticateGoogleAsync(email, name);
+                // Sign out of the external cookie
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            if (resp == null)
-                return Unauthorized(new { message = "Unable to authenticate Google user." });
+                return Ok(new { 
+                    token = resp.Token,
+                    expires = resp.Expires,
+                    email = email,
+                    name = name
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(500, new { message = "An error occurred during Google authentication", error = ex.Message });
+            }
+        }
 
-            // Optionally: sign out of the external cookie
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new { message = "Invalid registration data", errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage) });
+                }
 
-            return Ok(resp);
+                var resp = await _auth.RegisterAsync(request);
+                return Ok(new { 
+                    token = resp.Token,
+                    expires = resp.Expires,
+                    message = "Registration successful"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ export default {
   success: "#34C759",
   error: "#FF3B30",
   card: "#FFFFFF",
-  rating: "#FFB800",
+  rating: "#DE3B40",
   locationDot: "#0A84FF",
   buttonText: "#FFFFFF",
   tabBar: "#FFFFFF",

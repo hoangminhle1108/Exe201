@@ -9,11 +9,11 @@ import {
   Platform,
 } from "react-native";
 import { Image } from "expo-image";
-import { Star, MapPin, ChevronRight } from "lucide-react-native";
+import { Heart, MapPin, ChevronRight } from "lucide-react-native";
 import { Link } from "expo-router";
 import Colors from "@/constants/colors";
 
-interface DestinationCardProps {
+interface PostCardProps {
   id: string;
   name: string;
   location: string;
@@ -22,15 +22,14 @@ interface DestinationCardProps {
   isLarge?: boolean;
 }
 
-const DestinationCard = ({
+const PostCard = ({
   id,
   name,
   location,
   rating,
   image,
   isLarge = false,
-}: DestinationCardProps) => {
-  // Create card content as a separate component to reuse in both Link implementations
+}: PostCardProps) => {
   const CardContent = () => (
     <>
       <View
@@ -43,7 +42,7 @@ const DestinationCard = ({
           transition={300}
         />
         <View style={styles.ratingContainer}>
-          <Star size={12} color={Colors.rating} fill={Colors.rating} />
+          <Heart size={12} color={Colors.rating} fill={Colors.rating} />
           <Text style={styles.ratingText}>{rating}</Text>
         </View>
       </View>
@@ -52,9 +51,8 @@ const DestinationCard = ({
           {name}
         </Text>
         <View style={styles.locationContainer}>
-          <MapPin size={12} color={Colors.locationDot} />
           <Text style={styles.location} numberOfLines={1}>
-            {location}
+            Xem chi tiết &gt;
           </Text>
         </View>
       </View>
@@ -66,7 +64,6 @@ const DestinationCard = ({
     </>
   );
 
-  // Use different approaches for web vs native
   if (Platform.OS === "web") {
     return (
       <Link
@@ -102,7 +99,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
-    display: "flex", // Needed for web
+    display: "flex",
   },
   largeContainer: {
     width: "100%",
@@ -113,15 +110,15 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: "100%",
     position: "relative",
-    backgroundColor: Colors.backgroundAlt, // Thêm màu nền ở đây
+    backgroundColor: Colors.backgroundAlt,
   },
   largeImageContainer: {
-    height: 80, // Fixed height
-    width: 80, // Fixed width
+    height: 80,
+    width: 80,
     borderRadius: 12,
     marginRight: 12,
     overflow: "hidden",
-    backgroundColor: Colors.backgroundAlt, // Thêm màu nền ở đây
+    backgroundColor: Colors.backgroundAlt,
   },
   image: {
     width: 200,
@@ -133,7 +130,7 @@ const styles = StyleSheet.create({
   ratingContainer: {
     position: "absolute",
     top: 12,
-    right: 12,
+    right: 25,
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 12,
     paddingHorizontal: 8,
@@ -149,17 +146,22 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     padding: 12,
-    backgroundColor: Colors.card, // Thêm màu nền cho phần thông tin
+    backgroundColor: Colors.card,
   },
   name: {
     fontSize: 16,
     fontWeight: "600",
     color: Colors.text,
     marginBottom: 4,
+    flexShrink: 1,
+    maxWidth: 200,
+    lineHeight: 20,
   },
+
   locationContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-end",
   },
   location: {
     fontSize: 12,
@@ -171,4 +173,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DestinationCard;
+export default PostCard;

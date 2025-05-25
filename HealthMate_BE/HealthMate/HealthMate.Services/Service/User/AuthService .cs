@@ -1,14 +1,9 @@
 ﻿using HealthMate.Repository.DTOs.Login;
 using HealthMate.Repository.Interface.User;
+using HealthMate.Repository.Models;
 using HealthMate.Services.Interface.User;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HealthMate.Services.Service.User
@@ -16,46 +11,29 @@ namespace HealthMate.Services.Service.User
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _repo;
-        private readonly IConfiguration _config;
+        private readonly IJwtService _jwtService;
 
-        public AuthService(IUserRepository repo, IConfiguration config)
+        public AuthService(IUserRepository repo, IJwtService jwtService)
         {
             _repo = repo;
-            _config = config;
+            _jwtService = jwtService;
         }
 
         public async Task<LoginResponse> AuthenticateAsync(LoginRequest request)
         {
-            var user = await _repo.GetByEmailAndPasswordAsync(request.Email, request.Password);
+            // Get user by email first
+            var user = await _repo.GetByEmailAsync(request.Email);
             if (user == null) return null;
 
-            var jwtSection = _config.GetSection("Jwt");
-            var keyBytes = Encoding.UTF8.GetBytes(jwtSection["Key"]);
-            var creds = new SigningCredentials(new SymmetricSecurityKey(keyBytes),
-                                                    SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
+            // Verify the password using BCrypt
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Role,    user.Role.RoleName)
-            };
+                return null;
+            }
 
-            var expires = DateTime.UtcNow.AddMinutes(int.Parse(jwtSection["DurationMinutes"]));
-            var token = new JwtSecurityToken(
-                issuer: jwtSection["Issuer"],
-                audience: jwtSection["Audience"],
-                claims: claims,
-                expires: expires,
-                signingCredentials: creds
-            );
-
-            return new LoginResponse
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expires = expires
-            };
+            return _jwtService.GenerateToken(user);
         }
+
         public async Task<LoginResponse> AuthenticateGoogleAsync(string email, string fullName)
         {
             var user = await _repo.GetByEmailAsync(email);
@@ -64,32 +42,34 @@ namespace HealthMate.Services.Service.User
                 // Create a new user for Google login
                 user = await _repo.CreateGoogleUserAsync(email, fullName);
             }
-            // Generate JWT as before
-            var jwtSection = _config.GetSection("Jwt");
-            var keyBytes = Encoding.UTF8.GetBytes(jwtSection["Key"]);
-            var creds = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256);
+            return _jwtService.GenerateToken(user);
+        }
 
-            var claims = new[]
+        public async Task<LoginResponse> RegisterAsync(RegisterRequest request)
+        {
+            if (!request.AcceptTerms)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.RoleName)
-            };
+                throw new InvalidOperationException("Terms and conditions must be accepted");
+            }
 
-            var expires = DateTime.UtcNow.AddMinutes(int.Parse(jwtSection["DurationMinutes"]));
-            var token = new JwtSecurityToken(
-                issuer: jwtSection["Issuer"],
-                audience: jwtSection["Audience"],
-                claims: claims,
-                expires: expires,
-                signingCredentials: creds
-            );
+            // Hash the password before storing
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            return new LoginResponse
+            try
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expires = expires
-            };
+                var user = await _repo.RegisterUserAsync(
+                    request.Email,
+                    passwordHash,
+                    request.FullName,
+                    request.DateOfBirth
+                );
+
+                return _jwtService.GenerateToken(user);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"Registration failed: {ex.Message}");
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ const SectionHeader = ({ title, onViewAll }: SectionHeaderProps) => {
       <Text style={styles.title}>{title}</Text>
       {onViewAll && (
         <TouchableOpacity onPress={onViewAll}>
-          <Text style={styles.viewAll}>View All</Text>
+          <Text style={styles.viewAll}>Xem thêm &gt;</Text>
         </TouchableOpacity>
       )}
     </View>

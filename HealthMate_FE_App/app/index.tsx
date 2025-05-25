@@ -16,9 +16,14 @@ import logo from "@/assets/logo.png";
 export default function OnboardingScreen() {
   const router = useRouter();
 
+  // const handleGetStarted = () => {
+  //   router.replace("/(tabs)/home");
+  // };
+
   const handleGetStarted = () => {
-    router.replace("/(tabs)/home");
+    router.replace("/(authentication)/login");
   };
+
 
   return (
     <SafeAreaView style={styles.container}>

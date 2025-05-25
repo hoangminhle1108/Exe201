@@ -14,5 +14,6 @@ namespace HealthMate.Repository.Interface.User
         Task<HealthMate.Repository.Models.User> GetByEmailAsync(string email); 
         Task<HealthMate.Repository.Models.User> CreateGoogleUserAsync(string email, string fullName); 
         Task<List<HealthMate.Repository.Models.User>> GetAllUsersAsync();
+        Task<HealthMate.Repository.Models.User> RegisterUserAsync(string email, string passwordHash, string fullName, DateOnly dateOfBirth);
     }
 }
