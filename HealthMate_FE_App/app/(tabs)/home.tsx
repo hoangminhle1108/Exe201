@@ -9,21 +9,37 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Image } from "expo-image";
-import { Bell, ChevronRight, MapPin } from "lucide-react-native";
+import { Crown, ChevronRight, MapPin } from "lucide-react-native";
+import { Feather } from '@expo/vector-icons';
 import SearchBar from "../components/SearchBar";
 import CategoryItem from "../components/CategoryItem";
 import SectionHeader from "../components/SectionHeader";
-import DestinationCard from "../components/DestinationCard";
+import FeatureCard from "../components/FeatureCard";
+import PostCard from "../components/PostCard";
 import { categories, destinations } from "@/constants/destinations";
 import Colors from "@/constants/colors";
+import { Calendar } from "lucide-react-native";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+dayjs.locale("vi");
+
 
 const DATA = [
   { type: "header" },
   { type: "search" },
+  { type: "date" },
+  { type: "features" },
   { type: "categories" },
-  { type: "popular" },
-  { type: "newDestinations" },
+  { type: "post" },
 ];
+
+const capitalizeWords = (str: string) =>
+  str.replace(/\p{L}[\p{L}\p{M}]*/gu, (word) =>
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  );
+
+const today = dayjs().format("dddd, [Ngày] DD [Tháng] MM [Năm] YYYY");
+const formattedDate = capitalizeWords(today);
 
 export default function HomeScreen() {
   const renderItem = ({ item }: any) => {
@@ -34,7 +50,7 @@ export default function HomeScreen() {
             <View style={styles.userInfo}>
               <View style={styles.avatarContainer}>
                 <Image
-                  source={require("../../assets/avatar.jpg")}
+                  source={"https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=200"}
                   style={styles.avatar}
                 />
               </View>
@@ -44,50 +60,102 @@ export default function HomeScreen() {
               </View>
             </View>
             <TouchableOpacity style={styles.notificationButton}>
-              <Bell size={24} color={Colors.text} />
+              <Crown size={24} color={Colors.text} />
             </TouchableOpacity>
           </View>
         );
-      case "search":
+      // case "search":
+      //   return (
+      //     <View style={styles.content}>
+      //       <Text style={styles.questionText}>Where do you want to go?</Text>
+      //       <SearchBar placeholder="Search here..." />
+      //     </View>
+      //   );
+      case "date":
         return (
-          <View style={styles.content}>
-            <Text style={styles.questionText}>Where do you want to go?</Text>
-            <SearchBar placeholder="Search here..." />
-          </View>
-        );
-      case "categories":
-        return (
-          <View style={styles.content}>
-            <View style={styles.categoriesContainer}>
-              <FlatList
-                data={categories}
-                keyExtractor={(item) => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <CategoryItem
-                    name={item.name}
-                    image={item.image}
-                    onPress={() => { }}
-                  />
-                )}
-                contentContainerStyle={styles.categoriesList}
-              />
+          <View style={[styles.dateSection, { paddingTop: 10 }]}>
+            <Calendar size={30} color={Colors.textSecondary} style={styles.dateIcon} />
+            <View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={styles.dateLabel}>Hôm nay</Text>
+                <Feather name="sun" size={16} color={Colors.textSecondary} style={{ marginLeft: 6 }} />
+              </View>
+              <Text style={styles.dateText}>{formattedDate}</Text>
             </View>
           </View>
         );
-      case "popular":
+
+      case "features":
+        return (
+          <View style={[styles.content, { paddingTop: 10 }]}>
+            <SectionHeader title="Tính năng" />
+
+            <View style={[styles.featuresGrid, { paddingTop: 10 }]}>
+              <FeatureCard
+                type="post"
+                title="Bài đăng"
+                value="50+"
+                updated="bài đăng về sức khỏe"
+                color="#8a9eff"
+              />
+              <FeatureCard
+                type="recipe"
+                title="Công thức"
+                value="100+"
+                updated="công thức nấu ăn"
+                color="#d15d5d"
+              />
+              <FeatureCard
+                type="ai"
+                title="Trò chuyện với AI"
+                value="7:30 pm"
+                updated="lần cuối 10 phút trước"
+                color="#72C15F"
+              />
+              <FeatureCard
+                type="nutrition"
+                title="Phân tích dinh dưỡng"
+                value="960 calo"
+                updated="cập nhật 13 tiếng trước"
+                color="#f39c6b"
+              />
+            </View>
+          </View >
+        );
+
+      // case "categories":
+      //   return (
+      //     <View style={styles.content}>
+      //       <View style={styles.categoriesContainer}>
+      //         <FlatList
+      //           data={categories}
+      //           keyExtractor={(item) => item.id}
+      //           horizontal
+      //           showsHorizontalScrollIndicator={false}
+      //           renderItem={({ item }) => (
+      //             <CategoryItem
+      //               name={item.name}
+      //               image={item.image}
+      //               onPress={() => { }}
+      //             />
+      //           )}
+      //           contentContainerStyle={styles.categoriesList}
+      //         />
+      //       </View>
+      //     </View>
+      //   );
+      case "post":
         return (
           <View style={styles.content}>
             <View style={styles.section}>
-              <SectionHeader title="Popular" onViewAll={() => { }} />
+              <SectionHeader title="Bài đăng" onViewAll={() => { }} />
               <FlatList
                 data={destinations.slice(0, 3)}
                 keyExtractor={(item) => item.id}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <DestinationCard
+                  <PostCard
                     key={item.id}
                     id={item.id}
                     name={item.name}
@@ -101,56 +169,7 @@ export default function HomeScreen() {
             </View>
           </View>
         );
-      case "newDestinations":
-        return (
-          <View style={styles.content}>
-            <View style={styles.section}>
-              <SectionHeader title="New Destinations" />
-              <View>
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={{
-                      uri: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=200",
-                    }}
-                    style={{ width: 80, height: 80, borderRadius: 12 }}
-                  />
-                  <View style={styles.infoContainer}>
-                    <Text style={styles.name} numberOfLines={1}>
-                      Merapi Mount
-                    </Text>
-                    <View style={styles.locationContainer}>
-                      <MapPin size={12} color={Colors.locationDot} />
-                      <Text style={styles.location} numberOfLines={1}>
-                        Sleman city
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View>
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={{
-                      uri: "https://images.unsplash.com/photo-1584810359583-96fc3448beaa?q=80&w=200",
-                    }}
-                    style={{ width: 80, height: 80, borderRadius: 12 }}
-                  />
-                  <View style={styles.infoContainer}>
-                    <Text style={styles.name} numberOfLines={1}>
-                      Baron Beach
-                    </Text>
-                    <View style={styles.locationContainer}>
-                      <MapPin size={12} color={Colors.locationDot} />
-                      <Text style={styles.location} numberOfLines={1}>
-                        Gunung Kidul, Indc
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-        );
+
       default:
         return null;
     }
@@ -210,7 +229,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.backgroundAlt,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -239,12 +257,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   largeImageContainer: {
-    height: 80, // Fixed height
-    width: 80, // Fixed width
+    height: 80,
+    width: 80,
     borderRadius: 12,
     marginRight: 12,
     overflow: "hidden",
-    backgroundColor: Colors.backgroundAlt, // Thêm màu nền ở đây
+    backgroundColor: Colors.backgroundAlt,
   },
   image: {
     width: 200,
@@ -272,7 +290,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     padding: 12,
-    backgroundColor: Colors.card, // Thêm màu nền cho phần thông tin
+    backgroundColor: Colors.card,
   },
   name: {
     fontSize: 16,
@@ -292,4 +310,33 @@ const styles = StyleSheet.create({
   arrowContainer: {
     paddingRight: 16,
   },
+  featuresGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: 12,
+    marginTop: -12,
+    marginBottom: 12,
+  },
+  dateSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingBottom: 16,
+    paddingTop: 0,
+  },
+  dateIcon: {
+    marginRight: 12,
+  },
+  dateLabel: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    marginBottom: 2,
+  },
+  dateText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.text,
+  },
+
 });

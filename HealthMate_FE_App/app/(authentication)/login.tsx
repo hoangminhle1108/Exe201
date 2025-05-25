@@ -7,7 +7,7 @@ export default function ExploreScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Explore</Text>
+        <Text style={styles.title}>Login</Text>
         <Text style={styles.subtitle}>Coming soon</Text>
       </View>
     </SafeAreaView>

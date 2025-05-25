@@ -54,9 +54,9 @@ export const categories = [
 export const destinations: Destination[] = [
   {
     id: "1",
-    name: "Merapi Mount",
+    name: "10 bài tập thể dục tại nhà giúp giảm cân",
     location: "Sleman city",
-    rating: 4.9,
+    rating: 412,
     image:
       "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=80&w=500",
     description:
@@ -79,9 +79,9 @@ export const destinations: Destination[] = [
   },
   {
     id: "2",
-    name: "Baron Beach",
+    name: "Top 10 lý do nên uống nhiều nước",
     location: "Gunung Kidul, Indonesia",
-    rating: 4.9,
+    rating: 200,
     image:
       "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=500",
     description:
@@ -104,9 +104,9 @@ export const destinations: Destination[] = [
   },
   {
     id: "3",
-    name: "Borobudur Temple",
+    name: "Thiên lý ơi",
     location: "Magelang, Indonesia",
-    rating: 4.8,
+    rating: 100,
     image:
       "https://images.unsplash.com/photo-1584810359583-96fc3448beaa?q=80&w=500",
     description:

@@ -15,18 +15,17 @@ import {
     Pencil,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import Colors from "@/constants/colors";
 
 export default function ProfileScreen() {
     const router = useRouter();
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            {/* Edit Icon */}
             <TouchableOpacity style={styles.editIcon}>
-                <Pencil size={20} color="#000" />
+                <Pencil size={24} color={Colors.text} />
             </TouchableOpacity>
 
-            {/* Avatar */}
             <Image
                 source={{
                     uri: "https://randomuser.me/api/portraits/women/44.jpg",
@@ -34,11 +33,9 @@ export default function ProfileScreen() {
                 style={styles.avatar}
             />
 
-            {/* Name & Email */}
             <Text style={styles.name}>Jennifer Lopez</Text>
             <Text style={styles.email}>taylorslauren@hotmail.com</Text>
 
-            {/* Menu Options */}
             <View style={styles.cardList}>
                 <OptionCard icon={<Crown color="#4E7D28" />} text="Các gói trả phí" />
                 <OptionCard icon={<CreditCard color="#4E7D28" />} text="Lịch sử thanh toán" />
@@ -46,7 +43,6 @@ export default function ProfileScreen() {
                 <OptionCard icon={<Timer color="#4E7D28" />} text="Công thức yêu thích" />
             </View>
 
-            {/* Footer Actions */}
             <View style={styles.footer}>
                 <Text style={styles.footerLink}>Đăng xuất</Text>
                 <Text style={styles.footerLink}>Đổi mật khẩu</Text>

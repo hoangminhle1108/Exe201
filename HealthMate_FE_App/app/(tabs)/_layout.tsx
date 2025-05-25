@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Home, MessageCircle, BookOpen, User } from "lucide-react-native";
+import { Home, MessageCircle, User } from "lucide-react-native";
 
 export default function TabLayout() {
   return (
@@ -27,17 +27,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="chatbot/chatbot"
         options={{
-          title: "Chatbot",
+          title: "AI",
           tabBarIcon: ({ color }) => <MessageCircle size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="saved"
-        options={{
-          title: "Công thức",
-          tabBarIcon: ({ color }) => <BookOpen size={24} color={color} />,
         }}
       />
       <Tabs.Screen
