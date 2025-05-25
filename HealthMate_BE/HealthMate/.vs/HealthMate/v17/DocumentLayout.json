@@ -3,48 +3,36 @@
   "WorkspaceRootPath": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.services\\service\\user\\authservice .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\service\\user\\authservice .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.services\\service\\user\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\service\\user\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.services\\interface\\user\\ijwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\interface\\user\\ijwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\repository\\user\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\repository\\user\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\interface\\user\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\interface\\user\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\base\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\base\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\base\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\base\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.api\\controllers\\user\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\controllers\\user\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.services\\service\\user\\authservice .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\service\\user\\authservice .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.services\\interface\\user\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\interface\\user\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.api\\controllers\\articlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\controllers\\articlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\models\\nutritionappcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\models\\nutritionappcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.services\\service\\article\\articleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\service\\article\\articleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.services\\interface\\article\\iarticleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\interface\\article\\iarticleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\repository\\article\\articlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\repository\\article\\articlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\interface\\article\\iarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\interface\\article\\iarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\dtos\\article\\articledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\dtos\\article\\articledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,48 +42,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 14,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AuthService .cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\User\\AuthService .cs",
-              "RelativeDocumentMoniker": "HealthMate.Services\\Service\\User\\AuthService .cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\User\\AuthService .cs",
-              "RelativeToolTip": "HealthMate.Services\\Service\\User\\AuthService .cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAwCIAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-24T09:53:33.671Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IJwtService.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\User\\IJwtService.cs",
-              "RelativeDocumentMoniker": "HealthMate.Services\\Interface\\User\\IJwtService.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\User\\IJwtService.cs",
-              "RelativeToolTip": "HealthMate.Services\\Interface\\User\\IJwtService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T11:21:31.755Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "JwtService.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\User\\JwtService.cs",
-              "RelativeDocumentMoniker": "HealthMate.Services\\Service\\User\\JwtService.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\User\\JwtService.cs",
-              "RelativeToolTip": "HealthMate.Services\\Service\\User\\JwtService.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T11:21:11.979Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
@@ -150,102 +98,107 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IUserRepository.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Interface\\User\\IUserRepository.cs",
-              "RelativeDocumentMoniker": "HealthMate.Repository\\Interface\\User\\IUserRepository.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Interface\\User\\IUserRepository.cs",
-              "RelativeToolTip": "HealthMate.Repository\\Interface\\User\\IUserRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "AuthService .cs",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\User\\AuthService .cs",
+              "RelativeDocumentMoniker": "HealthMate.Services\\Service\\User\\AuthService .cs",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\User\\AuthService .cs",
+              "RelativeToolTip": "HealthMate.Services\\Service\\User\\AuthService .cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T05:01:17.995Z",
+              "WhenOpened": "2025-05-25T11:37:00.367Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserRepository.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\User\\UserRepository.cs",
-              "RelativeDocumentMoniker": "HealthMate.Repository\\Repository\\User\\UserRepository.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\User\\UserRepository.cs",
-              "RelativeToolTip": "HealthMate.Repository\\Repository\\User\\UserRepository.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAqwFcAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T05:01:00.705Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "GenericRepository.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Base\\GenericRepository.cs",
-              "RelativeDocumentMoniker": "HealthMate.Repository\\Base\\GenericRepository.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Base\\GenericRepository.cs",
-              "RelativeToolTip": "HealthMate.Repository\\Base\\GenericRepository.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAowBwAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-24T11:41:39.51Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UnitOfWork.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Base\\UnitOfWork.cs",
-              "RelativeDocumentMoniker": "HealthMate.Repository\\Base\\UnitOfWork.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Base\\UnitOfWork.cs",
-              "RelativeToolTip": "HealthMate.Repository\\Base\\UnitOfWork.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-24T11:38:05.706Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\User\\AuthController.cs",
-              "RelativeDocumentMoniker": "HealthMate.API\\Controllers\\User\\AuthController.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\User\\AuthController.cs",
-              "RelativeToolTip": "HealthMate.API\\Controllers\\User\\AuthController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-24T09:54:51.29Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "IAuthService.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\User\\IAuthService.cs",
-              "RelativeDocumentMoniker": "HealthMate.Services\\Interface\\User\\IAuthService.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\User\\IAuthService.cs",
-              "RelativeToolTip": "HealthMate.Services\\Interface\\User\\IAuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-24T09:53:07.69Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Program.cs",
               "RelativeDocumentMoniker": "HealthMate.API\\Program.cs",
               "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Program.cs",
               "RelativeToolTip": "HealthMate.API\\Program.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAvwCkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAADcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-24T09:35:28.677Z"
+              "WhenOpened": "2025-05-25T11:36:39.259Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "NutritionAppContext.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Models\\NutritionAppContext.cs",
-              "RelativeDocumentMoniker": "HealthMate.Repository\\Models\\NutritionAppContext.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Models\\NutritionAppContext.cs",
-              "RelativeToolTip": "HealthMate.Repository\\Models\\NutritionAppContext.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAIA4wCsAAAAPAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "ArticleController.cs",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\ArticleController.cs",
+              "RelativeDocumentMoniker": "HealthMate.API\\Controllers\\ArticleController.cs",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\ArticleController.cs",
+              "RelativeToolTip": "HealthMate.API\\Controllers\\ArticleController.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAswCsAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-24T09:21:21.885Z"
+              "WhenOpened": "2025-05-25T11:36:12.582Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ArticleService.cs",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\Article\\ArticleService.cs",
+              "RelativeDocumentMoniker": "HealthMate.Services\\Service\\Article\\ArticleService.cs",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\Article\\ArticleService.cs",
+              "RelativeToolTip": "HealthMate.Services\\Service\\Article\\ArticleService.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAmwEsAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T11:35:27.865Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IArticleService.cs",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\Article\\IArticleService.cs",
+              "RelativeDocumentMoniker": "HealthMate.Services\\Interface\\Article\\IArticleService.cs",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\Article\\IArticleService.cs",
+              "RelativeToolTip": "HealthMate.Services\\Interface\\Article\\IArticleService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T11:35:23.718Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ArticleRepository.cs",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\Article\\ArticleRepository.cs",
+              "RelativeDocumentMoniker": "HealthMate.Repository\\Repository\\Article\\ArticleRepository.cs",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\Article\\ArticleRepository.cs",
+              "RelativeToolTip": "HealthMate.Repository\\Repository\\Article\\ArticleRepository.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAmwDoAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T11:34:54.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ArticleDTO.cs",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\DTOs\\Article\\ArticleDTO.cs",
+              "RelativeDocumentMoniker": "HealthMate.Repository\\DTOs\\Article\\ArticleDTO.cs",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\DTOs\\Article\\ArticleDTO.cs",
+              "RelativeToolTip": "HealthMate.Repository\\DTOs\\Article\\ArticleDTO.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAgwBIAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T11:33:02.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IArticleRepository.cs",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Interface\\Article\\IArticleRepository.cs",
+              "RelativeDocumentMoniker": "HealthMate.Repository\\Interface\\Article\\IArticleRepository.cs",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Interface\\Article\\IArticleRepository.cs",
+              "RelativeToolTip": "HealthMate.Repository\\Interface\\Article\\IArticleRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T11:32:59.338Z",
+              "EditorCaption": ""
             }
           ]
         },
