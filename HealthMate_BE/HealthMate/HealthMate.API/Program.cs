@@ -101,7 +101,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 })
-// You can still support cookies or Google separately, but they won't break your API CORS
 .AddCookie()
 .AddGoogle(google =>
 {
@@ -128,8 +127,7 @@ app.UseHttpsRedirection();
 // Use CORS
 app.UseCors("AllowAll");
 
-// Add authentication middleware
-app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
