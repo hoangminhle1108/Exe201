@@ -11,5 +11,6 @@ namespace HealthMate.Services.Interface.User
     {
         Task<LoginResponse> AuthenticateAsync(LoginRequest request);
         Task<LoginResponse> AuthenticateGoogleAsync(string email, string fullName);
+        Task<LoginResponse> RegisterAsync(RegisterRequest request);
     }
 }
