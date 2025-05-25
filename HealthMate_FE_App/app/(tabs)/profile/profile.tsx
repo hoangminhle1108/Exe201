@@ -13,6 +13,7 @@ import {
     Bookmark,
     Timer,
     Pencil,
+    Headset
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
@@ -41,13 +42,19 @@ export default function ProfileScreen() {
                 <OptionCard icon={<CreditCard color="#4E7D28" />} text="Lịch sử thanh toán" />
                 <OptionCard icon={<Bookmark color="#4E7D28" />} text="Bài viết yêu thích" />
                 <OptionCard icon={<Timer color="#4E7D28" />} text="Công thức yêu thích" />
+                <OptionCard icon={<Headset color="#4E7D28" />} text="Trung tâm trợ giúp" />
             </View>
 
             <View style={styles.footer}>
-                <Text style={styles.footerLink}>Đăng xuất</Text>
+                <TouchableOpacity onPress={() => router.replace("/(authentication)/login")}>
+                    <Text style={styles.footerLink}>Đăng xuất</Text>
+                </TouchableOpacity>
+
                 <Text style={styles.footerLink}>Đổi mật khẩu</Text>
+
                 <Text style={styles.deleteLink}>Xoá tài khoản</Text>
             </View>
+
         </ScrollView>
     );
 }
@@ -74,8 +81,8 @@ const styles = StyleSheet.create({
     },
     editIcon: {
         position: "absolute",
-        top: 20,
-        right: 20,
+        top: 25,
+        right: 30,
         padding: 6,
     },
     avatar: {
@@ -104,6 +111,8 @@ const styles = StyleSheet.create({
         padding: 16,
         flexDirection: "row",
         alignItems: "center",
+        height: 70,
+
     },
     iconBox: {
         width: 24,
@@ -130,6 +139,6 @@ const styles = StyleSheet.create({
     deleteLink: {
         fontSize: 14,
         color: "red",
-        marginTop: 8,
+        marginTop: 15,
     },
 });
