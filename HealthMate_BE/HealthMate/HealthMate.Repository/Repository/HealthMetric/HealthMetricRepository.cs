@@ -58,5 +58,11 @@ namespace HealthMate.Repository.Repository.HealthMetric
             await _ctx.SaveChangesAsync();
             return true;
         }
+
+        public async Task<Models.HealthMetric?> GetByUserIdAndDateAsync(int userId, DateOnly date)
+        {
+            return await _ctx.HealthMetrics
+                .FirstOrDefaultAsync(m => m.UserId == userId && m.MetricDate == date);
+        }
     }
 } 

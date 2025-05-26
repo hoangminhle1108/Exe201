@@ -11,5 +11,6 @@ namespace HealthMate.Repository.Interface.HealthMetric
         Task<Models.HealthMetric> CreateAsync(Models.HealthMetric metric);
         Task<Models.HealthMetric?> UpdateAsync(Models.HealthMetric metric);
         Task<bool> DeleteAsync(int metricId, int userId);
+        Task<Models.HealthMetric?> GetByUserIdAndDateAsync(int userId, DateOnly date);
     }
 } 
