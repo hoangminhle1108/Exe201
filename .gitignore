@@ -56,3 +56,4 @@ nunit-*.xml
 /HealthMate_BE/HealthMate/.vs/
 .vs/
 /HealthMate_BE/HealthMate/HealthMate.API/appsettings.json
+/HealthMate_BE/HealthMate/HealthMate.API/appsettings.json

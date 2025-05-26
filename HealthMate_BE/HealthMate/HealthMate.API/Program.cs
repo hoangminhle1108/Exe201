@@ -86,6 +86,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
@@ -106,13 +107,23 @@ builder.Services.AddAuthentication(options =>
 {
     google.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     google.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-    google.CallbackPath = "/api/Auth/google-response";
+    //google.CallbackPath = "/api/Auth/google-response";
 });
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
+builder.Services.AddDistributedMemoryCache();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -126,8 +137,16 @@ app.UseHttpsRedirection();
 
 // Use CORS
 app.UseCors("AllowAll");
+app.UseSession();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.None,
+    Secure = CookieSecurePolicy.Always
+});
 
 
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

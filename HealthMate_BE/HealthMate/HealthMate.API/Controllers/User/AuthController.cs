@@ -36,7 +36,7 @@ namespace HealthMate.API.Controllers.User
         {
             try 
             {
-                var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                var result = await HttpContext.AuthenticateAsync("Google");
                 if (!result.Succeeded)
                 {
                     return Unauthorized(new { message = "Google authentication failed" });
