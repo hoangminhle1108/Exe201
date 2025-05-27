@@ -93,11 +93,19 @@ namespace HealthMate.Repository.Repository.User
             return user;
         }
 
-        public async Task<Models.User> GetByEmailAsync(string email)
+        public async Task<Models.User?> GetByEmailAsync(string email)
         {
             return await _ctx.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public Task<Models.User?> GetByIdAsync(int userId)
+        {
+            return _ctx.Users
+                .Include(u => u.Role)
+                .Include(u => u.HealthMetrics)
+                .FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
         public async Task<Models.User> RegisterUserAsync(string email, string passwordHash, string fullName, DateOnly dateOfBirth)

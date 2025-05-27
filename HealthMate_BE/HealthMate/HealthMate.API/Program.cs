@@ -1,11 +1,15 @@
 using HealthMate.Repository.Interface.Article;
+using HealthMate.Repository.Interface.HealthMetric;
 using HealthMate.Repository.Interface.User;
 using HealthMate.Repository.Models;
 using HealthMate.Repository.Repository.Article;
+using HealthMate.Repository.Repository.HealthMetric;
 using HealthMate.Repository.Repository.User;
 using HealthMate.Services.Interface.Article;
+using HealthMate.Services.Interface.HealthMetric;
 using HealthMate.Services.Interface.User;
 using HealthMate.Services.Service.Article;
+using HealthMate.Services.Service.HealthMetric;
 using HealthMate.Services.Service.User;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -114,6 +118,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<IHealthMetricRepository,HealthMetricRepository>();
+builder.Services.AddScoped<IHealthMetricService, HealthMetricService>();
 
 builder.Services.AddSession(options =>
 {

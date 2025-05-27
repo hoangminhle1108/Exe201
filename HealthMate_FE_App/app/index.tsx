@@ -6,11 +6,10 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
+  TouchableOpacity
 } from "react-native";
 import { useRouter } from "expo-router";
-import Button from "./components/Button";
 import Colors from "@/constants/colors";
-
 import logo from "@/assets/logo.png";
 
 export default function OnboardingScreen() {
@@ -32,7 +31,7 @@ export default function OnboardingScreen() {
       <View style={styles.topSection}>
         <Image
           source={{
-            uri: "https://static.independent.co.uk/s3fs-public/thumbnails/image/2020/04/02/13/istock-1155240408.jpg",
+            uri: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?cs=srgb&dl=pexels-janetrangdoan-1092730.jpg&fm=jpg",
           }}
           style={styles.cloudImage}
           resizeMode="cover"
@@ -46,11 +45,10 @@ export default function OnboardingScreen() {
           Ứng dụng giúp bạn theo dõi dinh dưỡng và sức khỏe hàng ngày. Hãy bắt đầu hành trình theo dõi sức khỏe cùng chúng tôi!
         </Text>
 
-        <Button
-          title="Tiếp tục"
-          onPress={handleGetStarted}
-          style={styles.button}
-        />
+        <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+          <Text style={styles.buttonText}>Tiếp tục</Text>
+        </TouchableOpacity>
+
       </View>
     </SafeAreaView>
   );
@@ -60,6 +58,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  button: {
+    marginTop: 24,
+    backgroundColor: "#72C15F",
+    padding: 14,
+    borderRadius: 12,
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
   },
   topSection: {
     height: "60%",
@@ -99,9 +109,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.textSecondary,
     lineHeight: 24,
-  },
-  button: {
-    marginTop: 24,
-    backgroundColor: "#72C15F",
   },
 });

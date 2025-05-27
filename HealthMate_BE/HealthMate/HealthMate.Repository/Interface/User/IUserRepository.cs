@@ -10,6 +10,7 @@ namespace HealthMate.Repository.Interface.User
 {
     public interface IUserRepository 
     {
+        Task<HealthMate.Repository.Models.User> GetByIdAsync(int userId);
         Task<HealthMate.Repository.Models.User> GetByEmailAndPasswordAsync(string email, string password);
         Task<HealthMate.Repository.Models.User> GetByEmailAsync(string email); 
         Task<HealthMate.Repository.Models.User> CreateGoogleUserAsync(string email, string fullName); 
