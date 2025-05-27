@@ -120,6 +120,7 @@ builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IHealthMetricRepository,HealthMetricRepository>();
 builder.Services.AddScoped<IHealthMetricService, HealthMetricService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSession(options =>
 {
