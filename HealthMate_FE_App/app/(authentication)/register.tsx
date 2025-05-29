@@ -14,7 +14,7 @@ export default function RegisterScreen() {
     const [agree, setAgree] = useState(false);
 
     const handleRegister = () => {
-        router.replace("/(authentication)/login");
+        router.push("/(authentication)/login");
     };
 
     return (
@@ -60,12 +60,16 @@ export default function RegisterScreen() {
                 <Text style={{ color: "black" }}>Đã có tài khoản? </Text>
                 <Text
                     style={{ color: "#72C15F", fontWeight: "bold" }}
-                    onPress={() => router.replace("/(authentication)/login")}
+                    onPress={() => router.push("/(authentication)/login")}
                 >
                     Đăng nhập
                 </Text>
             </Text>
-            <Text style={styles.orText}>HOẶC</Text>
+            <View style={styles.orContainer}>
+                <View style={styles.line} />
+                <Text style={styles.orText}>HOẶC</Text>
+                <View style={styles.line} />
+            </View>
 
             <TouchableOpacity style={styles.googleButton} onPress={() => { /* Handle Google login */ }}>
                 <Image
@@ -148,6 +152,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: "white",
+        fontSize: 16,
         fontWeight: "bold",
     },
     loginLink: {
@@ -155,11 +160,24 @@ const styles = StyleSheet.create({
         color: "#72C15F",
         marginBottom: 16,
     },
-    orText: {
-        textAlign: "center",
-        marginBottom: 16,
-        color: "#666",
+    orContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 16,
     },
+
+    line: {
+        flex: 1,
+        height: 1,
+        backgroundColor: "#ccc",
+        marginHorizontal: 10,
+    },
+
+    orText: {
+        color: "#666",
+        fontSize: 14,
+    },
+
     googleButton: {
         flexDirection: "row",
         alignItems: "center",

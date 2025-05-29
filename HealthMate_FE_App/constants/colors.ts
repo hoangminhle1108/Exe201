@@ -1,7 +1,6 @@
-// Color palette for the travel app
 export default {
-  primary: "#72C15F", // Main blue color
-  secondary: "#FFB800", // Accent yellow/orange
+  primary: "#72C15F",
+  secondary: "#FFB800",
   background: "#FFFFFF",
   backgroundAlt: "#F8F9FA",
   text: "#1A1A1A",

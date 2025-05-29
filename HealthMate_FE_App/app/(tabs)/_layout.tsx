@@ -36,7 +36,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="chatbot/chatbot"
+        name="chatbot"
         options={{
           title: "AI trò chuyện",
           tabBarIcon: ({ color }) => (
@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile/profile"
+        name="profile"
         options={{
           title: "Thông tin",
           tabBarIcon: ({ color }) => (

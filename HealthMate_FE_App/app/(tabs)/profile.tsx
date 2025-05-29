@@ -8,7 +8,6 @@ import {
     ScrollView,
 } from "react-native";
 import {
-    Crown,
     CreditCard,
     Bookmark,
     Timer,
@@ -38,7 +37,6 @@ export default function ProfileScreen() {
             <Text style={styles.email}>taylorslauren@hotmail.com</Text>
 
             <View style={styles.cardList}>
-                <OptionCard icon={<Crown color="#4E7D28" />} text="Các gói trả phí" />
                 <OptionCard icon={<CreditCard color="#4E7D28" />} text="Lịch sử thanh toán" />
                 <OptionCard icon={<Bookmark color="#4E7D28" />} text="Bài viết yêu thích" />
                 <OptionCard icon={<Timer color="#4E7D28" />} text="Công thức yêu thích" />

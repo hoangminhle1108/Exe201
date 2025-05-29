@@ -61,13 +61,17 @@ export default function LoginScreen() {
         <Text style={{ color: "black" }}>Chưa có tài khoản? </Text>
         <Text
           style={{ color: "#72C15F", fontWeight: "bold" }}
-          onPress={() => router.replace("/(authentication)/register")}
+          onPress={() => router.push("/(authentication)/register")}
         >
           Đăng ký
         </Text>
       </Text>
 
-      <Text style={styles.orText}>HOẶC</Text>
+      <View style={styles.orContainer}>
+        <View style={styles.line} />
+        <Text style={styles.orText}>HOẶC</Text>
+        <View style={styles.line} />
+      </View>
 
       <TouchableOpacity style={styles.googleButton} onPress={() => { /* Handle Google login */ }}>
         <Image
@@ -161,6 +165,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
+    fontSize: 16,
     fontWeight: "bold",
   },
   forgot: {
@@ -168,11 +173,24 @@ const styles = StyleSheet.create({
     color: "#72C15F",
     paddingLeft: 100,
   },
-  orText: {
-    textAlign: "center",
-    marginBottom: 16,
-    color: "#666",
+  orContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 16,
   },
+
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#ccc",
+    marginHorizontal: 10,
+  },
+
+  orText: {
+    color: "#666",
+    fontSize: 14,
+  },
+
   googleButton: {
     flexDirection: "row",
     alignItems: "center",

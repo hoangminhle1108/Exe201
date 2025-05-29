@@ -1,5 +1,6 @@
 
 import React from "react";
+import { useRouter } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -9,9 +10,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Image } from "expo-image";
-import { Crown, ChevronRight, MapPin } from "lucide-react-native";
+import { Crown } from "lucide-react-native";
 import { Feather } from '@expo/vector-icons';
-import SearchBar from "../components/SearchBar";
 import CategoryItem from "../components/CategoryItem";
 import SectionHeader from "../components/SectionHeader";
 import FeatureCard from "../components/FeatureCard";
@@ -26,7 +26,6 @@ dayjs.locale("vi");
 
 const DATA = [
   { type: "header" },
-  { type: "search" },
   { type: "date" },
   { type: "features" },
   { type: "categories" },
@@ -41,7 +40,9 @@ const capitalizeWords = (str: string) =>
 const today = dayjs().format("dddd, [Ngày] DD [Tháng] MM [Năm] YYYY");
 const formattedDate = capitalizeWords(today);
 
-export default function HomeScreen() {
+export default function Home() {
+  const router = useRouter();
+
   const renderItem = ({ item }: any) => {
     switch (item.type) {
       case "header":
@@ -59,18 +60,11 @@ export default function HomeScreen() {
                 <Text style={styles.userName}>Nguyen Tran</Text>
               </View>
             </View>
-            <TouchableOpacity style={styles.notificationButton}>
+            <TouchableOpacity onPress={() => router.replace("/(premium)/list")} style={styles.notificationButton}>
               <Crown size={24} color={Colors.text} />
             </TouchableOpacity>
           </View>
         );
-      // case "search":
-      //   return (
-      //     <View style={styles.content}>
-      //       <Text style={styles.questionText}>Where do you want to go?</Text>
-      //       <SearchBar placeholder="Search here..." />
-      //     </View>
-      //   );
       case "date":
         return (
           <View style={[styles.dateSection, { paddingTop: 10 }]}>
@@ -104,6 +98,7 @@ export default function HomeScreen() {
                 value="100+"
                 updated="công thức nấu ăn"
                 color="#d15d5d"
+                onPress={() => router.replace("/(recipe)/list")}
               />
               <FeatureCard
                 type="ai"
@@ -111,6 +106,7 @@ export default function HomeScreen() {
                 value="7:30 pm"
                 updated="lần cuối 10 phút trước"
                 color="#72C15F"
+                onPress={() => router.push("/(tabs)/chatbot")}
               />
               <FeatureCard
                 type="nutrition"

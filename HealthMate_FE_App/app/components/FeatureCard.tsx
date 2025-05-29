@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import {
     MaterialIcons,
     Ionicons,
@@ -14,14 +14,14 @@ const iconMap: any = {
     nutrition: <Entypo name="bowl" size={32} color="white" />,
 };
 
-const FeatureCard = ({ type, title, value, updated, color }: any) => {
+const FeatureCard = ({ type, title, value, updated, color, onPress }: any) => {
     return (
-        <View style={[styles.card, { backgroundColor: color }]}>
+        <TouchableOpacity style={[styles.card, { backgroundColor: color }]} onPress={onPress}>
             <View style={styles.icon}>{iconMap[type]}</View>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.value}>{value}</Text>
             <Text style={styles.updated}>{updated}</Text>
-        </View>
+        </TouchableOpacity>
     );
 };
 

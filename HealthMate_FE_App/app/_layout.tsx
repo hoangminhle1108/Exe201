@@ -51,7 +51,12 @@ function RootLayoutNav() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
-      <Stack.Screen
+      <Stack.Screen name="(premium)" options={{ headerShown: false }} />
+      <Stack.Screen name="(recipe)" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="(blog)" options={{ headerShown: false }} />
+      <Stack.Screen name="(nutrition)" options={{ headerShown: false }} /> */}
+
+      {/* <Stack.Screen
         name="destinations/[id]"
         options={{
           headerShown: true,
@@ -60,7 +65,7 @@ function RootLayoutNav() {
           headerBackVisible: false,
         }}
       />
-      <Stack.Screen name="NewDestinations" />
+      <Stack.Screen name="NewDestinations" /> */}
     </Stack>
   );
 }
