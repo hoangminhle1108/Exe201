@@ -12,11 +12,10 @@ import {
 import { Image } from "expo-image";
 import { Crown } from "lucide-react-native";
 import { Feather } from '@expo/vector-icons';
-import CategoryItem from "../components/CategoryItem";
 import SectionHeader from "../components/SectionHeader";
 import FeatureCard from "../components/FeatureCard";
 import PostCard from "../components/PostCard";
-import { categories, destinations } from "@/constants/destinations";
+import { destinations } from "@/constants/destinations";
 import Colors from "@/constants/colors";
 import { Calendar } from "lucide-react-native";
 import dayjs from "dayjs";
@@ -28,7 +27,6 @@ const DATA = [
   { type: "header" },
   { type: "date" },
   { type: "features" },
-  { type: "categories" },
   { type: "post" },
 ];
 
@@ -98,7 +96,7 @@ export default function Home() {
                 value="100+"
                 updated="công thức nấu ăn"
                 color="#d15d5d"
-                onPress={() => router.replace("/(recipe)/list")}
+                onPress={() => router.replace("/(recipe)/recipeList")}
               />
               <FeatureCard
                 type="ai"
@@ -118,28 +116,6 @@ export default function Home() {
             </View>
           </View >
         );
-
-      // case "categories":
-      //   return (
-      //     <View style={styles.content}>
-      //       <View style={styles.categoriesContainer}>
-      //         <FlatList
-      //           data={categories}
-      //           keyExtractor={(item) => item.id}
-      //           horizontal
-      //           showsHorizontalScrollIndicator={false}
-      //           renderItem={({ item }) => (
-      //             <CategoryItem
-      //               name={item.name}
-      //               image={item.image}
-      //               onPress={() => { }}
-      //             />
-      //           )}
-      //           contentContainerStyle={styles.categoriesList}
-      //         />
-      //       </View>
-      //     </View>
-      //   );
       case "post":
         return (
           <View style={styles.content}>

@@ -110,7 +110,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: "100%",
     position: "relative",
-    backgroundColor: Colors.backgroundAlt,
+    backgroundColor: "#fff",
+    marginRight: 5,
+    marginLeft: 5,
   },
   largeImageContainer: {
     height: 80,
@@ -124,8 +126,8 @@ const styles = StyleSheet.create({
     width: 200,
     height: 150,
     borderRadius: 12,
-    resizeMode: "cover",
-    marginRight: 12,
+    marginRight: 7,
+    marginLeft: 7,
   },
   ratingContainer: {
     position: "absolute",

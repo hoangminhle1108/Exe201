@@ -5,19 +5,19 @@ export default function StackLayout() {
     return (
         <Stack>
             <Stack.Screen
-                name="list"
+                name="recipeList"
                 options={{
                     headerShown: false,
                 }}
             />
             <Stack.Screen
-                name="search"
+                name="recipeSearch"
                 options={{
                     headerShown: false,
                 }}
             />
             <Stack.Screen
-                name="detail"
+                name="recipeDetail"
                 options={{
                     headerShown: false,
                 }}

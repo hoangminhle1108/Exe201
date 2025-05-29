@@ -83,7 +83,7 @@ export const destinations: Destination[] = [
     location: "Gunung Kidul, Indonesia",
     rating: 200,
     image:
-      "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=500",
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=80&w=500",
     description:
       "Baron Beach is located in Gunung Kidul Regency DIY. However, tourists must head to Yogyakarta City first, especially by airplane. The flight even takes only 1 hour and 10 minutes, so it would be a comfortable trip.",
     price: 313,
@@ -108,7 +108,7 @@ export const destinations: Destination[] = [
     location: "Magelang, Indonesia",
     rating: 100,
     image:
-      "https://images.unsplash.com/photo-1584810359583-96fc3448beaa?q=80&w=500",
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=80&w=500",
     description:
       "Borobudur is a 9th-century Mahayana Buddhist temple in Central Java, Indonesia. It is the world's largest Buddhist temple and a UNESCO World Heritage site.",
     price: 275,
@@ -129,11 +129,11 @@ export const destinations: Destination[] = [
   },
   {
     id: "4",
-    name: "Uluwatu Temple",
+    name: "Cappuchina",
     location: "Bali, Indonesia",
     rating: 4.7,
     image:
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=500",
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=80&w=500",
     description:
       "Uluwatu Temple is a Balinese Hindu sea temple located in Uluwatu. The temple is regarded as one of the six spiritual pillars of Bali and is renowned for its magnificent location, perched on top of a steep cliff.",
     price: 289,

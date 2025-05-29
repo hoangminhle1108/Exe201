@@ -26,9 +26,9 @@ const SearchBar = ({
           onChangeText={onSearch}
         />
       </View>
-      <TouchableOpacity style={styles.filterButton} onPress={onFilter}>
+      {/* <TouchableOpacity style={styles.filterButton} onPress={onFilter}>
         <Sliders size={20} color={Colors.buttonText} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
