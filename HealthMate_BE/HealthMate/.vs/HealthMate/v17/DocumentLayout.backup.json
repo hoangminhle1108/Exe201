@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.repository\\repository\\healthmetric\\healthmetricrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\repository\\healthmetric\\healthmetricrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -67,19 +62,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "HealthMetricRepository.cs",
-              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\HealthMetric\\HealthMetricRepository.cs",
-              "RelativeDocumentMoniker": "HealthMate.Repository\\Repository\\HealthMetric\\HealthMetricRepository.cs",
-              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\HealthMetric\\HealthMetricRepository.cs",
-              "RelativeToolTip": "HealthMate.Repository\\Repository\\HealthMetric\\HealthMetricRepository.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAYwDAAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T15:22:56.862Z",
-              "EditorCaption": ""
             }
           ]
         },
