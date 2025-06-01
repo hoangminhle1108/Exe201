@@ -1,4 +1,3 @@
-
 import { forwardRef } from "react";
 
 // prop-types is a library for typechecking of props
@@ -17,9 +16,9 @@ const SoftInput = forwardRef(({ size, icon, error, success, disabled, ...rest },
   let template;
   const [controller] = useSoftUIController();
   const { direction } = controller;
-  const iconDirection = icon.direction;
+  const iconDirection = icon?.direction || "none";
 
-  if (icon.component && icon.direction === "left") {
+  if (icon?.component && icon?.direction === "left") {
     template = (
       <SoftInputWithIconRoot ref={ref} ownerState={{ error, success, disabled }}>
         <SoftInputIconBoxRoot ownerState={{ size }}>
@@ -33,7 +32,7 @@ const SoftInput = forwardRef(({ size, icon, error, success, disabled, ...rest },
         />
       </SoftInputWithIconRoot>
     );
-  } else if (icon.component && icon.direction === "right") {
+  } else if (icon?.component && icon?.direction === "right") {
     template = (
       <SoftInputWithIconRoot ref={ref} ownerState={{ error, success, disabled }}>
         <SoftInputRoot

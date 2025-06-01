@@ -6,6 +6,7 @@ import BlogList from "layouts/manage-blog";
 import RecipeList from "layouts/manage-recipe";
 import Billing from "layouts/billing";
 import SignIn from "layouts/authentication/sign-in";
+import EditArticle from "layouts/manage-blog/edit-article";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
@@ -92,6 +93,14 @@ const routes = [
     // route: "/danh-sach-bai-dang/chi-tiet-bai-dang/:id",
     route: "/danh-sach-bai-dang/chi-tiet-bai-dang",
     component: <BlogDetail />,
+    noCollapse: true,
+  },
+  {
+    type: "route",
+    name: "Chỉnh sửa bài đăng",
+    key: "chinh-sua-bai-dang",
+    route: "/danh-sach-bai-dang/chinh-sua-bai-dang",
+    component: <EditArticle />,
     noCollapse: true,
   },
 ];

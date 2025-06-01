@@ -8,10 +8,14 @@ import SoftButton from "components/SoftButton";
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 import { useSoftUIController, setLayout } from "context";
 import banner from "assets/images/loginBanner.png";
+import authService from "services/authService";
 
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [, dispatch] = useSoftUIController();
   const navigate = useNavigate();
@@ -20,10 +24,29 @@ function SignIn() {
     setLayout(dispatch, "authentication");
   }, [dispatch]);
 
-  const handleSignIn = (e) => {
-    e.preventDefault(); // Prevent the form from submitting
-    // Navigate to /bang-thong-ke regardless of input
-    navigate("/bang-thong-ke");
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await authService.login(email, password);
+      
+      if (result.success) {
+        if (result.role === "Admin") {
+          navigate("/bang-thong-ke");
+        } else {
+          setError("Bạn không có quyền truy cập vào hệ thống quản trị");
+          authService.logout();
+        }
+      } else {
+        setError(result.message || "Đăng nhập thất bại");
+      }
+    } catch (error) {
+      setError("Có lỗi xảy ra khi đăng nhập");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,13 +56,26 @@ function SignIn() {
       image={banner}
     >
       <SoftBox component="form" role="form" onSubmit={handleSignIn}>
+        {error && (
+          <SoftBox mb={2}>
+            <SoftTypography variant="caption" color="error" fontWeight="bold">
+              {error}
+            </SoftTypography>
+          </SoftBox>
+        )}
         <SoftBox mb={1}>
           <SoftBox mb={1} ml={0.5}>
             <SoftTypography component="label" variant="caption" fontWeight="bold">
               Email
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="email" placeholder="Nhập email" icon={{}} />
+          <SoftInput 
+            type="email" 
+            placeholder="Nhập email" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </SoftBox>
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
@@ -47,22 +83,34 @@ function SignIn() {
               Mật Khẩu
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="password" placeholder="Nhập mật khẩu" icon={{}} />
+          <SoftInput 
+            type="password" 
+            placeholder="Nhập mật khẩu" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </SoftBox>
         <SoftBox display="flex" alignItems="center">
-          <Switch checked={rememberMe} onChange={handleSetRememberMe} />
+          <Switch checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
           <SoftTypography
             variant="button"
             fontWeight="regular"
-            onClick={handleSetRememberMe}
+            onClick={() => setRememberMe(!rememberMe)}
             sx={{ cursor: "pointer", userSelect: "none", textTransform: "none" }}
           >
             &nbsp;&nbsp;Ghi nhớ tài khoản
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={5} mb={1}>
-          <SoftButton variant="gradient" color="success" fullWidth type="submit">
-            Đăng nhập
+          <SoftButton 
+            variant="gradient" 
+            color="success" 
+            fullWidth 
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </SoftButton>
         </SoftBox>
       </SoftBox>

@@ -1,7 +1,15 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|d:\\summer 2025\\healthmate\\exe201\\healthmate_be\\healthmate\\healthmate.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Admin\\AppData\\Local\\SourceServer\\c827d7a456fc7d1c79a7dc47164d01c5d9b032b0fb040c7c287be9f7bd807c6a\\src\\libraries\\System.Private.CoreLib\\src\\System\\ArgumentNullException.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +17,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,6 +70,29 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{26341fe2-71dd-46fd-bb1b-2e51a92a0d64}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\appsettings.json",
+              "RelativeDocumentMoniker": "HealthMate.API\\appsettings.json",
+              "ToolTip": "D:\\Summer 2025\\HealthMate\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\appsettings.json",
+              "RelativeToolTip": "HealthMate.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-31T08:41:37.353Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ArgumentNullException.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Local\\SourceServer\\c827d7a456fc7d1c79a7dc47164d01c5d9b032b0fb040c7c287be9f7bd807c6a\\src\\libraries\\System.Private.CoreLib\\src\\System\\ArgumentNullException.cs",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Local\\SourceServer\\c827d7a456fc7d1c79a7dc47164d01c5d9b032b0fb040c7c287be9f7bd807c6a\\src\\libraries\\System.Private.CoreLib\\src\\System\\ArgumentNullException.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAqwFYAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-31T08:39:46.152Z"
             }
           ]
         },
