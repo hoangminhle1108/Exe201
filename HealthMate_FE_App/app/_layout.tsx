@@ -53,8 +53,8 @@ function RootLayoutNav() {
       <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
       <Stack.Screen name="(premium)" options={{ headerShown: false }} />
       <Stack.Screen name="(recipe)" options={{ headerShown: false }} />
-      {/* <Stack.Screen name="(blog)" options={{ headerShown: false }} />
-      <Stack.Screen name="(nutrition)" options={{ headerShown: false }} /> */}
+      <Stack.Screen name="(blog)" options={{ headerShown: false }} />
+      <Stack.Screen name="(nutrition)" options={{ headerShown: false }} />
 
       {/* <Stack.Screen
         name="destinations/[id]"

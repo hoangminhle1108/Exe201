@@ -28,7 +28,16 @@ export default function RecipeList() {
                     <ChevronLeft size={24} color={Colors.text} />
                 </TouchableOpacity>
                 <View style={styles.searchBarContainer}>
-                    <SearchBar placeholder="Tìm kiếm công thức theo tên" />
+                    <SearchBar
+                        placeholder="Tìm kiếm công thức theo tên"
+                        onSubmit={(text) => {
+                            if (text.trim()) {
+                                router.push({
+                                    pathname: "/(recipe)/recipeSearch",
+                                    params: { q: text },
+                                });
+                            }
+                        }} />
                 </View>
             </View>
 
@@ -39,7 +48,12 @@ export default function RecipeList() {
                         key={idx}
                         name={label}
                         image="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=200"
-                        onPress={() => console.log(`Pressed ${label}`)}
+                        onPress={() =>
+                            router.push({
+                                pathname: "/(recipe)/recipeCategory",
+                                params: { category: label },
+                            })
+                        }
                     />
                 ))}
             </ScrollView>
@@ -116,7 +130,10 @@ export default function RecipeList() {
                                     <Heart size={12} color={Colors.rating} fill={Colors.rating} />
                                     <Text style={styles.likesText}>{item.likes}</Text>
                                 </View>
-                                <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail`)}>
+                                    <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                </TouchableOpacity>
+
                             </View>
 
                         </View>

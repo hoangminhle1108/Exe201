@@ -5,25 +5,13 @@ export default function StackLayout() {
     return (
         <Stack>
             <Stack.Screen
-                name="recipeList"
+                name="overview"
                 options={{
                     headerShown: false,
                 }}
             />
             <Stack.Screen
-                name="recipeSearch"
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen
-                name="recipeDetail"
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen
-                name="recipeCategory"
+                name="dataInput"
                 options={{
                     headerShown: false,
                 }}

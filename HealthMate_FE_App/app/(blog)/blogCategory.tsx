@@ -4,11 +4,9 @@ import SearchBar from "../components/SearchBar";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
-import { useLocalSearchParams } from "expo-router";
 
-export default function RecipeSearch() {
+export default function BlogCategory() {
     const router = useRouter();
-    const { q } = useLocalSearchParams();
 
     const getTagStyle = (tag: string) => {
         switch (tag.toLowerCase()) {
@@ -21,7 +19,7 @@ export default function RecipeSearch() {
         }
     };
 
-    const foundRecipes = [
+    const foundPosts = [
         {
             title: "Trứng rán mỡ",
             likes: 26,
@@ -47,11 +45,11 @@ export default function RecipeSearch() {
                 </TouchableOpacity>
                 <View style={styles.searchBarContainer}>
                     <SearchBar
-                        placeholder="Tìm kiếm công thức theo tên"
+                        placeholder="Tìm kiếm bài viết theo tên"
                         onSubmit={(text) => {
                             if (text.trim()) {
                                 router.push({
-                                    pathname: "/(recipe)/recipeSearch",
+                                    pathname: "/(blog)/blogSearch",
                                     params: { q: text },
                                 });
                             }
@@ -59,10 +57,10 @@ export default function RecipeSearch() {
                 </View>
             </View>
 
-            <Text style={styles.resultText}>Tìm được {foundRecipes.length} công thức cho "{q}"</Text>
+            <Text style={styles.resultText}>Bộ sưu tập bài viết về giảm cân</Text>
 
             <View style={styles.fullRecipeList}>
-                {foundRecipes.map((item, idx) => (
+                {foundPosts.map((item, idx) => (
                     <View key={idx} style={styles.fullRecipeCard}>
                         <Image source={{ uri: item.image }} style={styles.fullRecipeImage} />
                         <View style={styles.fullRecipeInfo}>
@@ -86,7 +84,7 @@ export default function RecipeSearch() {
                                     <Heart size={12} color={Colors.rating} fill={Colors.rating} />
                                     <Text style={styles.likesText}>{item.likes}</Text>
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail`)}>
+                                <TouchableOpacity onPress={() => router.push(`/(blog)/blogDetail`)}>
                                     <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
                                 </TouchableOpacity>
                             </View>

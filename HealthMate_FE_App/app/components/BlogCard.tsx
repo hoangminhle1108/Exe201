@@ -13,7 +13,7 @@ import { Heart, MapPin, ChevronRight } from "lucide-react-native";
 import { Link } from "expo-router";
 import Colors from "@/constants/colors";
 
-interface PostCardProps {
+interface BlogCardProps {
   id: string;
   name: string;
   location: string;
@@ -22,14 +22,14 @@ interface PostCardProps {
   isLarge?: boolean;
 }
 
-const PostCard = ({
+const BlogCard = ({
   id,
   name,
   location,
   rating,
   image,
   isLarge = false,
-}: PostCardProps) => {
+}: BlogCardProps) => {
   const CardContent = () => (
     <>
       <View
@@ -175,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostCard;
+export default BlogCard;

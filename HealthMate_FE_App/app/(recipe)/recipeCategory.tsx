@@ -4,11 +4,9 @@ import SearchBar from "../components/SearchBar";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
-import { useLocalSearchParams } from "expo-router";
 
-export default function RecipeSearch() {
+export default function RecipeCategory() {
     const router = useRouter();
-    const { q } = useLocalSearchParams();
 
     const getTagStyle = (tag: string) => {
         switch (tag.toLowerCase()) {
@@ -59,7 +57,7 @@ export default function RecipeSearch() {
                 </View>
             </View>
 
-            <Text style={styles.resultText}>Tìm được {foundRecipes.length} công thức cho "{q}"</Text>
+            <Text style={styles.resultText}>Bộ sưu tập công thức về giảm cân</Text>
 
             <View style={styles.fullRecipeList}>
                 {foundRecipes.map((item, idx) => (

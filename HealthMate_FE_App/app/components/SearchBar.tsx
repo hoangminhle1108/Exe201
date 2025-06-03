@@ -8,12 +8,14 @@ interface SearchBarProps {
   placeholder?: string;
   onSearch?: (text: string) => void;
   onFilter?: () => void;
+  onSubmit?: (text: string) => void;
 }
 
 const SearchBar = ({
   placeholder = "Search here...",
   onSearch,
   onFilter,
+  onSubmit,
 }: SearchBarProps) => {
   return (
     <View style={styles.container}>
@@ -24,7 +26,12 @@ const SearchBar = ({
           placeholder={placeholder}
           placeholderTextColor={Colors.textLight}
           onChangeText={onSearch}
+          onSubmitEditing={(e) => {
+            if (onSubmit) onSubmit(e.nativeEvent.text);
+          }}
+          returnKeyType="search"
         />
+
       </View>
       {/* <TouchableOpacity style={styles.filterButton} onPress={onFilter}>
         <Sliders size={20} color={Colors.buttonText} />

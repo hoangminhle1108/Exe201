@@ -14,7 +14,7 @@ import { Crown } from "lucide-react-native";
 import { Feather } from '@expo/vector-icons';
 import SectionHeader from "../components/SectionHeader";
 import FeatureCard from "../components/FeatureCard";
-import PostCard from "../components/PostCard";
+import BlogCard from "../components/BlogCard";
 import { destinations } from "@/constants/destinations";
 import Colors from "@/constants/colors";
 import { Calendar } from "lucide-react-native";
@@ -85,10 +85,11 @@ export default function Home() {
             <View style={[styles.featuresGrid, { paddingTop: 10 }]}>
               <FeatureCard
                 type="post"
-                title="Bài đăng"
+                title="Bài viết"
                 value="50+"
-                updated="bài đăng về sức khỏe"
+                updated="bài viết về sức khỏe"
                 color="#8a9eff"
+                onPress={() => router.replace("/(blog)/blogList")}
               />
               <FeatureCard
                 type="recipe"
@@ -112,6 +113,7 @@ export default function Home() {
                 value="960 calo"
                 updated="cập nhật 13 tiếng trước"
                 color="#f39c6b"
+                onPress={() => router.replace("/(nutrition)/overview")}
               />
             </View>
           </View >
@@ -127,7 +129,7 @@ export default function Home() {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <PostCard
+                  <BlogCard
                     key={item.id}
                     id={item.id}
                     name={item.name}

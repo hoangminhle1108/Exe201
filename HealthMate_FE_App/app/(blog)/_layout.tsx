@@ -22,6 +22,12 @@ export default function StackLayout() {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="blogCategory"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     );
 }
