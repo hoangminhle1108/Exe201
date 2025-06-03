@@ -122,7 +122,10 @@ export default function Home() {
         return (
           <View style={styles.content}>
             <View style={styles.section}>
-              <SectionHeader title="Bài đăng" onViewAll={() => { }} />
+              <SectionHeader
+                title="Bài viết"
+                onViewAll={() => router.replace("/(blog)/blogList")}
+              />
               <FlatList
                 data={destinations.slice(0, 3)}
                 keyExtractor={(item) => item.id}
