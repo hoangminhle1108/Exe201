@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
     },
-    backIcon: { marginBottom: 12 },
+    backIcon: { marginBottom: 15 },
     mainTitle: {
         fontSize: 18,
         fontWeight: "bold",

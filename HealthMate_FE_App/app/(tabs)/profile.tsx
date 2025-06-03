@@ -48,9 +48,13 @@ export default function ProfileScreen() {
                     <Text style={styles.footerLink}>Đăng xuất</Text>
                 </TouchableOpacity>
 
-                <Text style={styles.footerLink}>Đổi mật khẩu</Text>
+                <TouchableOpacity onPress={() => router.replace("/(authentication)/changePassword")}>
+                    <Text style={styles.footerLink}>Đổi mật khẩu</Text>
+                </TouchableOpacity>
 
-                <Text style={styles.deleteLink}>Xoá tài khoản</Text>
+                <TouchableOpacity onPress={() => router.replace("/(deactive)/delete")}>
+                    <Text style={styles.deleteLink}>Xoá tài khoản</Text>
+                </TouchableOpacity>
             </View>
 
         </ScrollView>

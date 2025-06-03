@@ -46,7 +46,7 @@ export default function LoginScreen() {
           <Text style={styles.checkboxLabel}>
             <Text style={{ color: "black" }}>Ghi nhớ tài khoản </Text>
           </Text>
-          <Text onPress={() => { }}>
+          <Text onPress={() => router.push("/(authentication)/forget")}>
             <Text style={styles.forgot}>Quên mật khẩu?</Text>
           </Text>
         </View>
@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     height: 100,
     alignSelf: "center",
     marginBottom: 20,
+    marginTop: -50,
   },
   tabHeader: {
     flexDirection: "row",

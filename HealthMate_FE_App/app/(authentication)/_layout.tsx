@@ -1,61 +1,51 @@
 import React from "react";
-import { Tabs } from "expo-router";
-import { LogIn, UserPlus } from "lucide-react-native";
-import { View } from "react-native";
+import { Stack } from "expo-router";
 
-export default function TabLayout() {
+export default function StackLayout() {
     return (
-        <Tabs
-            screenOptions={{
-                tabBarActiveTintColor: "#72C15F",
-                tabBarInactiveTintColor: "#999",
-                tabBarStyle: {
-                    backgroundColor: "white",
-                    borderTopWidth: 1,
-                    borderTopColor: "#ccc",
-                    height: 60,
-                    paddingBottom: 8,
-                    paddingTop: 3,
-                },
-                tabBarLabelStyle: {
-                    fontWeight: "bold",
-                    fontSize: 13,
-                },
-                headerShown: false,
-            }}
-        >
-            <Tabs.Screen
+        <Stack>
+            <Stack.Screen
                 name="login"
                 options={{
-                    title: "Đăng nhập",
-                    tabBarIcon: ({ color }) => (
-                        <View
-                            style={{
-                                paddingBottom: 8,
-                                paddingTop: 3,
-                            }}
-                        >
-                            <LogIn size={22} color={color} />
-                        </View>
-                    ),
+                    headerShown: false,
                 }}
             />
-            <Tabs.Screen
+            <Stack.Screen
                 name="register"
                 options={{
-                    title: "Đăng ký",
-                    tabBarIcon: ({ color }) => (
-                        <View
-                            style={{
-                                paddingBottom: 8,
-                                paddingTop: 3,
-                            }}
-                        >
-                            <UserPlus size={22} color={color} />
-                        </View>
-                    ),
+                    headerShown: false,
                 }}
             />
-        </Tabs>
+            <Stack.Screen
+                name="tos"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="forget"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="code"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="newPassword"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="changePassword"
+                options={{
+                    headerShown: false,
+                }}
+            />
+        </Stack>
     );
 }

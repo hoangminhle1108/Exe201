@@ -2,23 +2,38 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
+import { PieChart } from "react-native-chart-kit";
 
 export default function OverviewScreen() {
     const router = useRouter();
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
 
     const fat = 80;
     const protein = 160;
     const carbs = 230;
-    const caloriesConsumed = 1960;
+    const fiber = 40;
+    const calo = 1060;
+
+    const total = fat + protein + carbs + fiber + calo;
 
     const nutritionData = [
-        { name: "Chất béo", population: fat, color: "#D9C2FF", legendFontColor: "#000", legendFontSize: 14 },
-        { name: "Protein", population: protein, color: "#FFD4C2", legendFontColor: "#000", legendFontSize: 14 },
-        { name: "Carbohydrate", population: carbs, color: "#FFC2C2", legendFontColor: "#000", legendFontSize: 14 },
-    ];
+        { name: "Chất béo", value: fat, color: "#d9a1ff" },
+        { name: "Chất đạm", value: protein, color: "#ffa1a1" },
+        { name: "Chất xơ", value: fiber, color: "#a1ffca" },
+        { name: "Đường bột", value: carbs, color: "#ffc3a1" },
+        { name: "Calo", value: calo, color: "#a1d0ff" },
+    ].map(item => ({
+        ...item,
+        population: item.value,
+        percentage: ((item.value / total) * 100).toFixed(1),
+        legendFontColor: "#000",
+        legendFontSize: 16,
+    }));
 
-    // Get screen width for chart sizing
-    const screenWidth = Dimensions.get("window").width - 40; // 20 padding each side
 
     return (
         <View style={styles.wrapper}>
@@ -28,12 +43,32 @@ export default function OverviewScreen() {
                 </TouchableOpacity>
 
                 <Text style={styles.mainText}>
-                    Bạn đã nạp vào tổng <Text style={{ color: "#72C15F" }}>{caloriesConsumed} calo</Text> hôm qua
+                    Tổng quan ngày {formattedDate}
                 </Text>
 
                 {/*  CHART */}
+                <PieChart
+                    data={nutritionData.map(item => ({
+                        name: `% ${item.name}`,
+                        population: parseFloat(((item.value / total) * 100).toFixed(1)),
+                        color: item.color,
+                        legendFontColor: "#000",
+                        legendFontSize: 14,
+                    }))}
+                    width={Dimensions.get("window").width - 40}
+                    height={220}
+                    chartConfig={{
+                        color: () => `#000`,
+                    }}
+                    accessor="population"
+                    backgroundColor="transparent"
+                    paddingLeft="15"
+                    center={[0, 0]}
+                    absolute={true}
+                    style={{ marginVertical: 8 }}
+                />
 
-                {/* Custom legend */}
+
                 <View style={styles.breakdown}>
                     {nutritionData.map((item, idx) => (
                         <View key={idx} style={styles.nutritionRow}>
@@ -45,7 +80,6 @@ export default function OverviewScreen() {
                 </View>
             </ScrollView>
 
-            {/* Fixed bottom button */}
             <TouchableOpacity style={styles.inputButton} onPress={() => router.push("/(nutrition)/dataInput")}>
                 <Text style={styles.inputText}>Nhập bữa ăn hôm nay</Text>
             </TouchableOpacity>
@@ -65,7 +99,7 @@ const styles = StyleSheet.create({
     },
     backIcon: {
         alignSelf: "flex-start",
-        marginBottom: 12,
+        marginBottom: 15,
     },
     mainText: {
         fontSize: 18,
@@ -82,12 +116,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingVertical: 6,
+        paddingVertical: 10,
         paddingHorizontal: 8,
         borderWidth: 1,
         borderColor: "#e5e7eb",
         borderRadius: 10,
-        marginBottom: 8,
+        marginBottom: 15,
         height: 50,
     },
     dot: {

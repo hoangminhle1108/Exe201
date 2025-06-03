@@ -45,7 +45,10 @@ export default function RegisterScreen() {
                 </TouchableOpacity>
                 <Text style={styles.checkboxLabel}>
                     <Text style={{ color: "black" }}>Tôi đồng ý với </Text>
-                    <Text style={{ color: "#72C15F", fontWeight: "bold" }}>
+                    <Text
+                        style={{ color: "#72C15F", fontWeight: "bold" }}
+                        onPress={() => router.push("/tos")}
+                    >
                         Điều khoản dịch vụ
                     </Text>
                 </Text>
@@ -94,6 +97,7 @@ const styles = StyleSheet.create({
         height: 100,
         alignSelf: "center",
         marginBottom: 20,
+        marginTop: -50,
     },
     tabHeader: {
         flexDirection: "row",
