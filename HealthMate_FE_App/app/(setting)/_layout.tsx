@@ -16,6 +16,12 @@ export default function StackLayout() {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="helpList"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     );
 }

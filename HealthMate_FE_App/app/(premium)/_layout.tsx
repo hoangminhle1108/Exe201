@@ -16,6 +16,12 @@ export default function StackLayout() {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="success"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     );
 }

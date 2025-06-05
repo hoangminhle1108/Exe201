@@ -14,9 +14,45 @@
         Chatbot.initFull({
             chatflowid: "892b9440-ba88-475c-9a19-f2246e7154bf",
             apiHost: "http://192.168.1.100:3000",
+            chatflowConfig: {
+            },
+            observersConfig: {
+            },
+            theme: {
+                button: {
+                    backgroundColor: "#72C15F",
+                    textColor: "#fff"
+                },
+                chatWindow: {
+                    backgroundColor: "#ffffff",
+                    botMessage: {
+                        backgroundColor: "#f2f2f2",
+                        textColor: "#000"
+                    },
+                    userMessage: {
+                        backgroundColor: "#EBFBE6",
+                        textColor: "#000"
+                    },
+                    footer: {
+                        textColor: '#303235',
+                        text: '',
+                        company: '',
+                    },
+                    textInput: {
+                        placeholder: 'Hỏi bất kỳ điều gì',
+                        backgroundColor: '#ffffff',
+                        textColor: '#303235',
+                        sendButtonColor: '#72C15F',
+                        maxChars: 200,
+                        maxCharsWarningMessage: 'Vượt quá giới hạn ký tự, hãy giảm xuống còn 200 ký tự.',
+                        autoFocus: true,
+                        sendMessageSound: false,
+                        receiveMessageSound: false,
+                    },
+                }
+            }
         })
     </script>
-
 </body>
 
 </html>

@@ -52,7 +52,7 @@ export default function Detail() {
                 </View>
             </ScrollView>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push("/(premium)/success")}>
                 <Text style={styles.buttonText}>Tiến hành thanh toán</Text>
             </TouchableOpacity>
         </View>
