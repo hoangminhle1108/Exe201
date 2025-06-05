@@ -38,7 +38,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chatbot"
         options={{
-          title: "AI trò chuyện",
+          title: "Trò chuyện",
           tabBarIcon: ({ color }) => (
             <View style={{ paddingBottom: 8, paddingTop: 3 }}>
               <MessageCircle size={22} color={color} />

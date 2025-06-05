@@ -15,7 +15,7 @@ const getTagStyle = (tag: string) => {
     }
 };
 
-export default function RecipeDetail() {
+export default function RecipeFavDetail() {
     const router = useRouter();
     const { name = "Quinoa Salad" } = useLocalSearchParams();
     const tags = ["Dinh dưỡng", "Giảm cân"];
@@ -33,7 +33,7 @@ export default function RecipeDetail() {
                         <ChevronLeft size={24} color="#000" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.heartButton}>
-                        <Heart size={24} color="#DE3B40" />
+                        <Heart size={24} color="#DE3B40" fill="#DE3B40" />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -111,6 +111,8 @@ const styles = StyleSheet.create({
         paddingLeft: 4,
         borderRadius: 20,
         elevation: 3,
+        marginTop: 5,
+
     },
     heartButton: {
         backgroundColor: "#fff",

@@ -22,8 +22,8 @@ export default function ProfileScreen() {
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <TouchableOpacity style={styles.editIcon}>
-                <Pencil size={24} color={Colors.text} />
+            <TouchableOpacity style={styles.editIcon} onPress={() => router.replace("/(setting)/editProfile")}>
+                <Pencil size={22} color={Colors.text} />
             </TouchableOpacity>
 
             <Image
@@ -37,10 +37,10 @@ export default function ProfileScreen() {
             <Text style={styles.email}>taylorslauren@hotmail.com</Text>
 
             <View style={styles.cardList}>
-                <OptionCard icon={<CreditCard color="#4E7D28" />} text="Lịch sử thanh toán" />
-                <OptionCard icon={<Bookmark color="#4E7D28" />} text="Bài viết yêu thích" />
-                <OptionCard icon={<Timer color="#4E7D28" />} text="Công thức yêu thích" />
-                <OptionCard icon={<Headset color="#4E7D28" />} text="Trung tâm trợ giúp" />
+                <OptionCard icon={<CreditCard color="#4E7D28" />} text="Lịch sử thanh toán" route="/(setting)/payHistory" />
+                <OptionCard icon={<Bookmark color="#4E7D28" />} text="Bài viết yêu thích" route="/(favorite)/favBlog" />
+                <OptionCard icon={<Timer color="#4E7D28" />} text="Công thức yêu thích" route="/(favorite)/favRecipe" />
+                <OptionCard icon={<Headset color="#4E7D28" />} text="Trung tâm trợ giúp" route="/(setting)/helpList" />
             </View>
 
             <View style={styles.footer}>
@@ -61,9 +61,19 @@ export default function ProfileScreen() {
     );
 }
 
-function OptionCard({ icon, text }: { icon: React.ReactNode; text: string }) {
+function OptionCard({
+    icon,
+    text,
+    route,
+}: {
+    icon: React.ReactNode;
+    text: string;
+    route: string;
+}) {
+    const router = useRouter();
+
     return (
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => router.replace(route)}>
             <View style={styles.iconBox}>{icon}</View>
             <Text style={styles.cardText}>{text}</Text>
             <Text style={styles.chevron}>{">"}</Text>

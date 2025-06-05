@@ -22,26 +22,23 @@ export default function BlogDetail() {
 
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-            {/* Image Header */}
             <View style={styles.imageContainer}>
                 <Image
                     source={{ uri: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200" }}
                     style={styles.image}
                 />
 
-                {/* Back & Heart Icons */}
                 <View style={styles.headerIcons}>
                     <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                         <ChevronLeft size={24} color="#000" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.heartButton}>
-                        <Heart size={24} color="#000" />
+                        <Heart size={24} color="#DE3B40" />
                     </TouchableOpacity>
                 </View>
             </View>
 
             <View style={styles.infoContainer}>
-                {/* Tags */}
                 <View style={styles.tagsContainer}>
                     {tags.map((tag, index) => (
                         <View key={index} style={[styles.tag, { backgroundColor: getTagStyle(tag).backgroundColor }]}>
@@ -50,10 +47,8 @@ export default function BlogDetail() {
                     ))}
                 </View>
 
-                {/* Title */}
                 <Text style={styles.title}>{name}</Text>
 
-                {/* Article Content */}
                 <Text style={styles.sectionTitle}>Giới thiệu</Text>
                 <Text style={styles.description}>
                     Giảm cân tại nhà không còn là điều khó khăn nếu bạn có kiến thức đúng và một kế hoạch hợp lý. Bài viết này sẽ

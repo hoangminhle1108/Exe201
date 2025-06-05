@@ -20,6 +20,7 @@ import Colors from "@/constants/colors";
 import { Calendar } from "lucide-react-native";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+
 dayjs.locale("vi");
 
 

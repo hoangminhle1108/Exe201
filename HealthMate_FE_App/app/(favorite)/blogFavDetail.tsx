@@ -15,9 +15,9 @@ const getTagStyle = (tag: string) => {
     }
 };
 
-export default function RecipeDetail() {
+export default function BlogFavDetail() {
     const router = useRouter();
-    const { name = "Quinoa Salad" } = useLocalSearchParams();
+    const { name = "Cách giảm cân tại nhà cấp tốc" } = useLocalSearchParams();
     const tags = ["Dinh dưỡng", "Giảm cân"];
 
     return (
@@ -33,7 +33,7 @@ export default function RecipeDetail() {
                         <ChevronLeft size={24} color="#000" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.heartButton}>
-                        <Heart size={24} color="#DE3B40" />
+                        <Heart size={24} color="#DE3B40" fill="#DE3B40" />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -49,34 +49,46 @@ export default function RecipeDetail() {
 
                 <Text style={styles.title}>{name}</Text>
 
-                <Text style={styles.sectionTitle}>Description</Text>
+                <Text style={styles.sectionTitle}>Giới thiệu</Text>
                 <Text style={styles.description}>
-                    Quinoa salad is a healthy mix of cooked quinoa, fresh veggies, and a zesty lemon dressing...
+                    Giảm cân tại nhà không còn là điều khó khăn nếu bạn có kiến thức đúng và một kế hoạch hợp lý. Bài viết này sẽ
+                    chia sẻ với bạn 10 cách đơn giản nhưng hiệu quả để giảm cân ngay tại nhà mà không cần đến phòng tập.
                 </Text>
+
                 <View style={styles.divider} />
 
-                <Text style={styles.sectionTitle}>Ingredients</Text>
-                {[
-                    ["Quinoa (cooked)", "1 cup"],
-                    ["Cucumber (diced)", "1 piece"],
-                    ["Tomato (chopped)", "1 piece"],
-                    ["Bell pepper (chopped)", "1 piece"],
-                    ["Red onion (finely chopped)", "1/4 cup"],
-                    ["Feta Cheese (crumbled)", "1/4 cup"],
-                    ["Olive oil (extra virgin)", "2 tbsp"],
-                ].map(([ingredient, quantity], idx) => (
-                    <View key={idx} style={styles.ingredientRow}>
-                        <Text style={styles.ingredientName}>{ingredient}</Text>
-                        <Text style={styles.ingredientQty}>{quantity}</Text>
-                    </View>
-                ))}
-                <View style={styles.divider} />
-
-                <Text style={styles.sectionTitle}>Instructions</Text>
+                <Text style={styles.sectionTitle}>1. Ăn uống khoa học</Text>
                 <Text style={styles.description}>
-                    Cook the quinoa: Rinse 1 cup of quinoa under cold water, then cook according to package instructions. Let it cool...
+                    Hạn chế đồ ăn nhanh, thực phẩm nhiều dầu mỡ và thay vào đó là các món hấp, luộc và rau củ. Uống đủ nước và ăn
+                    đúng bữa cũng là yếu tố quan trọng.
+                </Text>
+
+                <Text style={styles.sectionTitle}>2. Tập thể dục thường xuyên</Text>
+                <Text style={styles.description}>
+                    Bạn không cần tập nặng, chỉ cần đi bộ 30 phút mỗi ngày, nhảy dây hoặc tập các bài cardio đơn giản ngay trong
+                    phòng khách cũng đủ giúp đốt cháy calo hiệu quả.
+                </Text>
+
+                <Text style={styles.sectionTitle}>3. Ngủ đủ giấc</Text>
+                <Text style={styles.description}>
+                    Giấc ngủ ảnh hưởng lớn đến quá trình trao đổi chất. Thiếu ngủ khiến cơ thể mệt mỏi và dễ tăng cân hơn.
+                </Text>
+
+                <Text style={styles.sectionTitle}>4. Giảm căng thẳng</Text>
+                <Text style={styles.description}>
+                    Stress làm tăng hormone cortisol, khiến bạn thèm ăn và tích mỡ bụng. Hãy thử thiền, yoga hoặc đơn giản là dành
+                    thời gian cho bản thân.
+                </Text>
+
+                <View style={styles.divider} />
+
+                <Text style={styles.sectionTitle}>Kết luận</Text>
+                <Text style={styles.description}>
+                    Giảm cân tại nhà không quá khó nếu bạn duy trì được thói quen tốt mỗi ngày. Hãy bắt đầu từ những thay đổi nhỏ
+                    và kiên trì để đạt được mục tiêu sức khỏe của mình.
                 </Text>
             </View>
+
         </ScrollView>
     );
 }
@@ -111,6 +123,7 @@ const styles = StyleSheet.create({
         paddingLeft: 4,
         borderRadius: 20,
         elevation: 3,
+        marginTop: 5,
     },
     heartButton: {
         backgroundColor: "#fff",
