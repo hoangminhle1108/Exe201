@@ -62,7 +62,7 @@ export default function CodeScreen() {
                 ))}
             </View>
 
-            <Text style={styles.timerText}>Mã hết hạn trong vòng 10:50</Text>
+            {/* <Text style={styles.timerText}>Mã hết hạn trong vòng 10:50</Text> */}
             <TouchableOpacity onPress={handleResend}>
                 <Text style={styles.resendText}>Gửi lại mã</Text>
             </TouchableOpacity>
