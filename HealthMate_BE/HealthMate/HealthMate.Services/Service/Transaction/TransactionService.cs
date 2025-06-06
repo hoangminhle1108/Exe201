@@ -1,7 +1,10 @@
 using HealthMate.Repository.DTOs.Transaction;
 using HealthMate.Repository.Interface.Transaction;
 using HealthMate.Repository.Interface.User;
+using HealthMate.Services.Helpers;
 using HealthMate.Services.Interface.Transaction;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +17,13 @@ namespace HealthMate.Services.Service.Transaction
         private readonly ITransactionRepository _repo;
         private readonly IUserRepository _userRepo;
         private readonly Random _random = new Random();
+        private readonly IConfiguration _configuration;
 
-        public TransactionService(ITransactionRepository repo, IUserRepository userRepo)
+        public TransactionService(ITransactionRepository repo, IUserRepository userRepo, IConfiguration configuration)
         {
             _repo = repo;
             _userRepo = userRepo;
+            _configuration = configuration;
         }
 
         public async Task<List<TransactionDTO>> GetAllByUserIdAsync(int userId)
@@ -125,5 +130,30 @@ namespace HealthMate.Services.Service.Transaction
             // Generate a unique transaction code (e.g., TRX-2024-XXXXX)
             return $"TRX-{DateTime.UtcNow:yyyy}-{_random.Next(10000, 99999)}";
         }
+
+        public async Task<string> CreateVNPayPaymentUrl(TransactionDTO transaction, HttpContext httpContext)
+        {
+            var vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+            var returnUrl = "https://yourdomain.com/api/payment/vnpay-return";
+            var tmnCode = _configuration["VNPay:TmnCode"];
+            var hashSecret = _configuration["VNPay:HashSecret"];
+
+            var vnPay = new VnPayLibrary();
+            vnPay.AddRequestData("vnp_Version", "2.1.0");
+            vnPay.AddRequestData("vnp_Command", "pay");
+            vnPay.AddRequestData("vnp_TmnCode", tmnCode);
+            vnPay.AddRequestData("vnp_Amount", ((int)(transaction.Amount * 100)).ToString());
+            vnPay.AddRequestData("vnp_CreateDate", DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
+            vnPay.AddRequestData("vnp_CurrCode", "VND");
+            vnPay.AddRequestData("vnp_IpAddr", httpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1");
+            vnPay.AddRequestData("vnp_Locale", "vn");
+            vnPay.AddRequestData("vnp_OrderInfo", $"Payment for transaction {transaction.TransactionCode}");
+            vnPay.AddRequestData("vnp_OrderType", "other");
+            vnPay.AddRequestData("vnp_ReturnUrl", returnUrl);
+            vnPay.AddRequestData("vnp_TxnRef", transaction.TransactionCode);
+
+            return vnPay.CreateRequestUrl(vnp_Url, hashSecret);
+        }
+
     }
 } 
