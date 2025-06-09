@@ -23,10 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Using HTTPS for teting local
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(7015, listenOptions =>
-    {
-        listenOptions.UseHttps(); 
-    });
+    options.ListenAnyIP(8080);
 });
 
 // Add services to the container.
@@ -134,14 +131,13 @@ builder.Services.AddDistributedMemoryCache();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
-app.UseHttpsRedirection();
-
+// app.UseHttpsRedirection();
 // Use CORS
 app.UseCors("AllowAll");
 app.UseSession();
