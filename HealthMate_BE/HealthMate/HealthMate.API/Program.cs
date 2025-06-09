@@ -23,10 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Using HTTPS for teting local
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(7015, listenOptions =>
-    {
-        listenOptions.UseHttps(); 
-    });
+    options.ListenAnyIP(8080);
 });
 
 // Add services to the container.
@@ -140,8 +137,7 @@ var app = builder.Build();
     app.UseSwaggerUI();
 //}
 
-app.UseHttpsRedirection();
-
+// app.UseHttpsRedirection();
 // Use CORS
 app.UseCors("AllowAll");
 app.UseSession();
