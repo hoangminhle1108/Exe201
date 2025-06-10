@@ -57,3 +57,5 @@ nunit-*.xml
 .vs/
 /HealthMate_BE/HealthMate/HealthMate.API/appsettings.json
 /HealthMate_BE/HealthMate/HealthMate.API/appsettings.json
+HealthMate_BE/HealthMate/.vs/HealthMate/CopilotIndices/17.13.444.19527/SemanticSymbols.db
+*.db
