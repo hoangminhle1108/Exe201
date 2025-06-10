@@ -18,5 +18,6 @@ namespace HealthMate.Services.Interface.User
         Task<List<Repository.DTOs.UserDTO.UserDTO>> GetAllUsersWithNameAsync(string fullName);
         Task<Repository.DTOs.UserDTO.UserDTO> UpdateUserAsync(UserUpdateDTO updatedUser);
         Task<bool> DeleteUserAsync(int userId);
+        Task<Repository.DTOs.UserDTO.UserDTO> UpdateUserStatusAsync(int userId, bool isActive);
     }
 }

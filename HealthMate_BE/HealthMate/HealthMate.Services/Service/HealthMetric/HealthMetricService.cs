@@ -45,7 +45,7 @@ namespace HealthMate.Services.Service.HealthMetric
                 throw new ArgumentException("Metric date cannot be in the future", nameof(request.MetricDate));
             }
 
-            // Try to get existing metric for this user and date
+            // Try to get existing metric for this user and     date
             var existingMetric = await _repo.GetByUserIdAndDateAsync(userId, request.MetricDate);
 
             if (existingMetric != null)

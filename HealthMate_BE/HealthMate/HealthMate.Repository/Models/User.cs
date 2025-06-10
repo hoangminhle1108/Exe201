@@ -31,7 +31,13 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
+    public string? ResetPasswordToken { get; set; }
+
+    public DateTime? ResetPasswordTokenExpiry { get; set; }
+
     public virtual ICollection<HealthMetric> HealthMetrics { get; set; } = new List<HealthMetric>();
+
+    public virtual ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
 
     public virtual Role Role { get; set; } = null!;
 

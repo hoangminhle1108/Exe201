@@ -2,6 +2,7 @@
 using HealthMate.Services.Interface.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HealthMate.API.Controllers.User
 {
@@ -119,6 +120,29 @@ namespace HealthMate.API.Controllers.User
                     return Ok(new { message = "User deleted successfully" });
                 }
                 return NotFound(new { message = "User not found" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("update_user_status/{userId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUserStatus(int userId, [FromBody] bool isActive)
+        {
+            try
+            {
+                var user = await _userService.UpdateUserStatusAsync(userId, isActive);
+                return Ok(user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
