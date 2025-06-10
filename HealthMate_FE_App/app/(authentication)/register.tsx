@@ -6,32 +6,135 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
+    Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { API_URL } from "@env";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { CalendarDays } from "lucide-react-native";
+import { Eye, EyeOff } from "lucide-react-native";
 
 export default function RegisterScreen() {
     const router = useRouter();
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const [agree, setAgree] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    const handleRegister = () => {
-        router.push("/(authentication)/login");
+    const isOver13 = (dob: Date) => {
+        const today = new Date();
+        const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+        return dob <= minDate;
+    };
+
+
+    const handleRegister = async () => {
+        if (!fullName || !email || !password) {
+            Alert.alert("Thông báo", "Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+
+        if (password.length < 6) {
+            Alert.alert("Thông báo", "Mật khẩu phải có ít nhất 6 ký tự.");
+            return;
+        }
+
+        if (!isOver13(dateOfBirth)) {
+            Alert.alert("Thông báo", "Bạn phải đủ 13 tuổi trở lên để sử dụng ứng dụng này.");
+            return;
+        }
+
+        if (!agree) {
+            Alert.alert("Thông báo", "Bạn phải đồng ý với điều khoản dịch vụ để sử dụng ứng dụng này.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/Auth/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    fullName,
+                    email,
+                    password,
+                    dateOfBirth: dateOfBirth.toISOString().split("T")[0],
+                    acceptTerms: agree,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (data.message?.includes("already exists")) {
+                    Alert.alert("Thông báo", "Email đã đăng ký tài khoản, hãy đăng nhập bằng email này hoặc dùng email khác để đăng ký.");
+                } else {
+                    Alert.alert("Thông báo", data.message || "Có lỗi xảy ra.");
+                }
+                return;
+            }
+
+            Alert.alert("Thông báo", "Đăng ký tài khoản thành công!");
+            router.push("/(authentication)/login");
+        } catch (error) {
+            Alert.alert("Lỗi", "Không thể kết nối đến máy chủ.");
+        }
     };
 
     return (
         <View style={styles.container}>
-            <Image
-                source={require("@/assets/logo.png")}
-                style={styles.logo}
-                resizeMode="contain"
-            />
+            <Image source={require("@/assets/logo.png")} style={styles.logo} resizeMode="contain" />
+
             <View style={styles.tabHeader}>
                 <Text style={styles.tab}>Đăng nhập</Text>
                 <Text style={[styles.tab, styles.activeTab]}>Đăng ký</Text>
             </View>
 
-            <TextInput style={styles.input} placeholder="Họ và tên" />
-            <TextInput style={styles.input} placeholder="Email" />
-            <TextInput style={styles.input} placeholder="Mật khẩu" secureTextEntry />
+            <TextInput style={styles.input} placeholder="Họ và tên" value={fullName} onChangeText={setFullName} />
+            <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} />
+
+            <View style={{ position: "relative" }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Mật khẩu"
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                />
+                <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={{ position: "absolute", right: 12, top: 14 }}
+                >
+                    {showPassword ? <EyeOff size={20} color="#666" /> : <Eye size={20} color="#666" />}
+                </TouchableOpacity>
+            </View>
+
+            <View style={{ position: "relative" }}>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)} style={[styles.input, { justifyContent: "space-between", flexDirection: "row", alignItems: "center" }]}>
+                    <Text style={{ color: "#000" }}>
+                        {`${dateOfBirth.getDate().toString().padStart(2, "0")}/${(dateOfBirth.getMonth() + 1).toString().padStart(2, "0")}/${dateOfBirth.getFullYear()}`}
+                    </Text>
+                    <CalendarDays color="#666" size={20} />
+                </TouchableOpacity>
+            </View>
+            {showDatePicker && (
+                <DateTimePicker
+                    value={dateOfBirth}
+                    mode="date"
+                    display="default"
+                    maximumDate={new Date()}
+                    onChange={(event, selectedDate) => {
+                        setShowDatePicker(false);
+                        if (selectedDate) {
+                            setDateOfBirth(selectedDate);
+                        }
+                    }}
+                />
+            )}
 
             <View style={styles.checkboxContainer}>
                 <TouchableOpacity
@@ -45,15 +148,11 @@ export default function RegisterScreen() {
                 </TouchableOpacity>
                 <Text style={styles.checkboxLabel}>
                     <Text style={{ color: "black" }}>Tôi đồng ý với </Text>
-                    <Text
-                        style={{ color: "#72C15F", fontWeight: "bold" }}
-                        onPress={() => router.push("/tos")}
-                    >
+                    <Text style={{ color: "#72C15F", fontWeight: "bold" }} onPress={() => router.push("/tos")}>
                         Điều khoản dịch vụ
                     </Text>
                 </Text>
             </View>
-
 
             <TouchableOpacity style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Đăng ký</Text>
@@ -61,22 +160,22 @@ export default function RegisterScreen() {
 
             <Text style={styles.loginLink}>
                 <Text style={{ color: "black" }}>Đã có tài khoản? </Text>
-                <Text
-                    style={{ color: "#72C15F", fontWeight: "bold" }}
-                    onPress={() => router.push("/(authentication)/login")}
-                >
+                <Text style={{ color: "#72C15F", fontWeight: "bold" }} onPress={() => router.push("/(authentication)/login")}>
                     Đăng nhập
                 </Text>
             </Text>
+
             <View style={styles.orContainer}>
                 <View style={styles.line} />
                 <Text style={styles.orText}>HOẶC</Text>
                 <View style={styles.line} />
             </View>
 
-            <TouchableOpacity style={styles.googleButton} onPress={() => { /* Handle Google login */ }}>
+            <TouchableOpacity style={styles.googleButton} onPress={() => { }}>
                 <Image
-                    source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/800px-Google_%22G%22_logo.svg.png" }}
+                    source={{
+                        uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/800px-Google_%22G%22_logo.svg.png",
+                    }}
                     style={styles.googleIcon}
                 />
                 <Text style={styles.googleButtonText}>Đăng nhập bằng Google</Text>
@@ -84,6 +183,7 @@ export default function RegisterScreen() {
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

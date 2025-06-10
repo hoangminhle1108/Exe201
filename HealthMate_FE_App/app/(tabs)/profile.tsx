@@ -16,6 +16,7 @@ import {
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfileScreen() {
     const router = useRouter();
@@ -44,7 +45,16 @@ export default function ProfileScreen() {
             </View>
 
             <View style={styles.footer}>
-                <TouchableOpacity onPress={() => router.replace("/(authentication)/login")}>
+                <TouchableOpacity
+                    onPress={async () => {
+                        const agree = await AsyncStorage.getItem("agree");
+                        if (agree !== "true") {
+                            await AsyncStorage.removeItem("email");
+                            await AsyncStorage.removeItem("password");
+                        }
+                        router.replace("/(authentication)/login");
+                    }}
+                >
                     <Text style={styles.footerLink}>Đăng xuất</Text>
                 </TouchableOpacity>
 

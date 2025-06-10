@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,15 +6,74 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Eye, EyeOff } from "lucide-react-native";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    router.replace("/(tabs)/home");
+
+  useEffect(() => {
+    const loadRememberedData = async () => {
+      const savedEmail = await AsyncStorage.getItem("email");
+      const savedPassword = await AsyncStorage.getItem("password");
+      const savedAgree = await AsyncStorage.getItem("agree");
+
+      if (savedEmail && savedPassword && savedAgree === "true") {
+        setEmail(savedEmail);
+        setPassword(savedPassword);
+        setAgree(true);
+      }
+    };
+
+    loadRememberedData();
+  }, []);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Thông báo", "Vui lòng nhập đầy đủ thông tin.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/Auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (agree) {
+        await AsyncStorage.setItem("email", email);
+        await AsyncStorage.setItem("password", password);
+        await AsyncStorage.setItem("agree", "true");
+      } else {
+        await AsyncStorage.removeItem("email");
+        await AsyncStorage.removeItem("password");
+        await AsyncStorage.setItem("agree", "false");
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Đăng nhập thất bại");
+      }
+
+      const data = await response.json();
+      // await AsyncStorage.setItem("token", data.token);
+
+      router.replace("/(tabs)/home");
+    } catch (error: any) {
+      Alert.alert("Thông báo", error.message || "Có lỗi xảy ra.");
+    }
   };
 
   return (
@@ -29,8 +88,32 @@ export default function LoginScreen() {
         <Text style={styles.tab}>Đăng ký</Text>
       </View>
 
-      <TextInput style={styles.input} placeholder="Email" />
-      <TextInput style={styles.input} placeholder="Mật khẩu" secureTextEntry />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <View style={{ position: "relative" }}>
+        <TextInput
+          style={styles.input}
+          placeholder="Mật khẩu"
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)}
+          style={{ position: "absolute", right: 12, top: 14 }}
+        >
+          {showPassword ? (
+            <EyeOff size={20} color="#666" />
+          ) : (
+            <Eye size={20} color="#666" />
+          )}
+        </TouchableOpacity>
+      </View>
+
 
       <View style={styles.rowBetween}>
         <View style={styles.checkboxContainer}>
@@ -38,7 +121,10 @@ export default function LoginScreen() {
             onPress={() => setAgree(!agree)}
             style={[
               styles.checkbox,
-              { backgroundColor: agree ? "#72C15F" : "transparent", borderColor: agree ? "#72C15F" : "#ccc" },
+              {
+                backgroundColor: agree ? "#72C15F" : "transparent",
+                borderColor: agree ? "#72C15F" : "#ccc",
+              },
             ]}
           >
             {agree && <Text style={styles.checkmark}>✓</Text>}
@@ -51,7 +137,6 @@ export default function LoginScreen() {
           </Text>
         </View>
       </View>
-
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Đăng nhập</Text>
@@ -73,14 +158,20 @@ export default function LoginScreen() {
         <View style={styles.line} />
       </View>
 
-      <TouchableOpacity style={styles.googleButton} onPress={() => { /* Handle Google login */ }}>
+      <TouchableOpacity
+        style={styles.googleButton}
+        onPress={() => {
+          // Handle Google login
+        }}
+      >
         <Image
-          source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/800px-Google_%22G%22_logo.svg.png" }}
+          source={{
+            uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/800px-Google_%22G%22_logo.svg.png",
+          }}
           style={styles.googleIcon}
         />
         <Text style={styles.googleButtonText}>Đăng nhập bằng Google</Text>
       </TouchableOpacity>
-
     </View>
   );
 }
