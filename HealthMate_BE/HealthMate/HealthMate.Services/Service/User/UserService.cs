@@ -210,5 +210,42 @@ namespace HealthMate.Services.Service.User
                 throw new InvalidOperationException($"Failed to update user with ID {updatedUser.UserId}: {ex.Message}", ex);
             }
         }
+
+        public async Task<Repository.DTOs.UserDTO.UserDTO> UpdateUserStatusAsync(int userId, bool isActive)
+        {
+            if (userId <= 0)
+            {
+                throw new ArgumentException("User ID must be a positive integer.", nameof(userId));
+            }
+
+            var existingUser = await _userRepository.GetByIdAsync(userId);
+            if (existingUser == null)
+            {
+                throw new InvalidOperationException($"User with ID {userId} not found.");
+            }
+
+            existingUser.IsActive = isActive;
+            existingUser.UpdatedAt = DateTime.UtcNow;
+
+            try
+            {
+                Repository.Models.User user = await _userRepository.UpdateUserAsync(existingUser);
+                return new Repository.DTOs.UserDTO.UserDTO
+                {
+                    UserId = user.UserId,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    AvatarUrl = user.AvatarUrl,
+                    DateOfBirth = user.DateOfBirth,
+                    RoleId = user.RoleId,
+                    IsActive = user.IsActive,
+                    PremiumExpiry = user.PremiumExpiry
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to update user status with ID {userId}: {ex.Message}", ex);
+            }
+        }
     }
 }
