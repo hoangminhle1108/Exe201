@@ -38,6 +38,8 @@ CREATE TABLE [User] (
     IsActive        BIT NOT NULL DEFAULT 1,
     CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
     UpdatedAt       DATETIME NULL,
+    ResetPasswordToken NVARCHAR(255) NULL,           -- Token để reset password
+    ResetPasswordTokenExpiry DATETIME NULL,          -- Thời gian hết hạn của token
     FOREIGN KEY(RoleId) REFERENCES Role(RoleId)
 );
 GO
@@ -75,6 +77,16 @@ CREATE TABLE [Transaction] (
 );
 GO
 
+-- Bảng Tag (Thẻ cho bài viết)
+CREATE TABLE Tag (
+    TagId          INT IDENTITY PRIMARY KEY,
+    TagName        NVARCHAR(50) NOT NULL UNIQUE,
+    Description    NVARCHAR(200) NULL,
+    CreatedAt      DATETIME NOT NULL DEFAULT GETDATE(),
+    UpdatedAt      DATETIME NULL
+);
+GO
+
 -- Bảng Article
 CREATE TABLE Article (
     ArticleId    INT IDENTITY PRIMARY KEY,
@@ -83,6 +95,17 @@ CREATE TABLE Article (
     Author       NVARCHAR(100)    NULL,
     PublishedAt  DATETIME   NOT NULL DEFAULT GETDATE(),
     UpdatedAt    DATETIME   NULL
+);
+GO
+
+-- Bảng ArticleTagMapping (Mapping giữa Article và Tag)
+CREATE TABLE ArticleTagMapping (
+    ArticleId      INT NOT NULL,
+    TagId          INT NOT NULL,
+    CreatedAt      DATETIME NOT NULL DEFAULT GETDATE(),
+    PRIMARY KEY (ArticleId, TagId),
+    FOREIGN KEY(ArticleId) REFERENCES Article(ArticleId) ON DELETE CASCADE,
+    FOREIGN KEY(TagId) REFERENCES Tag(TagId) ON DELETE CASCADE
 );
 GO
 
@@ -100,6 +123,60 @@ CREATE TABLE HealthMetric (
 );
 GO
 
+-- Bảng Recipe (Công thức món ăn)
+CREATE TABLE Recipe (
+    RecipeId        INT IDENTITY PRIMARY KEY,
+    Title           NVARCHAR(200) NOT NULL,
+    Description     NVARCHAR(500) NULL,
+    Ingredients     NTEXT NOT NULL,          -- Danh sách nguyên liệu
+    Instructions    NTEXT NOT NULL,          -- Hướng dẫn nấu
+    CookingTime     INT NOT NULL,            -- Thời gian nấu (phút)
+    Servings        INT NOT NULL,            -- Số phần ăn
+    Calories        INT NULL,                -- Calories mỗi phần
+    Difficulty      NVARCHAR(50) NOT NULL,   -- Dễ, Trung bình, Khó
+    ImageUrl        NVARCHAR(255) NULL,      -- URL hình ảnh món ăn
+    IsPremium       BIT NOT NULL DEFAULT 0,  -- true nếu là công thức premium
+    CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
+    UpdatedAt       DATETIME NULL,
+    CreatedBy       INT NOT NULL,            -- User tạo công thức
+    FOREIGN KEY(CreatedBy) REFERENCES [User](UserId)
+);
+GO
+
+-- Bảng RecipeCategory (Danh mục công thức)
+CREATE TABLE RecipeCategory (
+    CategoryId      INT IDENTITY PRIMARY KEY,
+    CategoryName    NVARCHAR(100) NOT NULL UNIQUE,
+    Description     NVARCHAR(500) NULL
+);
+GO
+
+-- Bảng RecipeCategoryMapping (Mapping giữa Recipe và Category)
+CREATE TABLE RecipeCategoryMapping (
+    RecipeId        INT NOT NULL,
+    CategoryId      INT NOT NULL,
+    PRIMARY KEY (RecipeId, CategoryId),
+    FOREIGN KEY(RecipeId) REFERENCES Recipe(RecipeId),
+    FOREIGN KEY(CategoryId) REFERENCES RecipeCategory(CategoryId)
+);
+GO
+
+-- Bảng Banner
+CREATE TABLE Banner (
+    BannerId        INT IDENTITY PRIMARY KEY,
+    Title           NVARCHAR(200) NOT NULL,
+    Description     NVARCHAR(500) NULL,
+    ImageUrl        NVARCHAR(255) NOT NULL,
+    LinkUrl         NVARCHAR(255) NULL,      -- URL khi click vào banner
+    StartDate       DATETIME NOT NULL,        -- Ngày bắt đầu hiển thị
+    EndDate         DATETIME NOT NULL,        -- Ngày kết thúc hiển thị
+    IsActive        BIT NOT NULL DEFAULT 1,   -- Trạng thái hiển thị
+    DisplayOrder    INT NOT NULL DEFAULT 0,   -- Thứ tự hiển thị
+    CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
+    UpdatedAt       DATETIME NULL
+);
+GO
+
 -- =======================
 -- Dữ liệu mẫu (Mock Data)
 -- =======================
@@ -111,13 +188,13 @@ INSERT INTO Role (RoleName) VALUES
     ('Admin');
 GO
 
--- User (mật khẩu mock = '12345')
+-- User (mật khẩu đã được hash = '12345')
 INSERT INTO [User] 
     (Email, PasswordHash, FullName, AvatarUrl, DateOfBirth, IsGoogle, RoleId, TermsAcceptedAt, PremiumExpiry, CreatedAt)
 VALUES
-    ('user1@example.com', '12345', N'Nguyễn Văn A', NULL, '1995-04-10', 0, 1, '2024-01-01 09:00:00', NULL, '2024-01-01 09:00:00'),
-    ('user2@example.com', '12345', N'Trần Thị B', NULL, '1990-08-15', 1, 2, '2024-02-01 08:30:00', '2024-08-01 00:00:00', '2024-02-01 08:30:00'),
-    ('admin@example.com',  '12345', 'Admin C', NULL, '1985-01-01', 0, 3, '2024-03-01 10:00:00', NULL, '2024-03-01 10:00:00');
+    ('user1@example.com', '$2y$10$H73au2Slk45SoaqFUH5zMOEG4ZFiVtEoXV1Gp2xUzqIhd1OLmzq3e', N'Nguyễn Văn A', NULL, '1995-04-10', 0, 1, '2024-01-01 09:00:00', NULL, '2024-01-01 09:00:00'),
+    ('user2@example.com', '$2y$10$H73au2Slk45SoaqFUH5zMOEG4ZFiVtEoXV1Gp2xUzqIhd1OLmzq3e', N'Trần Thị B', NULL, '1990-08-15', 1, 2, '2024-02-01 08:30:00', '2024-08-01 00:00:00', '2024-02-01 08:30:00'),
+    ('admin@example.com', '$2y$10$H73au2Slk45SoaqFUH5zMOEG4ZFiVtEoXV1Gp2xUzqIhd1OLmzq3e', 'Admin C', NULL, '1985-01-01', 0, 3, '2024-03-01 10:00:00', NULL, '2024-03-01 10:00:00');
 GO
 
 -- PremiumPackage
@@ -130,7 +207,7 @@ GO
 INSERT INTO PaymentMethod (MethodName) VALUES 
     ('Banking'),
     ('MoMo'),
-    ('Banking');
+    ('VNPay');
 GO
 
 -- Transaction
@@ -141,10 +218,52 @@ VALUES
     (2, 2, 2, 'TXN002', 249000, 'Pending', '2024-03-01 09:00:00');
 GO
 
+-- Tag (data mẫu)
+INSERT INTO Tag (TagName, Description) VALUES
+    (N'Dinh dưỡng', N'Các bài viết về dinh dưỡng và chế độ ăn'),
+    (N'Giảm cân', N'Các bài viết về phương pháp giảm cân'),
+    (N'Tăng cân', N'Các bài viết về phương pháp tăng cân'),
+    (N'Thể dục', N'Các bài viết về tập luyện và thể dục'),
+    (N'Sức khỏe', N'Các bài viết về sức khỏe tổng quát'),
+    (N'Yoga', N'Các bài viết về yoga và thiền'),
+    (N'Ăn chay', N'Các bài viết về chế độ ăn chay'),
+    (N'Ăn kiêng', N'Các bài viết về chế độ ăn kiêng');
+GO
+
 -- Article (data mẫu)
 INSERT INTO Article (Title, Content, Author, PublishedAt) VALUES
     (N'5 Mẹo Dinh Dưỡng', N'Bạn nên ăn đủ rau xanh và...', N'Dr. Lê Thị X', '2024-04-01 10:00:00'),
-    (N'Lợi Ích Tập Yoga',   N'Yoga giúp cải thiện độ dẻo...',   N'PT Nguyễn Văn Y', '2024-05-01 14:30:00');
+    (N'Lợi Ích Tập Yoga', N'Yoga giúp cải thiện độ dẻo...', N'PT Nguyễn Văn Y', '2024-05-01 14:30:00'),
+    (N'Chế Độ Ăn Giảm Cân Khoa Học', N'Các nguyên tắc cơ bản trong chế độ ăn giảm cân...', N'Dr. Trần Văn Z', '2024-05-15 09:00:00'),
+    (N'Lợi Ích Của Việc Ăn Chay', N'Ăn chay không chỉ tốt cho sức khỏe mà còn...', N'Dr. Nguyễn Thị A', '2024-05-20 11:00:00'),
+    (N'Các Bài Tập Yoga Cho Người Mới Bắt Đầu', N'Hướng dẫn chi tiết các tư thế yoga cơ bản...', N'PT Lê Văn B', '2024-05-25 15:00:00');
+GO
+
+-- ArticleTagMapping (data mẫu)
+INSERT INTO ArticleTagMapping (ArticleId, TagId) VALUES
+    -- Bài viết "5 Mẹo Dinh Dưỡng"
+    (1, 1), -- Dinh dưỡng
+    (1, 5), -- Sức khỏe
+    
+    -- Bài viết "Lợi Ích Tập Yoga"
+    (2, 4), -- Thể dục
+    (2, 6), -- Yoga
+    (2, 5), -- Sức khỏe
+    
+    -- Bài viết "Chế Độ Ăn Giảm Cân Khoa Học"
+    (3, 1), -- Dinh dưỡng
+    (3, 2), -- Giảm cân
+    (3, 8), -- Ăn kiêng
+    
+    -- Bài viết "Lợi Ích Của Việc Ăn Chay"
+    (4, 1), -- Dinh dưỡng
+    (4, 7), -- Ăn chay
+    (4, 5), -- Sức khỏe
+    
+    -- Bài viết "Các Bài Tập Yoga Cho Người Mới Bắt Đầu"
+    (5, 4), -- Thể dục
+    (5, 6), -- Yoga
+    (5, 5); -- Sức khỏe
 GO
 
 -- HealthMetric (data mẫu)
@@ -152,4 +271,61 @@ INSERT INTO HealthMetric (UserId, MetricDate, Weight, Height, BodyFat, Note) VAL
     (1, '2024-04-01', 68.5, 172.0, 20.3, N'Khởi đầu tracking'),
     (1, '2024-05-01', 67.0, 172.0, 19.8, N'Tiếp tục giảm cân'),
     (2, '2024-04-15', 72.0, 165.0, 22.5, N'Sau khi sử dụng gói Premium');
+GO
+
+-- RecipeCategory (data mẫu)
+INSERT INTO RecipeCategory (CategoryName, Description) VALUES
+    (N'Món chính', N'Các món ăn chính trong bữa ăn'),
+    (N'Món phụ', N'Các món ăn kèm'),
+    (N'Tráng miệng', N'Các món tráng miệng'),
+    (N'Ăn kiêng', N'Các món ăn dành cho người ăn kiêng'),
+    (N'Ăn chay', N'Các món ăn chay');
+GO
+
+-- Recipe (data mẫu)
+INSERT INTO Recipe (Title, Description, Ingredients, Instructions, CookingTime, Servings, Calories, Difficulty, ImageUrl, IsPremium, CreatedBy) VALUES
+    (N'Salad Gà Nướng', 
+     N'Salad gà nướng thơm ngon, bổ dưỡng', 
+     N'- Ức gà: 200g\n- Rau xà lách: 100g\n- Cà chua: 2 quả\n- Dầu oliu: 2 muỗng\n- Gia vị: muối, tiêu, tỏi',
+     N'1. Ướp gà với gia vị\n2. Nướng gà trong 20 phút\n3. Trộn salad với sốt',
+     30, 2, 350, N'Dễ', 
+     'https://example.com/salad-ga.jpg', 
+     0, 1),
+    
+    (N'Cá Hồi Áp Chảo', 
+     N'Cá hồi áp chảo với sốt bơ chanh', 
+     N'- Phi lê cá hồi: 300g\n- Bơ: 50g\n- Chanh: 1 quả\n- Gia vị: muối, tiêu, tỏi',
+     N'1. Ướp cá với gia vị\n2. Áp chảo cá trong 5-7 phút mỗi mặt\n3. Làm sốt bơ chanh',
+     25, 2, 450, N'Trung bình', 
+     'https://example.com/ca-hoi.jpg', 
+     1, 2);
+GO
+
+-- RecipeCategoryMapping (data mẫu)
+INSERT INTO RecipeCategoryMapping (RecipeId, CategoryId) VALUES
+    (1, 1), -- Salad Gà Nướng -> Món chính
+    (1, 4), -- Salad Gà Nướng -> Ăn kiêng
+    (2, 1), -- Cá Hồi Áp Chảo -> Món chính
+    (2, 4); -- Cá Hồi Áp Chảo -> Ăn kiêng
+GO
+
+-- Banner (data mẫu)
+INSERT INTO Banner (Title, Description, ImageUrl, LinkUrl, StartDate, EndDate, IsActive, DisplayOrder) VALUES
+    (N'Khuyến mãi tháng 5', 
+     N'Giảm giá 20% cho gói Premium 90 ngày', 
+     'https://example.com/banner1.jpg',
+     '/premium-packages',
+     '2024-05-01 00:00:00',
+     '2024-05-31 23:59:59',
+     1,
+     1),
+    
+    (N'Chương trình mới', 
+     N'Khám phá các công thức ăn kiêng mới', 
+     'https://example.com/banner2.jpg',
+     '/recipes/diet',
+     '2024-05-01 00:00:00',
+     '2024-06-30 23:59:59',
+     1,
+     2);
 GO
