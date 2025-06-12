@@ -57,10 +57,11 @@ export default function LoginScreen() {
         await AsyncStorage.setItem("password", password);
         await AsyncStorage.setItem("agree", "true");
       } else {
-        await AsyncStorage.removeItem("email");
         await AsyncStorage.removeItem("password");
         await AsyncStorage.setItem("agree", "false");
       }
+      await AsyncStorage.setItem("email", email);
+
 
       if (!response.ok) {
         const errorData = await response.json();

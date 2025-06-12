@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -10,29 +10,127 @@ import {
     KeyboardAvoidingView,
     Platform,
     Pressable,
+    Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { Pencil, ChevronLeft, Mail, User, Calendar } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "@/constants/colors";
+import { API_URL } from "@env";
+import * as ImagePicker from "expo-image-picker";
 
 export default function EditProfileScreen() {
     const router = useRouter();
 
-    const [email] = useState("taylorslauren@hotmail.com");
-    const [name, setName] = useState("Jennifer Lopez");
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [dob, setDob] = useState("");
+    const [dobDate, setDobDate] = useState<Date | undefined>();
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const [dobDate, setDobDate] = useState<Date | undefined>(undefined);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+    const isOver13 = (dob: Date) => {
+        const today = new Date();
+        const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+        return dob <= minDate;
+    };
+
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const storedEmail = await AsyncStorage.getItem("email");
+                if (!storedEmail) return;
+
+                const response = await fetch(`${API_URL}/User/all_user_by_email/${storedEmail}`);
+                const userArray = await response.json();
+
+                if (response.ok && userArray.length > 0) {
+                    const user = userArray[0];
+                    setEmail(user.email || storedEmail);
+                    setName(user.fullName || "");
+                    setAvatarUrl(user.avatarUrl || null);
+                    if (user.dateOfBirth) {
+                        const dobObj = new Date(user.dateOfBirth);
+                        setDobDate(dobObj);
+                        setDob(dobObj.toLocaleDateString("vi-VN"));
+                    }
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy thông tin người dùng:", error);
+            }
+        };
+
+        fetchUserInfo();
+    }, []);
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
         setShowDatePicker(false);
         if (selectedDate) {
             setDobDate(selectedDate);
-            const formatted = selectedDate.toLocaleDateString("vi-VN");
-            setDob(formatted);
+            setDob(selectedDate.toLocaleDateString("vi-VN"));
         }
     };
+
+    const handleSave = async () => {
+        if (!name || !dobDate) {
+            Alert.alert("Thông báo", "Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+
+        if (!isOver13(dobDate)) {
+            Alert.alert("Thông báo", "Bạn phải đủ 13 tuổi trở lên để sử dụng ứng dụng này.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/User/update_by_email/${email}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    fullName: name,
+                    dateOfBirth: dobDate.toISOString().split("T")[0],
+                    avatarUrl: avatarUrl,
+                    email: email,
+                }),
+            });
+
+            if (response.ok) {
+                Alert.alert("Thành công", "Thông tin đã được cập nhật.");
+                router.replace("/(tabs)/profile");
+            } else {
+                Alert.alert("Lỗi", "Không thể cập nhật thông tin.");
+            }
+        } catch (error) {
+            console.error("Lỗi khi cập nhật hồ sơ:", error);
+            Alert.alert("Lỗi", "Đã xảy ra lỗi khi lưu thông tin.");
+        }
+    };
+
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert("Quyền bị từ chối", "Ứng dụng cần quyền truy cập thư viện ảnh.");
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+            base64: false,
+        });
+
+        if (!result.canceled) {
+            const selectedImage = result.assets[0];
+            setAvatarUrl(selectedImage.uri);
+        }
+    };
+
 
     return (
         <KeyboardAvoidingView
@@ -52,11 +150,11 @@ export default function EditProfileScreen() {
                 <View style={styles.avatarContainer}>
                     <Image
                         source={{
-                            uri: "https://randomuser.me/api/portraits/women/44.jpg",
+                            uri: avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
                         }}
                         style={styles.avatar}
                     />
-                    <TouchableOpacity style={styles.editIcon}>
+                    <TouchableOpacity style={styles.editIcon} onPress={pickImage}>
                         <Pencil size={24} color={Colors.text} />
                     </TouchableOpacity>
                 </View>
@@ -92,6 +190,7 @@ export default function EditProfileScreen() {
                     />
                     <Calendar size={18} color="#999" style={styles.iconEnd} />
                 </Pressable>
+
                 {showDatePicker && (
                     <DateTimePicker
                         mode="date"
@@ -102,7 +201,7 @@ export default function EditProfileScreen() {
                 )}
             </ScrollView>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSave}>
                 <Text style={styles.buttonText}>Lưu thông tin</Text>
             </TouchableOpacity>
         </KeyboardAvoidingView>
