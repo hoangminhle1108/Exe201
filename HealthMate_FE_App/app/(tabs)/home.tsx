@@ -171,6 +171,7 @@ export default function Home() {
                     location={item.location}
                     rating={item.rating}
                     image={item.image}
+                    tags={["Dinh dưỡng", "Giảm cân"]}
                   />
                 )}
                 contentContainerStyle={styles.horizontalList}
