@@ -1,14 +1,46 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Exe201\\HealthMate_BE\\HealthMate\\",
+  "WorkspaceRootPath": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|d:\\exe201\\healthmate_be\\healthmate\\healthmate.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.repository\\models\\nutritionappcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\models\\nutritionappcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|d:\\exe201\\healthmate_be\\healthmate\\healthmate.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.api\\controllers\\articlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\controllers\\articlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.services\\service\\transaction\\transactionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\service\\transaction\\transactionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.services\\interface\\transaction\\itransactionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94717268-98BE-401C-9342-63E1BF181114}|HealthMate.Services\\HealthMate.Services.csproj|solutionrelative:healthmate.services\\interface\\transaction\\itransactionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.api\\controllers\\user\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{84A0E26C-3244-49DC-8F80-92825658BD9C}|HealthMate.API\\HealthMate.API.csproj|solutionrelative:healthmate.api\\controllers\\user\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.repository\\dtos\\transaction\\transactiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\dtos\\transaction\\transactiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.repository\\models\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\models\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|c:\\fpt\\2025\\exe201\\repo\\healthmate_be\\healthmate\\healthmate.repository\\repository\\transaction\\transactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1D2F1D3-FAF4-4B96-BA3A-391ACCE4C04E}|HealthMate.Repository\\HealthMate.Repository.csproj|solutionrelative:healthmate.repository\\repository\\transaction\\transactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,117 +50,130 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NutritionAppContext.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Models\\NutritionAppContext.cs",
+              "RelativeDocumentMoniker": "HealthMate.Repository\\Models\\NutritionAppContext.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Models\\NutritionAppContext.cs",
+              "RelativeToolTip": "HealthMate.Repository\\Models\\NutritionAppContext.cs",
+              "ViewState": "AgIAAMUAAAAAAAAAAAAqwC8AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T16:10:38.234Z",
+              "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ArticleController.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\ArticleController.cs",
+              "RelativeDocumentMoniker": "HealthMate.API\\Controllers\\ArticleController.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\ArticleController.cs",
+              "RelativeToolTip": "HealthMate.API\\Controllers\\ArticleController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T16:04:15.44Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\User\\UserController.cs",
+              "RelativeDocumentMoniker": "HealthMate.API\\Controllers\\User\\UserController.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\Controllers\\User\\UserController.cs",
+              "RelativeToolTip": "HealthMate.API\\Controllers\\User\\UserController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T10:07:26.856Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Transaction.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Models\\Transaction.cs",
+              "RelativeDocumentMoniker": "HealthMate.Repository\\Models\\Transaction.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Models\\Transaction.cs",
+              "RelativeToolTip": "HealthMate.Repository\\Models\\Transaction.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAuwB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T09:57:40.89Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TransactionDTO.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\DTOs\\Transaction\\TransactionDTO.cs",
+              "RelativeDocumentMoniker": "HealthMate.Repository\\DTOs\\Transaction\\TransactionDTO.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\DTOs\\Transaction\\TransactionDTO.cs",
+              "RelativeToolTip": "HealthMate.Repository\\DTOs\\Transaction\\TransactionDTO.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAA5wA0AAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T09:57:30.247Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:134:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ITransactionService.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\Transaction\\ITransactionService.cs",
+              "RelativeDocumentMoniker": "HealthMate.Services\\Interface\\Transaction\\ITransactionService.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Interface\\Transaction\\ITransactionService.cs",
+              "RelativeToolTip": "HealthMate.Services\\Interface\\Transaction\\ITransactionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T09:27:11.352Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:135:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TransactionService.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\Transaction\\TransactionService.cs",
+              "RelativeDocumentMoniker": "HealthMate.Services\\Service\\Transaction\\TransactionService.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Services\\Service\\Transaction\\TransactionService.cs",
+              "RelativeToolTip": "HealthMate.Services\\Service\\Transaction\\TransactionService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T20:42:41.445Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TransactionRepository.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\Transaction\\TransactionRepository.cs",
+              "RelativeDocumentMoniker": "HealthMate.Repository\\Repository\\Transaction\\TransactionRepository.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.Repository\\Repository\\Transaction\\TransactionRepository.cs",
+              "RelativeToolTip": "HealthMate.Repository\\Repository\\Transaction\\TransactionRepository.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADgAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T20:43:02.248Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\appsettings.json",
+              "RelativeDocumentMoniker": "HealthMate.API\\appsettings.json",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\appsettings.json",
+              "RelativeToolTip": "HealthMate.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-28T12:38:53.65Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Program.cs",
+              "DocumentMoniker": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\Program.cs",
               "RelativeDocumentMoniker": "HealthMate.API\\Program.cs",
-              "ToolTip": "D:\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\Program.cs",
+              "ToolTip": "C:\\FPT\\2025\\EXE201\\Repo\\HealthMate_BE\\HealthMate\\HealthMate.API\\Program.cs",
               "RelativeToolTip": "HealthMate.API\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAAAAAA",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAAIYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-13T13:17:18.435Z",
+              "WhenOpened": "2025-05-24T10:09:19.357Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\appsettings.json",
-              "RelativeDocumentMoniker": "HealthMate.API\\appsettings.json",
-              "ToolTip": "D:\\Exe201\\HealthMate_BE\\HealthMate\\HealthMate.API\\appsettings.json",
-              "RelativeToolTip": "HealthMate.API\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB4AAAAEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-06-13T13:15:36.879Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
             }
           ]
         }
