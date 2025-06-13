@@ -33,6 +33,8 @@ public partial class Recipe
 
     public int CreatedBy { get; set; }
 
+    public int Likes { get; set; }
+
     public virtual User CreatedByNavigation { get; set; } = null!;
 
     public virtual ICollection<RecipeCategory> Categories { get; set; } = new List<RecipeCategory>();
