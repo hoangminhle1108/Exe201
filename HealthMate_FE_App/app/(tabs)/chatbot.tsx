@@ -249,7 +249,7 @@ export default function ChatBotScreen() {
         <View style={styles.container}>
             <WebView
                 originWhitelist={['*']}
-                source={require('../../assets/chatbot.html')}
+                source={require('../../constants/chatbot.html')}
                 style={{ flex: 1 }}
                 javaScriptEnabled={true}
                 domStorageEnabled={true}

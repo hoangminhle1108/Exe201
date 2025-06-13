@@ -20,6 +20,7 @@ interface BlogCardProps {
   rating: number;
   image: string;
   isLarge?: boolean;
+  tags: string[];
 }
 
 const BlogCard = ({
@@ -27,6 +28,7 @@ const BlogCard = ({
   name,
   location,
   rating,
+  tags,
   image,
   isLarge = false,
 }: BlogCardProps) => {

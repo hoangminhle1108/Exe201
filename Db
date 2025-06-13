@@ -23,7 +23,7 @@ CREATE TABLE Role (
 );
 GO
 
--- Bảng User
+-- Bảng [User]
 CREATE TABLE [User] (
     UserId          INT IDENTITY PRIMARY KEY,
     Email           NVARCHAR(100) NOT NULL UNIQUE,
@@ -38,8 +38,8 @@ CREATE TABLE [User] (
     IsActive        BIT NOT NULL DEFAULT 1,
     CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
     UpdatedAt       DATETIME NULL,
-    ResetPasswordToken NVARCHAR(255) NULL,           -- Token để reset password
-    ResetPasswordTokenExpiry DATETIME NULL,          -- Thời gian hết hạn của token
+    ResetPasswordToken       NVARCHAR(255) NULL,      -- Token để reset password
+    ResetPasswordTokenExpiry DATETIME NULL,           -- Thời gian hết hạn của token
     FOREIGN KEY(RoleId) REFERENCES Role(RoleId)
 );
 GO
@@ -61,7 +61,7 @@ CREATE TABLE PaymentMethod (
 );
 GO
 
--- Bảng Transaction
+-- Bảng [Transaction]
 CREATE TABLE [Transaction] (
     TransactionId    INT IDENTITY PRIMARY KEY,
     UserId           INT NOT NULL,
@@ -87,14 +87,16 @@ CREATE TABLE Tag (
 );
 GO
 
--- Bảng Article
+-- Bảng Article (cập nhật: thêm ImageUrl, Likes)
 CREATE TABLE Article (
     ArticleId    INT IDENTITY PRIMARY KEY,
     Title        NVARCHAR(200) NOT NULL,
     Content      NTEXT      NOT NULL,
     Author       NVARCHAR(100)    NULL,
     PublishedAt  DATETIME   NOT NULL DEFAULT GETDATE(),
-    UpdatedAt    DATETIME   NULL
+    UpdatedAt    DATETIME   NULL,
+    ImageUrl     NVARCHAR(255) NULL,             -- URL hình ảnh bài viết
+    Likes        INT          NOT NULL DEFAULT 0 -- Số lượt thích
 );
 GO
 
@@ -105,7 +107,7 @@ CREATE TABLE ArticleTagMapping (
     CreatedAt      DATETIME NOT NULL DEFAULT GETDATE(),
     PRIMARY KEY (ArticleId, TagId),
     FOREIGN KEY(ArticleId) REFERENCES Article(ArticleId) ON DELETE CASCADE,
-    FOREIGN KEY(TagId) REFERENCES Tag(TagId) ON DELETE CASCADE
+    FOREIGN KEY(TagId)     REFERENCES Tag(TagId)     ON DELETE CASCADE
 );
 GO
 
@@ -123,7 +125,7 @@ CREATE TABLE HealthMetric (
 );
 GO
 
--- Bảng Recipe (Công thức món ăn)
+-- Bảng Recipe (cập nhật: thêm Likes)
 CREATE TABLE Recipe (
     RecipeId        INT IDENTITY PRIMARY KEY,
     Title           NVARCHAR(200) NOT NULL,
@@ -139,6 +141,7 @@ CREATE TABLE Recipe (
     CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
     UpdatedAt       DATETIME NULL,
     CreatedBy       INT NOT NULL,            -- User tạo công thức
+    Likes           INT NOT NULL DEFAULT 0,  -- Số lượt thích
     FOREIGN KEY(CreatedBy) REFERENCES [User](UserId)
 );
 GO
@@ -156,7 +159,7 @@ CREATE TABLE RecipeCategoryMapping (
     RecipeId        INT NOT NULL,
     CategoryId      INT NOT NULL,
     PRIMARY KEY (RecipeId, CategoryId),
-    FOREIGN KEY(RecipeId) REFERENCES Recipe(RecipeId),
+    FOREIGN KEY(RecipeId)   REFERENCES Recipe(RecipeId),
     FOREIGN KEY(CategoryId) REFERENCES RecipeCategory(CategoryId)
 );
 GO
@@ -167,11 +170,11 @@ CREATE TABLE Banner (
     Title           NVARCHAR(200) NOT NULL,
     Description     NVARCHAR(500) NULL,
     ImageUrl        NVARCHAR(255) NOT NULL,
-    LinkUrl         NVARCHAR(255) NULL,      -- URL khi click vào banner
-    StartDate       DATETIME NOT NULL,        -- Ngày bắt đầu hiển thị
-    EndDate         DATETIME NOT NULL,        -- Ngày kết thúc hiển thị
-    IsActive        BIT NOT NULL DEFAULT 1,   -- Trạng thái hiển thị
-    DisplayOrder    INT NOT NULL DEFAULT 0,   -- Thứ tự hiển thị
+    LinkUrl         NVARCHAR(255) NULL,      
+    StartDate       DATETIME NOT NULL,        
+    EndDate         DATETIME NOT NULL,        
+    IsActive        BIT NOT NULL DEFAULT 1,   
+    DisplayOrder    INT NOT NULL DEFAULT 0,   
     CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
     UpdatedAt       DATETIME NULL
 );
@@ -230,40 +233,22 @@ INSERT INTO Tag (TagName, Description) VALUES
     (N'Ăn kiêng', N'Các bài viết về chế độ ăn kiêng');
 GO
 
--- Article (data mẫu)
-INSERT INTO Article (Title, Content, Author, PublishedAt) VALUES
-    (N'5 Mẹo Dinh Dưỡng', N'Bạn nên ăn đủ rau xanh và...', N'Dr. Lê Thị X', '2024-04-01 10:00:00'),
-    (N'Lợi Ích Tập Yoga', N'Yoga giúp cải thiện độ dẻo...', N'PT Nguyễn Văn Y', '2024-05-01 14:30:00'),
-    (N'Chế Độ Ăn Giảm Cân Khoa Học', N'Các nguyên tắc cơ bản trong chế độ ăn giảm cân...', N'Dr. Trần Văn Z', '2024-05-15 09:00:00'),
-    (N'Lợi Ích Của Việc Ăn Chay', N'Ăn chay không chỉ tốt cho sức khỏe mà còn...', N'Dr. Nguyễn Thị A', '2024-05-20 11:00:00'),
-    (N'Các Bài Tập Yoga Cho Người Mới Bắt Đầu', N'Hướng dẫn chi tiết các tư thế yoga cơ bản...', N'PT Lê Văn B', '2024-05-25 15:00:00');
+-- Article (data mẫu đã cập nhật)
+INSERT INTO Article (Title, Content, Author, PublishedAt, ImageUrl, Likes) VALUES
+    (N'5 Mẹo Dinh Dưỡng', N'Bạn nên ăn đủ rau xanh và...', N'Dr. Lê Thị X', '2024-04-01 10:00:00', 'https://example.com/5-meo-dinh-duong.jpg', 12),
+    (N'Lợi Ích Tập Yoga', N'Yoga giúp cải thiện độ dẻo...', N'PT Nguyễn Văn Y', '2024-05-01 14:30:00',  'https://example.com/loi-ich-yoga.jpg', 27),
+    (N'Chế Độ Ăn Giảm Cân Khoa Học', N'Các nguyên tắc cơ bản trong chế độ ăn giảm cân...', N'Dr. Trần Văn Z', '2024-05-15 09:00:00', 'https://example.com/che-do-an-giam-can.jpg', 35),
+    (N'Lợi Ích Của Việc Ăn Chay', N'Ăn chay không chỉ tốt cho sức khỏe mà còn...', N'Dr. Nguyễn Thị A', '2024-05-20 11:00:00', 'https://example.com/loi-ich-an-chay.jpg', 18),
+    (N'Các Bài Tập Yoga Cho Người Mới Bắt Đầu', N'Hướng dẫn chi tiết các tư thế yoga cơ bản...', N'PT Lê Văn B', '2024-05-25 15:00:00', 'https://example.com/yoga-cho-nguoi-moi.jpg', 22);
 GO
 
 -- ArticleTagMapping (data mẫu)
 INSERT INTO ArticleTagMapping (ArticleId, TagId) VALUES
-    -- Bài viết "5 Mẹo Dinh Dưỡng"
-    (1, 1), -- Dinh dưỡng
-    (1, 5), -- Sức khỏe
-    
-    -- Bài viết "Lợi Ích Tập Yoga"
-    (2, 4), -- Thể dục
-    (2, 6), -- Yoga
-    (2, 5), -- Sức khỏe
-    
-    -- Bài viết "Chế Độ Ăn Giảm Cân Khoa Học"
-    (3, 1), -- Dinh dưỡng
-    (3, 2), -- Giảm cân
-    (3, 8), -- Ăn kiêng
-    
-    -- Bài viết "Lợi Ích Của Việc Ăn Chay"
-    (4, 1), -- Dinh dưỡng
-    (4, 7), -- Ăn chay
-    (4, 5), -- Sức khỏe
-    
-    -- Bài viết "Các Bài Tập Yoga Cho Người Mới Bắt Đầu"
-    (5, 4), -- Thể dục
-    (5, 6), -- Yoga
-    (5, 5); -- Sức khỏe
+    (1, 1), (1, 5),
+    (2, 4), (2, 6), (2, 5),
+    (3, 1), (3, 2), (3, 8),
+    (4, 1), (4, 7), (4, 5),
+    (5, 4), (5, 6), (5, 5);
 GO
 
 -- HealthMetric (data mẫu)
@@ -282,23 +267,22 @@ INSERT INTO RecipeCategory (CategoryName, Description) VALUES
     (N'Ăn chay', N'Các món ăn chay');
 GO
 
--- Recipe (data mẫu)
-INSERT INTO Recipe (Title, Description, Ingredients, Instructions, CookingTime, Servings, Calories, Difficulty, ImageUrl, IsPremium, CreatedBy) VALUES
+-- Recipe (data mẫu đã cập nhật)
+INSERT INTO Recipe (Title, Description, Ingredients, Instructions, CookingTime, Servings, Calories, Difficulty, ImageUrl, IsPremium, CreatedBy, Likes) VALUES
     (N'Salad Gà Nướng', 
      N'Salad gà nướng thơm ngon, bổ dưỡng', 
      N'- Ức gà: 200g\n- Rau xà lách: 100g\n- Cà chua: 2 quả\n- Dầu oliu: 2 muỗng\n- Gia vị: muối, tiêu, tỏi',
      N'1. Ướp gà với gia vị\n2. Nướng gà trong 20 phút\n3. Trộn salad với sốt',
      30, 2, 350, N'Dễ', 
      'https://example.com/salad-ga.jpg', 
-     0, 1),
-    
+     0, 1, 45),
     (N'Cá Hồi Áp Chảo', 
      N'Cá hồi áp chảo với sốt bơ chanh', 
      N'- Phi lê cá hồi: 300g\n- Bơ: 50g\n- Chanh: 1 quả\n- Gia vị: muối, tiêu, tỏi',
      N'1. Ướp cá với gia vị\n2. Áp chảo cá trong 5-7 phút mỗi mặt\n3. Làm sốt bơ chanh',
      25, 2, 450, N'Trung bình', 
      'https://example.com/ca-hoi.jpg', 
-     1, 2);
+     1, 2, 38);
 GO
 
 -- RecipeCategoryMapping (data mẫu)
@@ -311,21 +295,6 @@ GO
 
 -- Banner (data mẫu)
 INSERT INTO Banner (Title, Description, ImageUrl, LinkUrl, StartDate, EndDate, IsActive, DisplayOrder) VALUES
-    (N'Khuyến mãi tháng 5', 
-     N'Giảm giá 20% cho gói Premium 90 ngày', 
-     'https://example.com/banner1.jpg',
-     '/premium-packages',
-     '2024-05-01 00:00:00',
-     '2024-05-31 23:59:59',
-     1,
-     1),
-    
-    (N'Chương trình mới', 
-     N'Khám phá các công thức ăn kiêng mới', 
-     'https://example.com/banner2.jpg',
-     '/recipes/diet',
-     '2024-05-01 00:00:00',
-     '2024-06-30 23:59:59',
-     1,
-     2);
+    (N'Khuyến mãi tháng 5', N'Giảm giá 20% cho gói Premium 90 ngày', 'https://example.com/banner1.jpg', '/premium-packages', '2024-05-01 00:00:00', '2024-05-31 23:59:59', 1, 1),
+    (N'Chương trình mới', N'Khám phá các công thức ăn kiêng mới', 'https://example.com/banner2.jpg', '/recipes/diet', '2024-05-01 00:00:00', '2024-06-30 23:59:59', 1, 2);
 GO

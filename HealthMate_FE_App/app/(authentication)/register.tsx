@@ -125,7 +125,7 @@ export default function RegisterScreen() {
                 <DateTimePicker
                     value={dateOfBirth}
                     mode="date"
-                    display="default"
+                    display="spinner"
                     maximumDate={new Date()}
                     onChange={(event, selectedDate) => {
                         setShowDatePicker(false);

@@ -1,5 +1,14 @@
-import React from "react";
-import { View, FlatList, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+    View,
+    FlatList,
+    Text,
+    ScrollView,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    ActivityIndicator,
+} from "react-native";
 import SearchBar from "../components/SearchBar";
 import BlogCard from "../components/BlogCard";
 import Colors from "@/constants/colors";
@@ -7,9 +16,20 @@ import CategoryItem from "../components/CategoryItem";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { categories, destinations } from "@/constants/destinations";
+import { API_URL } from "@env";
 
 export default function BlogList() {
     const router = useRouter();
+    type Article = {
+        articleId: number;
+        title: string;
+        image: string;
+        tags: string[];
+        likes: number;
+    };
+    const [articles, setArticles] = useState<Article[]>([]);
+    const [loading, setLoading] = useState(true);
+
     const getTagStyle = (tag: string) => {
         switch (tag.toLowerCase()) {
             case "dinh dưỡng":
@@ -20,6 +40,26 @@ export default function BlogList() {
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
     };
+
+    useEffect(() => {
+        const fetchArticles = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Article`);
+                const data = await response.json();
+                if (response.ok) {
+                    setArticles(data);
+                } else {
+                    console.error("Failed to fetch articles.");
+                }
+            } catch (error) {
+                console.error("Lỗi khi tải bài viết:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchArticles();
+    }, []);
 
     return (
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -37,7 +77,8 @@ export default function BlogList() {
                                     params: { q: text },
                                 });
                             }
-                        }} />
+                        }}
+                    />
                 </View>
             </View>
 
@@ -58,90 +99,71 @@ export default function BlogList() {
                 ))}
             </ScrollView>
 
-
             <Text style={styles.sectionTitle}>Bài viết được yêu thích</Text>
-            <View style={styles.content}>
-                <View>
-                    <FlatList
-                        data={destinations.slice(0, 3)}
-                        keyExtractor={(item) => item.id}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <BlogCard
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                location={item.location}
-                                rating={item.rating}
-                                image={item.image}
-                                tags={["Dinh dưỡng", "Giảm cân"]}
-                            />
-                        )}
-                        contentContainerStyle={styles.horizontalList}
+            <FlatList
+                data={destinations.slice(0, 3)}
+                keyExtractor={(item) => item.id}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                    <BlogCard
+                        key={item.id}
+                        id={item.id}
+                        name={item.name}
+                        location={item.location}
+                        rating={item.rating}
+                        image={item.image}
+                        tags={["Dinh dưỡng", "Giảm cân"]}
                     />
-                </View>
-            </View>
-
+                )}
+                contentContainerStyle={styles.horizontalList}
+            />
 
             <Text style={styles.sectionTitle}>Toàn bộ bài viết</Text>
             <View style={styles.fullRecipeList}>
-                {[
-                    {
-                        title: "Trứng rán mỡ",
-                        likes: 26,
-                        image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-
-                    },
-                    {
-                        title: "Bắp xào bơ",
-                        likes: 88,
-                        image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-                    },
-                    {
-                        title: "Bơ xào bắp",
-                        likes: 131,
-                        image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-                    },
-                ].map((item, idx) => (
-                    <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.image }} style={styles.fullRecipeImage} />
-                        <View style={styles.fullRecipeInfo}>
-                            <Text style={styles.fullRecipeTitle}>{item.title}</Text>
-
-                            <View style={styles.tagsContainer}>
-                                {["Dinh dưỡng", "Giảm cân"].map((tag, i) => (
-                                    <View
-                                        key={i}
-                                        style={[
-                                            styles.tag,
-                                            { backgroundColor: getTagStyle(tag).backgroundColor },
-                                        ]}
-                                    >
-                                        <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>
-                                            {tag}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-
-                            <View style={styles.bottomRow}>
-                                <View style={styles.likesContainer}>
-                                    <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                    <Text style={styles.likesText}>{item.likes}</Text>
+                {loading ? (
+                    <ActivityIndicator size="large" color={Colors.primary} />
+                ) : (
+                    articles.map((item, idx) => (
+                        <View key={idx} style={styles.fullRecipeCard}>
+                            <Image
+                                source={{ uri: item?.image || "https://cdn-icons-png.flaticon.com/512/135/135620.png" }}
+                                style={styles.fullRecipeImage}
+                            />
+                            <View style={styles.fullRecipeInfo}>
+                                <Text style={styles.fullRecipeTitle}>{item?.title || "Không có tiêu đề"}</Text>
+                                <View style={styles.tagsContainer}>
+                                    {item?.tags?.map((tag: string, i: number) => (
+                                        <View
+                                            key={i}
+                                            style={[
+                                                styles.tag,
+                                                { backgroundColor: getTagStyle(tag).backgroundColor },
+                                            ]}
+                                        >
+                                            <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>
+                                                {tag}
+                                            </Text>
+                                        </View>
+                                    ))}
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(blog)/blogDetail`)}>
-                                    <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
-                                </TouchableOpacity>
 
+                                <View style={styles.bottomRow}>
+                                    <View style={styles.likesContainer}>
+                                        <Heart size={12} color={Colors.rating} fill={Colors.rating} />
+                                        <Text style={styles.likesText}>{item?.likes ?? 0}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => router.push(`/(blog)/blogDetail?id=${item?.articleId}`)}
+                                    >
+                                        <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-
                         </View>
-                    </View>
-
-                ))}
+                    ))
+                )}
             </View>
-
         </ScrollView>
     );
 }

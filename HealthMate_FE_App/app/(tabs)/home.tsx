@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import {
   StyleSheet,
@@ -9,20 +9,20 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
-import { Crown } from "lucide-react-native";
+import { Crown, Calendar } from "lucide-react-native";
 import { Feather } from '@expo/vector-icons';
 import SectionHeader from "../components/SectionHeader";
 import FeatureCard from "../components/FeatureCard";
 import BlogCard from "../components/BlogCard";
 import { destinations } from "@/constants/destinations";
 import Colors from "@/constants/colors";
-import { Calendar } from "lucide-react-native";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import { API_URL } from "@env";
 
 dayjs.locale("vi");
-
 
 const DATA = [
   { type: "header" },
@@ -41,6 +41,29 @@ const formattedDate = capitalizeWords(today);
 
 export default function Home() {
   const router = useRouter();
+  const [fullName, setFullName] = useState("Người dùng");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserFullName = async () => {
+      try {
+        const email = await AsyncStorage.getItem("email");
+        if (!email) return;
+
+        const response = await fetch(`${API_URL}/User/all_user_by_email/${email}`);
+        const userArray = await response.json();
+
+        if (response.ok && userArray.length > 0) {
+          setFullName(userArray[0].fullName || "Người dùng");
+          setAvatarUrl(userArray[0].avatarUrl);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin người dùng:", error);
+      }
+    };
+
+    fetchUserFullName();
+  }, []);
 
   const renderItem = ({ item }: any) => {
     switch (item.type) {
@@ -50,16 +73,24 @@ export default function Home() {
             <View style={styles.userInfo}>
               <View style={styles.avatarContainer}>
                 <Image
-                  source={"https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=200"}
+                  source={
+                    avatarUrl
+                      ? avatarUrl
+                      : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                  }
                   style={styles.avatar}
+                  contentFit="cover"
                 />
               </View>
               <View>
                 <Text style={styles.welcomeText}>Chào mừng</Text>
-                <Text style={styles.userName}>Nguyen Tran</Text>
+                <Text style={styles.userName}>{fullName}</Text>
               </View>
             </View>
-            <TouchableOpacity onPress={() => router.replace("/(premium)/list")} style={styles.notificationButton}>
+            <TouchableOpacity
+              onPress={() => router.replace("/(premium)/list")}
+              style={styles.notificationButton}
+            >
               <Crown size={24} color={Colors.text} />
             </TouchableOpacity>
           </View>
@@ -140,6 +171,7 @@ export default function Home() {
                     location={item.location}
                     rating={item.rating}
                     image={item.image}
+                    tags={["Dinh dưỡng", "Giảm cân"]}
                   />
                 )}
                 contentContainerStyle={styles.horizontalList}
