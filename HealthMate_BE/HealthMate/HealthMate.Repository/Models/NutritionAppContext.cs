@@ -39,15 +39,15 @@ public partial class NutritionAppContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=localhost;Database=NutritionApp;Trusted_Connection=True;User Id=sa;Password=12345;TrustServerCertificate=True;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=NutritionApp;Trusted_Connection=True;User Id=sa;Password=12345;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Article>(entity =>
         {
-            entity.HasKey(e => e.ArticleId).HasName("PK__Article__9C6270E8E32EB513");
+            entity.HasKey(e => e.ArticleId).HasName("PK__Article__9C6270E8F91B7C23");
 
             entity.ToTable("Article");
 
@@ -63,7 +63,7 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<ArticleTagMapping>(entity =>
         {
-            entity.HasKey(e => new { e.ArticleId, e.TagId }).HasName("PK__ArticleT__4A35BF72EF047DB4");
+            entity.HasKey(e => new { e.ArticleId, e.TagId }).HasName("PK__ArticleT__4A35BF72D36CD1ED");
 
             entity.ToTable("ArticleTagMapping");
 
@@ -82,7 +82,7 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<Banner>(entity =>
         {
-            entity.HasKey(e => e.BannerId).HasName("PK__Banner__32E86AD15C2DAC18");
+            entity.HasKey(e => e.BannerId).HasName("PK__Banner__32E86AD1AD6E3FE3");
 
             entity.ToTable("Banner");
 
@@ -101,7 +101,7 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<HealthMetric>(entity =>
         {
-            entity.HasKey(e => e.MetricId).HasName("PK__HealthMe__561056A5D41EE234");
+            entity.HasKey(e => e.MetricId).HasName("PK__HealthMe__561056A5BA4F592B");
 
             entity.ToTable("HealthMetric");
 
@@ -121,7 +121,7 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<PaymentMethod>(entity =>
         {
-            entity.HasKey(e => e.PaymentMethodId).HasName("PK__PaymentM__DC31C1D3033924E7");
+            entity.HasKey(e => e.PaymentMethodId).HasName("PK__PaymentM__DC31C1D343F52D1F");
 
             entity.ToTable("PaymentMethod");
 
@@ -130,7 +130,7 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<PremiumPackage>(entity =>
         {
-            entity.HasKey(e => e.PackageId).HasName("PK__PremiumP__322035CCC88D3F89");
+            entity.HasKey(e => e.PackageId).HasName("PK__PremiumP__322035CC04262306");
 
             entity.ToTable("PremiumPackage");
 
@@ -141,7 +141,7 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<Recipe>(entity =>
         {
-            entity.HasKey(e => e.RecipeId).HasName("PK__Recipe__FDD988B092F83145");
+            entity.HasKey(e => e.RecipeId).HasName("PK__Recipe__FDD988B0461297B5");
 
             entity.ToTable("Recipe");
 
@@ -159,7 +159,7 @@ public partial class NutritionAppContext : DbContext
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Recipes)
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Recipe__CreatedB__5FB337D6");
+                .HasConstraintName("FK__Recipe__CreatedB__5EBF139D");
 
             entity.HasMany(d => d.Categories).WithMany(p => p.Recipes)
                 .UsingEntity<Dictionary<string, object>>(
@@ -167,25 +167,25 @@ public partial class NutritionAppContext : DbContext
                     r => r.HasOne<RecipeCategory>().WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__RecipeCat__Categ__66603565"),
+                        .HasConstraintName("FK__RecipeCat__Categ__656C112C"),
                     l => l.HasOne<Recipe>().WithMany()
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__RecipeCat__Recip__656C112C"),
+                        .HasConstraintName("FK__RecipeCat__Recip__6477ECF3"),
                     j =>
                     {
-                        j.HasKey("RecipeId", "CategoryId").HasName("PK__RecipeCa__5C491B108C7A3FBF");
+                        j.HasKey("RecipeId", "CategoryId").HasName("PK__RecipeCa__5C491B1016229521");
                         j.ToTable("RecipeCategoryMapping");
                     });
         });
 
         modelBuilder.Entity<RecipeCategory>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__RecipeCa__19093A0B45CCE139");
+            entity.HasKey(e => e.CategoryId).HasName("PK__RecipeCa__19093A0B726AB9F0");
 
             entity.ToTable("RecipeCategory");
 
-            entity.HasIndex(e => e.CategoryName, "UQ__RecipeCa__8517B2E03325DC37").IsUnique();
+            entity.HasIndex(e => e.CategoryName, "UQ__RecipeCa__8517B2E087430DD6").IsUnique();
 
             entity.Property(e => e.CategoryName).HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(500);
@@ -193,22 +193,22 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1A9D39CCDE");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1A4F17E3D0");
 
             entity.ToTable("Role");
 
-            entity.HasIndex(e => e.RoleName, "UQ__Role__8A2B616079211C47").IsUnique();
+            entity.HasIndex(e => e.RoleName, "UQ__Role__8A2B6160C02AA7DC").IsUnique();
 
             entity.Property(e => e.RoleName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.TagId).HasName("PK__Tag__657CF9ACF3906901");
+            entity.HasKey(e => e.TagId).HasName("PK__Tag__657CF9ACC2347233");
 
             entity.ToTable("Tag");
 
-            entity.HasIndex(e => e.TagName, "UQ__Tag__BDE0FD1DF432356D").IsUnique();
+            entity.HasIndex(e => e.TagName, "UQ__Tag__BDE0FD1D8CF0CDBF").IsUnique();
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -220,11 +220,11 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6B0D783104");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6B52651EAB");
 
             entity.ToTable("Transaction");
 
-            entity.HasIndex(e => e.TransactionCode, "UQ__Transact__D85E7026AF556559").IsUnique();
+            entity.HasIndex(e => e.TransactionCode, "UQ__Transact__D85E70265BC03D35").IsUnique();
 
             entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.PurchasedAt)
@@ -251,11 +251,11 @@ public partial class NutritionAppContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4C1D1F96E8");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4C88201A47");
 
             entity.ToTable("User");
 
-            entity.HasIndex(e => e.Email, "UQ__User__A9D105348250997C").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__User__A9D10534CB94C556").IsUnique();
 
             entity.Property(e => e.AvatarUrl).HasMaxLength(255);
             entity.Property(e => e.CreatedAt)

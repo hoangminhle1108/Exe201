@@ -37,26 +37,51 @@ namespace HealthMate.Services.Service.Article
                 Title = request.Title,
                 Content = request.Content,
                 Author = request.Author,
+                ImageUrl = request.ImageUrl,
                 PublishedAt = DateTime.UtcNow
             };
 
-            var createdArticle = await _repo.CreateArticleAsync(article);
-            return MapToDTO(createdArticle);
+            // Add tags
+            foreach (var tagId in request.TagIds.Distinct())
+            {
+                article.ArticleTagMappings.Add(new ArticleTagMapping
+                {
+                    TagId = tagId,
+                });
+            }
+
+            var created = await _repo.CreateArticleAsync(article);
+            return MapToDTO(created);
         }
 
         public async Task<ArticleDTO?> UpdateArticleAsync(int id, UpdateArticleRequest request)
         {
-            var existingArticle = await _repo.GetArticleByIdAsync(id);
-            if (existingArticle == null)
+            var article = await _repo.GetArticleByIdAsync(id);
+            if (article == null)
                 return null;
 
-            existingArticle.Title = request.Title;
-            existingArticle.Content = request.Content;
-            existingArticle.Author = request.Author;
-            existingArticle.UpdatedAt = DateTime.UtcNow;
+            article.Title = request.Title;
+            article.Content = request.Content;
+            article.Author = request.Author;
+            article.ImageUrl = request.ImageUrl;
+            article.UpdatedAt = DateTime.UtcNow;
 
-            var updatedArticle = await _repo.UpdateArticleAsync(existingArticle);
-            return updatedArticle != null ? MapToDTO(updatedArticle) : null;
+            // Clear old tags
+            article.ArticleTagMappings.Clear();
+
+            // Add new tag mappings
+            foreach (var tagId in request.TagIds.Distinct())
+            {
+                article.ArticleTagMappings.Add(new ArticleTagMapping
+                {
+                    ArticleId = article.ArticleId,
+                    TagId = tagId,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            var updated = await _repo.UpdateArticleAsync(article);
+            return updated != null ? MapToDTO(updated) : null;
         }
 
         public async Task<bool> DeleteArticleAsync(int id)
@@ -73,7 +98,13 @@ namespace HealthMate.Services.Service.Article
                 Content = article.Content,
                 Author = article.Author,
                 PublishedAt = article.PublishedAt,
-                UpdatedAt = article.UpdatedAt
+                UpdatedAt = article.UpdatedAt,
+                ImageUrl = article.ImageUrl,
+                Tags = article.ArticleTagMappings.Select(m => new TagDTO
+                {
+                    TagId = m.TagId,
+                    TagName = m.Tag.TagName
+                }).ToList()
             };
         }
     }

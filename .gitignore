@@ -53,13 +53,9 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 *.vsidx
-/HealthMate_BE/HealthMate/.vs/
 .vs/
-/HealthMate_BE/HealthMate/HealthMate.API/appsettings.json
-/HealthMate_BE/HealthMate/HealthMate.API/appsettings.json
 HealthMate_BE/HealthMate/.vs/HealthMate/CopilotIndices/17.13.444.19527/SemanticSymbols.db
 *.db
 *.v2
-/HealthMate_BE
-*.v2
-*.json
+
+

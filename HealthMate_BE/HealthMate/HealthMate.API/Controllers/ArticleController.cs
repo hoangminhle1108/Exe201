@@ -35,16 +35,16 @@ namespace HealthMate.API.Controllers
             return Ok(article);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ArticleDTO>> CreateArticle(CreateArticleRequest request)
         {
             var article = await _articleService.CreateArticleAsync(request);
             return CreatedAtAction(nameof(GetArticleById), new { id = article.ArticleId }, article);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ArticleDTO>> UpdateArticle(int id, UpdateArticleRequest request)
         {
             var article = await _articleService.UpdateArticleAsync(id, request);
@@ -65,4 +65,4 @@ namespace HealthMate.API.Controllers
             return NoContent();
         }
     }
-} 
+}
