@@ -20,12 +20,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Using HTTPS for teting local
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(8080);
-});
-
 // Add services to the container.
 
 builder.Services.AddDbContext<NutritionAppContext>(opts =>
