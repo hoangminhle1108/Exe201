@@ -16,6 +16,7 @@ namespace HealthMate.Repository.Repository.Article
         public async Task<List<Models.Article>> GetAllArticlesAsync()
         {
             return await _ctx.Articles
+                .Include(a=> a.ArticleTagMappings).ThenInclude(a=> a.Tag)
                 .OrderByDescending(a => a.PublishedAt)
                 .ToListAsync();
         }
@@ -23,6 +24,7 @@ namespace HealthMate.Repository.Repository.Article
         public async Task<Models.Article?> GetArticleByIdAsync(int id)
         {
             return await _ctx.Articles
+                .Include(a => a.ArticleTagMappings).ThenInclude(a => a.Tag)
                 .FirstOrDefaultAsync(a => a.ArticleId == id);
         }
 
@@ -45,6 +47,7 @@ namespace HealthMate.Repository.Repository.Article
             existingArticle.Title = article.Title;
             existingArticle.Content = article.Content;
             existingArticle.Author = article.Author;
+            existingArticle.ImageUrl = article.ImageUrl;
             existingArticle.UpdatedAt = DateTime.UtcNow;
 
             await _ctx.SaveChangesAsync();

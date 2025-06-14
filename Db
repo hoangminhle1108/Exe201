@@ -125,7 +125,7 @@ CREATE TABLE HealthMetric (
 );
 GO
 
--- Bảng Recipe (cập nhật: thêm Likes)
+-- Bảng Recipe (đã bỏ IsPremium)
 CREATE TABLE Recipe (
     RecipeId        INT IDENTITY PRIMARY KEY,
     Title           NVARCHAR(200) NOT NULL,
@@ -137,7 +137,6 @@ CREATE TABLE Recipe (
     Calories        INT NULL,                -- Calories mỗi phần
     Difficulty      NVARCHAR(50) NOT NULL,   -- Dễ, Trung bình, Khó
     ImageUrl        NVARCHAR(255) NULL,      -- URL hình ảnh món ăn
-    IsPremium       BIT NOT NULL DEFAULT 0,  -- true nếu là công thức premium
     CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
     UpdatedAt       DATETIME NULL,
     CreatedBy       INT NOT NULL,            -- User tạo công thức
@@ -267,22 +266,22 @@ INSERT INTO RecipeCategory (CategoryName, Description) VALUES
     (N'Ăn chay', N'Các món ăn chay');
 GO
 
--- Recipe (data mẫu đã cập nhật)
-INSERT INTO Recipe (Title, Description, Ingredients, Instructions, CookingTime, Servings, Calories, Difficulty, ImageUrl, IsPremium, CreatedBy, Likes) VALUES
+-- Recipe (data mẫu đã bỏ IsPremium)
+INSERT INTO Recipe (Title, Description, Ingredients, Instructions, CookingTime, Servings, Calories, Difficulty, ImageUrl, CreatedBy, Likes) VALUES
     (N'Salad Gà Nướng', 
      N'Salad gà nướng thơm ngon, bổ dưỡng', 
      N'- Ức gà: 200g\n- Rau xà lách: 100g\n- Cà chua: 2 quả\n- Dầu oliu: 2 muỗng\n- Gia vị: muối, tiêu, tỏi',
      N'1. Ướp gà với gia vị\n2. Nướng gà trong 20 phút\n3. Trộn salad với sốt',
      30, 2, 350, N'Dễ', 
      'https://example.com/salad-ga.jpg', 
-     0, 1, 45),
+     1, 45),
     (N'Cá Hồi Áp Chảo', 
      N'Cá hồi áp chảo với sốt bơ chanh', 
      N'- Phi lê cá hồi: 300g\n- Bơ: 50g\n- Chanh: 1 quả\n- Gia vị: muối, tiêu, tỏi',
      N'1. Ướp cá với gia vị\n2. Áp chảo cá trong 5-7 phút mỗi mặt\n3. Làm sốt bơ chanh',
      25, 2, 450, N'Trung bình', 
      'https://example.com/ca-hoi.jpg', 
-     1, 2, 38);
+     2, 38);
 GO
 
 -- RecipeCategoryMapping (data mẫu)

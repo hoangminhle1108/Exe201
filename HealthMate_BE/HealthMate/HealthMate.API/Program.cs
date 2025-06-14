@@ -1,15 +1,23 @@
 using HealthMate.Repository.Interface.Article;
 using HealthMate.Repository.Interface.HealthMetric;
+using HealthMate.Repository.Interface.PremiumPackage;
+using HealthMate.Repository.Interface.Recipe;
 using HealthMate.Repository.Interface.User;
 using HealthMate.Repository.Models;
 using HealthMate.Repository.Repository.Article;
 using HealthMate.Repository.Repository.HealthMetric;
+using HealthMate.Repository.Repository.PremiumPackage;
+using HealthMate.Repository.Repository.Recipe;
 using HealthMate.Repository.Repository.User;
 using HealthMate.Services.Interface.Article;
 using HealthMate.Services.Interface.HealthMetric;
+using HealthMate.Services.Interface.PremiumPackage;
+using HealthMate.Services.Interface.Recipe;
 using HealthMate.Services.Interface.User;
 using HealthMate.Services.Service.Article;
 using HealthMate.Services.Service.HealthMetric;
+using HealthMate.Services.Service.PremiumPackage;
+using HealthMate.Services.Service.Recipe;
 using HealthMate.Services.Service.User;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -112,7 +120,10 @@ builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IHealthMetricRepository,HealthMetricRepository>();
 builder.Services.AddScoped<IHealthMetricService, HealthMetricService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScoped<IPremiumPackageRepository, PremiumPackageRepository>();
+builder.Services.AddScoped<IPremiumPackageService, PremiumPackageService>();
+builder.Services.AddScoped<IRecipeRepository,RecipeRepository>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
