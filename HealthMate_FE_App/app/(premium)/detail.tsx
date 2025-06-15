@@ -1,13 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { ChevronLeft } from "lucide-react-native";
 import Colors from "@/constants/colors";
 import { Laptop2, Banknote, Calendar, Check } from "lucide-react-native";
+import { API_URL } from "@env";
+
+type PremiumPackage = {
+    packageId: number;
+    packageName: string;
+    description: string;
+    price: number;
+    durationDays: number;
+    activeSubscribers: number;
+};
 
 export default function Detail() {
     const router = useRouter();
+    const { id } = useLocalSearchParams<{ id: string }>();
+    const [pkg, setPkg] = useState<PremiumPackage | null>(null);
+
+    useEffect(() => {
+        const fetchPackageDetail = async () => {
+            try {
+                const response = await fetch(`${API_URL}/PremiumPackage/${id}`);
+                const data = await response.json();
+                if (response.ok) {
+                    setPkg(data);
+                } else {
+                    console.error("Không thể lấy chi tiết gói:", data);
+                }
+            } catch (error) {
+                console.error("Lỗi khi gọi API:", error);
+            }
+        };
+
+        if (id) {
+            fetchPackageDetail();
+        }
+    }, [id]);
 
     return (
         <View style={styles.container}>
@@ -22,17 +54,21 @@ export default function Detail() {
                     resizeMode="contain"
                 />
 
-                <Text style={styles.title}>Gói tháng</Text>
-                <Text style={styles.subtitle}>(Tiêu chuẩn)</Text>
+                <Text style={styles.title}>{pkg?.packageName || "Gói trả phí"}</Text>
+                <Text style={styles.subtitle}>Tận hưởng các tính năng độc quyền và mới nhất</Text>
 
                 <View style={styles.features}>
                     <View style={styles.featureRow}>
                         <Banknote size={18} color="black" style={styles.icon} />
-                        <Text style={styles.featureText}>Giá: 49.000 VND</Text>
+                        <Text style={styles.featureText}>
+                            Giá: {pkg ? `${pkg.price.toLocaleString()} VND` : "49.000 VND"}
+                        </Text>
                     </View>
                     <View style={styles.featureRow}>
                         <Calendar size={18} color="black" style={styles.icon} />
-                        <Text style={styles.featureText}>Hiệu lực: 30 ngày sau khi thanh toán thành công</Text>
+                        <Text style={styles.featureText}>
+                            Hiệu lực: {pkg ? `${pkg.durationDays} ngày` : "30 ngày"} sau khi thanh toán thành công
+                        </Text>
                     </View>
                 </View>
 
@@ -41,8 +77,8 @@ export default function Detail() {
                 <View style={styles.benefits}>
                     {[
                         "AI thông minh hơn",
-                        "Trò chuyện với AI không bị giới hạn",
                         "AI được cá nhân hóa phù hợp hơn cho người dùng",
+                        pkg?.description,
                     ].map((benefit, index) => (
                         <View key={index} style={styles.benefitRow}>
                             <Check size={18} color="#72C15F" style={styles.icon} />

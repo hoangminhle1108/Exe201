@@ -1,34 +1,49 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
+import { Image } from "expo-image";
 import Colors from "@/constants/colors";
+import { API_URL } from "@env";
 
-const packages = [
-    {
-        id: "1",
-        name: "Gói tháng (Tiêu chuẩn)",
-        price: "49.000 VND/tháng",
-        description: "Mở khóa các tính năng nâng cao",
-        recommended: true,
-    },
-    {
-        id: "2",
-        name: "Gói năm (Cao cấp)",
-        price: "419.000 VND/năm",
-        description: "Có được trải nghiệm tốt nhất với giá thành hợp lý",
-    },
-    {
-        id: "3",
-        name: "Gói dùng thử miễn phí (7 ngày)",
-        price: "Miễn phí",
-        description: "Được sử dụng các tính năng cao tạm thời",
-    },
-];
+type PremiumPackage = {
+    packageId: number;
+    packageName: string;
+    description: string;
+    price: number;
+    durationDays: number;
+    activeSubscribers: number;
+};
 
 export default function List() {
     const router = useRouter();
-    const [selectedId, setSelectedId] = useState("1");
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [packages, setPackages] = useState<PremiumPackage[]>([]);
+
+    useEffect(() => {
+        const fetchPackages = async () => {
+            try {
+                const response = await fetch(`${API_URL}/PremiumPackage`);
+                const data = await response.json();
+                if (response.ok) {
+                    setPackages(data);
+                    if (data.length > 0) setSelectedId(data[0].packageId);
+                } else {
+                    console.error("Không thể lấy dữ liệu gói:", data);
+                }
+            } catch (error) {
+                console.error("Lỗi khi gọi API:", error);
+            }
+        };
+
+        fetchPackages();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -47,26 +62,22 @@ export default function List() {
 
             <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
                 {packages.map((item) => {
-                    const selected = selectedId === item.id;
+                    const selected = selectedId === item.packageId;
                     return (
                         <TouchableOpacity
-                            key={item.id}
-                            style={[
-                                styles.card,
-                                selected && styles.cardSelected,
-                            ]}
-                            onPress={() => setSelectedId(item.id)}
+                            key={item.packageId}
+                            style={[styles.card, selected && styles.cardSelected]}
+                            onPress={() => setSelectedId(item.packageId)}
                         >
                             <View style={{ flex: 1 }}>
-                                <Text style={styles.packageName}>{item.name}</Text>
-                                <Text style={styles.packagePrice}>{item.price}</Text>
+                                <Text style={styles.packageName}>{item.packageName}</Text>
+                                <Text style={styles.packagePrice}>{item.price.toLocaleString()} VND</Text>
                                 <Text style={styles.packageDesc}>{item.description}</Text>
                             </View>
                             <View style={styles.detailRow}>
                                 <Text style={styles.detailText}>Chi tiết</Text>
                                 <ChevronRight size={16} color="gray" />
                             </View>
-                            {item.recommended && <Text style={styles.recommended}>Gợi ý</Text>}
                         </TouchableOpacity>
                     );
                 })}
@@ -74,11 +85,10 @@ export default function List() {
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push("/(premium)/detail")}
+                onPress={() => router.push(`/(premium)/detail?id=${selectedId}`)}
             >
                 <Text style={styles.buttonText}>Tiếp tục</Text>
             </TouchableOpacity>
-
         </View>
     );
 }
