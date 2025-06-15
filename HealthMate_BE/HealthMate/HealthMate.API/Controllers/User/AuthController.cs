@@ -110,5 +110,6 @@ namespace HealthMate.API.Controllers.User
                 return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
             }
         }
+
     }
 }

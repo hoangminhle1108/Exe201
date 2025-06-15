@@ -246,5 +246,36 @@ namespace HealthMate.Repository.Repository.User
                 throw new InvalidOperationException($"Failed to update user ({user.UserId}, {user.FullName}): {ex.Message}", ex);
             }
         }
+        public async Task SetResetPasswordTokenAsync(string email, string token, DateTime expiry)
+        {
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null) throw new InvalidOperationException("User not found.");
+
+            user.ResetPasswordToken = token;
+            user.ResetPasswordTokenExpiry = expiry;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _ctx.SaveChangesAsync();
+        }
+
+        public async Task<Models.User?> GetUserByResetTokenAsync(string token)
+        {
+            return await _ctx.Users.FirstOrDefaultAsync(u =>
+                u.ResetPasswordToken == token && u.ResetPasswordTokenExpiry > DateTime.UtcNow);
+        }
+
+        public async Task<bool> UpdatePasswordAsync(int userId, string newPasswordHash)
+        {
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null) return false;
+
+            user.PasswordHash = newPasswordHash;
+            user.ResetPasswordToken = null;
+            user.ResetPasswordTokenExpiry = null;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _ctx.SaveChangesAsync();
+            return true;
+        }
     }
 }

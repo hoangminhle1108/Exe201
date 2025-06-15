@@ -124,6 +124,7 @@ builder.Services.AddScoped<IPremiumPackageRepository, PremiumPackageRepository>(
 builder.Services.AddScoped<IPremiumPackageService, PremiumPackageService>();
 builder.Services.AddScoped<IRecipeRepository,RecipeRepository>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
