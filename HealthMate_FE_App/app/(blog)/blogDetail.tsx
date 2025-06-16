@@ -1,8 +1,9 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import Colors from "@/constants/colors";
+import { API_URL } from "@env";
 
 const getTagStyle = (tag: string) => {
     switch (tag.toLowerCase()) {
@@ -10,24 +11,81 @@ const getTagStyle = (tag: string) => {
             return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
         case "giảm cân":
             return { backgroundColor: "#dcfce7", color: "#16a34a" };
+        case "thể dục":
+            return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
+        case "sức khỏe":
+            return { backgroundColor: "#fef9c3", color: "#ca8a04" };
+        case "yoga":
+            return { backgroundColor: "#fae8ff", color: "#a21caf" };
+        case "ăn chay":
+            return { backgroundColor: "#bbf7d0", color: "#15803d" };
+        case "ăn kiêng":
+            return { backgroundColor: "#fee2e2", color: "#b91c1c" };
         default:
             return { backgroundColor: "#e5e7eb", color: "#374151" };
     }
 };
 
+type Tag = {
+    tagId: number;
+    tagName: string;
+};
+
+type Article = {
+    articleId: number;
+    title: string;
+    content: string;
+    imageUrl: string;
+    author: string;
+    publishedAt: string;
+    tags: Tag[];
+};
+
 export default function BlogDetail() {
     const router = useRouter();
-    const { name = "Cách giảm cân tại nhà cấp tốc" } = useLocalSearchParams();
-    const tags = ["Dinh dưỡng", "Giảm cân"];
+    const { id } = useLocalSearchParams();
+    const [article, setArticle] = useState<Article | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchArticle = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Article/${id}`);
+                const data = await response.json();
+                if (response.ok) {
+                    setArticle(data);
+                } else {
+                    console.error("Failed to fetch article.");
+                }
+            } catch (error) {
+                console.error("Error fetching article:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) fetchArticle();
+    }, [id]);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 100 }} />;
+    }
+
+    if (!article) {
+        return (
+            <View style={{ padding: 20 }}>
+                <Text style={{ color: "red" }}>Không tìm thấy bài viết.</Text>
+            </View>
+        );
+    }
 
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             <View style={styles.imageContainer}>
                 <Image
-                    source={{ uri: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200" }}
+                    source={{ uri: article.imageUrl || "https://cdn-icons-png.flaticon.com/512/135/135620.png" }}
                     style={styles.image}
                 />
-
                 <View style={styles.headerIcons}>
                     <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                         <ChevronLeft size={24} color="#000" />
@@ -40,58 +98,29 @@ export default function BlogDetail() {
 
             <View style={styles.infoContainer}>
                 <View style={styles.tagsContainer}>
-                    {tags.map((tag, index) => (
-                        <View key={index} style={[styles.tag, { backgroundColor: getTagStyle(tag).backgroundColor }]}>
-                            <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>{tag}</Text>
+                    {article.tags.map((tag, index) => (
+                        <View key={index} style={[styles.tag, { backgroundColor: getTagStyle(tag.tagName).backgroundColor }]}>
+                            <Text style={[styles.tagText, { color: getTagStyle(tag.tagName).color }]}>{tag.tagName}</Text>
                         </View>
                     ))}
                 </View>
 
-                <Text style={styles.title}>{name}</Text>
+                <Text style={styles.title}>{article.title}</Text>
 
-                <Text style={styles.sectionTitle}>Giới thiệu</Text>
-                <Text style={styles.description}>
-                    Giảm cân tại nhà không còn là điều khó khăn nếu bạn có kiến thức đúng và một kế hoạch hợp lý. Bài viết này sẽ
-                    chia sẻ với bạn 10 cách đơn giản nhưng hiệu quả để giảm cân ngay tại nhà mà không cần đến phòng tập.
-                </Text>
-
-                <View style={styles.divider} />
-
-                <Text style={styles.sectionTitle}>1. Ăn uống khoa học</Text>
-                <Text style={styles.description}>
-                    Hạn chế đồ ăn nhanh, thực phẩm nhiều dầu mỡ và thay vào đó là các món hấp, luộc và rau củ. Uống đủ nước và ăn
-                    đúng bữa cũng là yếu tố quan trọng.
-                </Text>
-
-                <Text style={styles.sectionTitle}>2. Tập thể dục thường xuyên</Text>
-                <Text style={styles.description}>
-                    Bạn không cần tập nặng, chỉ cần đi bộ 30 phút mỗi ngày, nhảy dây hoặc tập các bài cardio đơn giản ngay trong
-                    phòng khách cũng đủ giúp đốt cháy calo hiệu quả.
-                </Text>
-
-                <Text style={styles.sectionTitle}>3. Ngủ đủ giấc</Text>
-                <Text style={styles.description}>
-                    Giấc ngủ ảnh hưởng lớn đến quá trình trao đổi chất. Thiếu ngủ khiến cơ thể mệt mỏi và dễ tăng cân hơn.
-                </Text>
-
-                <Text style={styles.sectionTitle}>4. Giảm căng thẳng</Text>
-                <Text style={styles.description}>
-                    Stress làm tăng hormone cortisol, khiến bạn thèm ăn và tích mỡ bụng. Hãy thử thiền, yoga hoặc đơn giản là dành
-                    thời gian cho bản thân.
-                </Text>
+                <View style={styles.metaRow}>
+                    <Text style={styles.meta}>Tác giả: {article.author}</Text>
+                    <Text style={styles.meta}>Ngày đăng: {new Date(article.publishedAt).toLocaleDateString("vi-VN")}</Text>
+                </View>
 
                 <View style={styles.divider} />
 
-                <Text style={styles.sectionTitle}>Kết luận</Text>
-                <Text style={styles.description}>
-                    Giảm cân tại nhà không quá khó nếu bạn duy trì được thói quen tốt mỗi ngày. Hãy bắt đầu từ những thay đổi nhỏ
-                    và kiên trì để đạt được mục tiêu sức khỏe của mình.
-                </Text>
+                {/* <Text style={styles.sectionTitle}>Nội dung</Text> */}
+                <Text style={styles.description}>{article.content}</Text>
             </View>
-
         </ScrollView>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -99,6 +128,16 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         position: "relative",
+    },
+    metaRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    meta: {
+        fontSize: 13,
+        color: "#6b7280",
     },
     image: {
         width: "100%",
@@ -176,8 +215,8 @@ const styles = StyleSheet.create({
     divider: {
         height: 1,
         backgroundColor: "#e5e7eb",
-        marginTop: 25,
-        marginBottom: 5,
+        marginTop: 10,
+        marginBottom: 15,
     },
     ingredientRow: {
         flexDirection: "row",

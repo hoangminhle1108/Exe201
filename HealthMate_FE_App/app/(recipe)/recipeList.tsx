@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { API_URL } from "@env";
 import { View, FlatList, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
 import SearchBar from "../components/SearchBar";
 import RecipeCard from "../components/RecipeCard";
@@ -8,8 +9,32 @@ import { ChevronLeft, Heart } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { categories, destinations } from "@/constants/destinations";
 
+type Recipe = {
+    recipeId: number;
+    title: string;
+    imageUrl: string;
+    likes: number;
+    tags?: string[] | null;
+};
+
 export default function RecipeList() {
     const router = useRouter();
+    const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+
+    useEffect(() => {
+        const fetchRecipes = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Recipe`);
+                const data = await response.json();
+                setAllRecipes(data);
+            } catch (error) {
+                console.error("Error fetching recipes:", error);
+            }
+        };
+
+        fetchRecipes();
+    }, []);
+
     const getTagStyle = (tag: string) => {
         switch (tag.toLowerCase()) {
             case "dinh dưỡng":
@@ -20,6 +45,7 @@ export default function RecipeList() {
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
     };
+
 
     return (
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -86,31 +112,14 @@ export default function RecipeList() {
 
             <Text style={styles.sectionTitle}>Toàn bộ công thức</Text>
             <View style={styles.fullRecipeList}>
-                {[
-                    {
-                        title: "Trứng rán mỡ",
-                        likes: 26,
-                        image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-
-                    },
-                    {
-                        title: "Bắp xào bơ",
-                        likes: 88,
-                        image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-                    },
-                    {
-                        title: "Bơ xào bắp",
-                        likes: 131,
-                        image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-                    },
-                ].map((item, idx) => (
+                {allRecipes.map((item, idx) => (
                     <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.image }} style={styles.fullRecipeImage} />
+                        <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
                         <View style={styles.fullRecipeInfo}>
                             <Text style={styles.fullRecipeTitle}>{item.title}</Text>
 
                             <View style={styles.tagsContainer}>
-                                {["Dinh dưỡng", "Giảm cân"].map((tag, i) => (
+                                {(item.tags && item.tags.length > 0 ? item.tags : ["Dinh dưỡng"]).map((tag, i) => (
                                     <View
                                         key={i}
                                         style={[
@@ -130,15 +139,12 @@ export default function RecipeList() {
                                     <Heart size={12} color={Colors.rating} fill={Colors.rating} />
                                     <Text style={styles.likesText}>{item.likes}</Text>
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail`)}>
+                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)}>
                                     <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
                                 </TouchableOpacity>
-
                             </View>
-
                         </View>
                     </View>
-
                 ))}
             </View>
 
