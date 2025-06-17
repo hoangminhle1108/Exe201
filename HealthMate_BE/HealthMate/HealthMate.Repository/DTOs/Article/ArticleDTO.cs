@@ -19,6 +19,37 @@ namespace HealthMate.Repository.DTOs.Article
         public int TagId { get; set; }
         public string TagName { get; set; } = null!;
     }
+    
+    // Thêm CategoryDTO cho Article (sử dụng Tag như category)
+    public class ArticleCategoryDTO
+    {
+        public int TagId { get; set; }
+        public string TagName { get; set; } = null!;
+        public string? Description { get; set; }
+        public int ArticleCount { get; set; }
+    }
+    
+    // Thêm DTOs cho CRUD operations
+    public class CreateArticleCategoryRequest
+    {
+        [Required]
+        [StringLength(100)]
+        public string TagName { get; set; } = null!;
+        
+        [StringLength(500)]
+        public string? Description { get; set; }
+    }
+    
+    public class UpdateArticleCategoryRequest
+    {
+        [Required]
+        [StringLength(100)]
+        public string TagName { get; set; } = null!;
+        
+        [StringLength(500)]
+        public string? Description { get; set; }
+    }
+    
     public class CreateArticleRequest
     {
         public string Title { get; set; } = null!;

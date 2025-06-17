@@ -42,5 +42,78 @@ namespace HealthMate.API.Controllers
 
             return Ok(recipe);
         }
+        
+        // Thêm các endpoint mới cho category operations
+        [HttpGet("categories")]
+        public async Task<ActionResult<List<RecipeCategoryDTO>>> GetAllRecipeCategories()
+        {
+            var categories = await _service.GetAllRecipeCategoriesAsync();
+            return Ok(categories);
+        }
+
+        [HttpGet("categories/{categoryId}/recipes")]
+        public async Task<ActionResult<List<RecipeDTO>>> GetRecipesByCategory(int categoryId)
+        {
+            var recipes = await _service.GetRecipesByCategoryAsync(categoryId);
+            return Ok(recipes);
+        }
+        
+        // Thêm CRUD endpoints cho Recipe Categories
+        [HttpGet("categories/{categoryId}")]
+        public async Task<ActionResult<RecipeCategoryDTO>> GetRecipeCategoryById(int categoryId)
+        {
+            var category = await _service.GetRecipeCategoryByIdAsync(categoryId);
+            if (category == null)
+                return NotFound();
+
+            return Ok(category);
+        }
+
+        [HttpPost("categories")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<RecipeCategoryDTO>> CreateRecipeCategory(CreateRecipeCategoryRequest request)
+        {
+            var category = await _service.CreateRecipeCategoryAsync(request);
+            return CreatedAtAction(nameof(GetRecipeCategoryById), new { categoryId = category.CategoryId }, category);
+        }
+
+        [HttpPut("categories/{categoryId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<RecipeCategoryDTO>> UpdateRecipeCategory(int categoryId, UpdateRecipeCategoryRequest request)
+        {
+            var category = await _service.UpdateRecipeCategoryAsync(categoryId, request);
+            if (category == null)
+                return NotFound();
+
+            return Ok(category);
+        }
+
+        [HttpDelete("categories/{categoryId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteRecipeCategory(int categoryId)
+        {
+            var result = await _service.DeleteRecipeCategoryAsync(categoryId);
+            if (!result)
+                return NotFound();
+
+            return NoContent();
+        }
+        
+        // Thêm endpoints cho Like/Unlike
+        [HttpPost("{id}/like")]
+        public async Task<ActionResult> LikeRecipe(int id)
+        {
+            var result = await _service.LikeRecipeAsync(id);
+            if (!result) return NotFound();
+            return Ok();
+        }
+
+        [HttpPost("{id}/unlike")]
+        public async Task<ActionResult> UnlikeRecipe(int id)
+        {
+            var result = await _service.UnlikeRecipeAsync(id);
+            if (!result) return NotFound();
+            return Ok();
+        }
     }
 }

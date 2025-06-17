@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,37 @@ namespace HealthMate.Repository.DTOs.Recipe
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
     }
+    
+    // Thêm CategoryDTO riêng cho category operations
+    public class RecipeCategoryDTO
+    {
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; } = null!;
+        public string? Description { get; set; }
+        public int RecipeCount { get; set; }
+    }
+    
+    // Thêm DTOs cho CRUD operations
+    public class CreateRecipeCategoryRequest
+    {
+        [Required]
+        [StringLength(100)]
+        public string CategoryName { get; set; } = null!;
+        
+        [StringLength(500)]
+        public string? Description { get; set; }
+    }
+    
+    public class UpdateRecipeCategoryRequest
+    {
+        [Required]
+        [StringLength(100)]
+        public string CategoryName { get; set; } = null!;
+        
+        [StringLength(500)]
+        public string? Description { get; set; }
+    }
+    
     public class RecipeDTO
     {
         public int RecipeId { get; set; }
