@@ -88,6 +88,95 @@ namespace HealthMate.Services.Service.Article
         {
             return await _repo.DeleteArticleAsync(id);
         }
+        
+        // Implementation cho category operations
+        public async Task<List<ArticleCategoryDTO>> GetAllArticleCategoriesAsync()
+        {
+            var tags = await _repo.GetAllArticleCategoriesAsync();
+            return tags.Select(tag => new ArticleCategoryDTO
+            {
+                TagId = tag.TagId,
+                TagName = tag.TagName,
+                Description = tag.Description,
+                ArticleCount = tag.ArticleTagMappings?.Count ?? 0
+            }).ToList();
+        }
+
+        public async Task<List<ArticleDTO>> GetArticlesByCategoryAsync(int tagId)
+        {
+            var articles = await _repo.GetArticlesByCategoryAsync(tagId);
+            return articles.Select(MapToDTO).ToList();
+        }
+        
+        // Implementation cho CRUD Article Categories
+        public async Task<ArticleCategoryDTO?> GetArticleCategoryByIdAsync(int tagId)
+        {
+            var tag = await _repo.GetArticleCategoryByIdAsync(tagId);
+            return tag != null ? new ArticleCategoryDTO
+            {
+                TagId = tag.TagId,
+                TagName = tag.TagName,
+                Description = tag.Description,
+                ArticleCount = tag.ArticleTagMappings?.Count ?? 0
+            } : null;
+        }
+
+        public async Task<ArticleCategoryDTO> CreateArticleCategoryAsync(CreateArticleCategoryRequest request)
+        {
+            var tag = new Repository.Models.Tag
+            {
+                TagName = request.TagName,
+                Description = request.Description,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var created = await _repo.CreateArticleCategoryAsync(tag);
+            return new ArticleCategoryDTO
+            {
+                TagId = created.TagId,
+                TagName = created.TagName,
+                Description = created.Description,
+                ArticleCount = 0
+            };
+        }
+
+        public async Task<ArticleCategoryDTO?> UpdateArticleCategoryAsync(int tagId, UpdateArticleCategoryRequest request)
+        {
+            var tag = new Repository.Models.Tag
+            {
+                TagId = tagId,
+                TagName = request.TagName,
+                Description = request.Description
+            };
+
+            var updated = await _repo.UpdateArticleCategoryAsync(tag);
+            if (updated == null)
+                return null;
+
+            return new ArticleCategoryDTO
+            {
+                TagId = updated.TagId,
+                TagName = updated.TagName,
+                Description = updated.Description,
+                ArticleCount = updated.ArticleTagMappings?.Count ?? 0
+            };
+        }
+
+        public async Task<bool> DeleteArticleCategoryAsync(int tagId)
+        {
+            return await _repo.DeleteArticleCategoryAsync(tagId);
+        }
+
+        // Implementation cho Like/Unlike
+        public async Task<bool> LikeArticleAsync(int articleId)
+        {
+            return await _repo.LikeArticleAsync(articleId);
+        }
+
+        public async Task<bool> UnlikeArticleAsync(int articleId)
+        {
+            return await _repo.UnlikeArticleAsync(articleId);
+        }
 
         private static ArticleDTO MapToDTO(Repository.Models.Article article)
         {
