@@ -22,5 +22,9 @@ namespace HealthMate.Repository.Interface.User
         Task<List<HealthMate.Repository.Models.User>?> GetAllUsersByGoogleAsync(bool isGoogle);
         Task<HealthMate.Repository.Models.User> UpdateUserAsync(HealthMate.Repository.Models.User user);
         Task<bool> DeleteUserAsync(int userId);
+        Task SetResetPasswordTokenAsync(string email, string token, DateTime expiry);
+        Task<Models.User?> GetUserByResetTokenAsync(string token);
+        Task<bool> UpdatePasswordAsync(int userId, string newPasswordHash);
+
     }
 }

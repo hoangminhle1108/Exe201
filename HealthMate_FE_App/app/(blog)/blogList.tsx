@@ -20,26 +20,21 @@ import { API_URL } from "@env";
 
 export default function BlogList() {
     const router = useRouter();
+    type Tag = {
+        tagId: number;
+        tagName: string;
+    };
+
     type Article = {
         articleId: number;
         title: string;
-        image: string;
-        tags: string[];
+        imageUrl: string;
+        tags: Tag[];
         likes: number;
     };
+
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
-
-    const getTagStyle = (tag: string) => {
-        switch (tag.toLowerCase()) {
-            case "dinh dưỡng":
-                return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
-            case "giảm cân":
-                return { backgroundColor: "#dcfce7", color: "#16a34a" };
-            default:
-                return { backgroundColor: "#e5e7eb", color: "#374151" };
-        }
-    };
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -60,6 +55,32 @@ export default function BlogList() {
 
         fetchArticles();
     }, []);
+
+
+    const getTagStyle = (tagName: string | undefined) => {
+        if (typeof tagName !== "string") {
+            return { backgroundColor: "#e5e7eb", color: "#374151" };
+        }
+
+        switch (tagName.toLowerCase()) {
+            case "dinh dưỡng":
+                return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
+            case "giảm cân":
+                return { backgroundColor: "#dcfce7", color: "#16a34a" };
+            case "thể dục":
+                return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
+            case "sức khỏe":
+                return { backgroundColor: "#fef9c3", color: "#ca8a04" };
+            case "yoga":
+                return { backgroundColor: "#fae8ff", color: "#a21caf" };
+            case "ăn chay":
+                return { backgroundColor: "#bbf7d0", color: "#15803d" };
+            case "ăn kiêng":
+                return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+            default:
+                return { backgroundColor: "#e5e7eb", color: "#374151" };
+        }
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -127,26 +148,30 @@ export default function BlogList() {
                     articles.map((item, idx) => (
                         <View key={idx} style={styles.fullRecipeCard}>
                             <Image
-                                source={{ uri: item?.image || "https://cdn-icons-png.flaticon.com/512/135/135620.png" }}
+                                source={{ uri: item?.imageUrl || "https://cdn-icons-png.flaticon.com/512/135/135620.png" }}
                                 style={styles.fullRecipeImage}
                             />
                             <View style={styles.fullRecipeInfo}>
                                 <Text style={styles.fullRecipeTitle}>{item?.title || "Không có tiêu đề"}</Text>
                                 <View style={styles.tagsContainer}>
-                                    {item?.tags?.map((tag: string, i: number) => (
+                                    {(item?.tags?.length > 0
+                                        ? item.tags.map((t) => t.tagName)
+                                        : ["Dinh dưỡng"]
+                                    ).map((tagName: string, i: number) => (
                                         <View
                                             key={i}
                                             style={[
                                                 styles.tag,
-                                                { backgroundColor: getTagStyle(tag).backgroundColor },
+                                                { backgroundColor: getTagStyle(tagName).backgroundColor },
                                             ]}
                                         >
-                                            <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>
-                                                {tag}
+                                            <Text style={[styles.tagText, { color: getTagStyle(tagName).color }]}>
+                                                {tagName}
                                             </Text>
                                         </View>
                                     ))}
                                 </View>
+
 
                                 <View style={styles.bottomRow}>
                                     <View style={styles.likesContainer}>

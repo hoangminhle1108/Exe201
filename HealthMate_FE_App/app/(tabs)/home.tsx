@@ -43,6 +43,7 @@ export default function Home() {
   const router = useRouter();
   const [fullName, setFullName] = useState("Người dùng");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [premiumExpiry, setPremiumExpiry] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserFullName = async () => {
@@ -56,6 +57,8 @@ export default function Home() {
         if (response.ok && userArray.length > 0) {
           setFullName(userArray[0].fullName || "Người dùng");
           setAvatarUrl(userArray[0].avatarUrl);
+          setPremiumExpiry(userArray[0].premiumExpiry);
+
         }
       } catch (error) {
         console.error("Lỗi khi lấy thông tin người dùng:", error);
@@ -91,7 +94,10 @@ export default function Home() {
               onPress={() => router.replace("/(premium)/list")}
               style={styles.notificationButton}
             >
-              <Crown size={24} color={Colors.text} />
+              <Crown
+                size={24}
+                color={premiumExpiry ? Colors.secondary : Colors.text}
+              />
             </TouchableOpacity>
           </View>
         );
@@ -102,7 +108,7 @@ export default function Home() {
             <View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={styles.dateLabel}>Hôm nay</Text>
-                <Feather name="sun" size={16} color={Colors.textSecondary} style={{ marginLeft: 6 }} />
+                <Feather name="sun" size={16} color={Colors.secondary} style={{ marginLeft: 6 }} />
               </View>
               <Text style={styles.dateText}>{formattedDate}</Text>
             </View>

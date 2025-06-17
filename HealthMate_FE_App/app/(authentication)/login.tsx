@@ -9,9 +9,14 @@ import {
   Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { API_URL } from "@env";
+import { API_URL, GOOGLE_CLIENT_ID } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Eye, EyeOff } from "lucide-react-native";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+import { makeRedirectUri } from "expo-auth-session";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -20,6 +25,44 @@ export default function LoginScreen() {
   const [agree, setAgree] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: GOOGLE_CLIENT_ID,
+    iosClientId: GOOGLE_CLIENT_ID,
+    androidClientId: GOOGLE_CLIENT_ID,
+    scopes: ["profile", "email"],
+    redirectUri: makeRedirectUri({
+      native: "com.healthmate:/oauthredirect",
+    }),
+  });
+
+  useEffect(() => {
+    if (response?.type === "success" && response.authentication?.idToken) {
+      handleGoogleLogin(response.authentication.idToken);
+    }
+  }, [response]);
+
+  const handleGoogleLogin = async (idToken: string) => {
+    try {
+      const res = await fetch(`${API_URL}/Auth/login/google`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Đăng nhập bằng Google thất bại.");
+      }
+
+      const data = await res.json();
+      await AsyncStorage.setItem("token", data.token);
+      router.replace("/(tabs)/home");
+    } catch (error: any) {
+      Alert.alert("Đăng nhập bằng Google thất bại.", error.message || "Đăng nhập bằng Google thất bại.");
+    }
+  };
 
   useEffect(() => {
     const loadRememberedData = async () => {
@@ -33,7 +76,6 @@ export default function LoginScreen() {
         setAgree(true);
       }
     };
-
     loadRememberedData();
   }, []);
 
@@ -46,9 +88,7 @@ export default function LoginScreen() {
     try {
       const response = await fetch(`${API_URL}/Auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -60,8 +100,6 @@ export default function LoginScreen() {
         await AsyncStorage.removeItem("password");
         await AsyncStorage.setItem("agree", "false");
       }
-      await AsyncStorage.setItem("email", email);
-
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -69,8 +107,7 @@ export default function LoginScreen() {
       }
 
       const data = await response.json();
-      // await AsyncStorage.setItem("token", data.token);
-
+      await AsyncStorage.setItem("token", data.token);
       router.replace("/(tabs)/home");
     } catch (error: any) {
       Alert.alert("Thông báo", error.message || "Có lỗi xảy ra.");
@@ -84,6 +121,7 @@ export default function LoginScreen() {
         style={styles.logo}
         resizeMode="contain"
       />
+
       <View style={styles.tabHeader}>
         <Text style={[styles.tab, styles.activeTab]}>Đăng nhập</Text>
         <Text style={styles.tab}>Đăng ký</Text>
@@ -95,6 +133,7 @@ export default function LoginScreen() {
         value={email}
         onChangeText={setEmail}
       />
+
       <View style={{ position: "relative" }}>
         <TextInput
           style={styles.input}
@@ -114,7 +153,6 @@ export default function LoginScreen() {
           )}
         </TouchableOpacity>
       </View>
-
 
       <View style={styles.rowBetween}>
         <View style={styles.checkboxContainer}>
@@ -161,9 +199,7 @@ export default function LoginScreen() {
 
       <TouchableOpacity
         style={styles.googleButton}
-        onPress={() => {
-          // Handle Google login
-        }}
+        onPress={() => promptAsync()}
       >
         <Image
           source={{

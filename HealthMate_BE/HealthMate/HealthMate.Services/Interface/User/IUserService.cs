@@ -19,5 +19,8 @@ namespace HealthMate.Services.Interface.User
         Task<Repository.DTOs.UserDTO.UserDTO> UpdateUserAsync(UserUpdateDTO updatedUser);
         Task<bool> DeleteUserAsync(int userId);
         Task<Repository.DTOs.UserDTO.UserDTO> UpdateUserStatusAsync(int userId, bool isActive);
+        Task<bool> RequestPasswordResetAsync(string email);
+        Task<bool> ResetPasswordAsync(string token, string newPassword);
+
     }
 }

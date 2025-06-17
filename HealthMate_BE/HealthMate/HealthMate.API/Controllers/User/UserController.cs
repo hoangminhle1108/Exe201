@@ -149,5 +149,23 @@ namespace HealthMate.API.Controllers.User
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
         }
+        [HttpPost("request-reset-password")]
+        public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
+        {
+            var success = await _userService.RequestPasswordResetAsync(email);
+            if (!success) return NotFound(new { message = "User not found." });
+
+            return Ok(new { message = "Password reset link sent." });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
+        {
+            var success = await _userService.ResetPasswordAsync(dto.Token, dto.NewPassword);
+            if (!success) return BadRequest(new { message = "Invalid or expired token." });
+
+            return Ok(new { message = "Password updated successfully." });
+        }
+
     }
 }

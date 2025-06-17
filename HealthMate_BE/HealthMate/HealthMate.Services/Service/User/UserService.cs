@@ -13,9 +13,11 @@ namespace HealthMate.Services.Service.User
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IEmailService _emailService;
+        public UserService(IUserRepository userRepository, IEmailService emailService)
         {
             _userRepository = userRepository;
+            _emailService = emailService;
         }
         public async Task<bool> DeleteUserAsync(int userId)
         {
@@ -246,6 +248,35 @@ namespace HealthMate.Services.Service.User
             {
                 throw new InvalidOperationException($"Failed to update user status with ID {userId}: {ex.Message}", ex);
             }
+        }
+        public async Task<bool> RequestPasswordResetAsync(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null) return false;
+
+            var token = Guid.NewGuid().ToString();
+            var expiry = DateTime.UtcNow.AddMinutes(15);
+
+            await _userRepository.SetResetPasswordTokenAsync(email, token, expiry);
+
+            var resetUrl = $"https://yourfrontend.com/reset-password?token={token}";
+            var htmlMessage = $@"
+        <p>Hello {user.FullName ?? "User"},</p>
+        <p>You requested a password reset. Click below:</p>
+        <p><a href='{resetUrl}'>Reset Password</a></p>
+        <p>This link will expire in 15 minutes.</p>";
+
+            await _emailService.SendEmailAsync(user.Email, "Reset Your Password", htmlMessage);
+            return true;
+        }
+
+        public async Task<bool> ResetPasswordAsync(string token, string newPassword)
+        {
+            var user = await _userRepository.GetUserByResetTokenAsync(token);
+            if (user == null) return false;
+
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            return await _userRepository.UpdatePasswordAsync(user.UserId, hashedPassword);
         }
     }
 }
