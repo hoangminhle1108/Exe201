@@ -1,4 +1,4 @@
-﻿using HealthMate.Repository.DTOs.UserDTO;
+using HealthMate.Repository.DTOs.UserDTO;
 using HealthMate.Repository.Interface.User;
 using HealthMate.Repository.Models;
 using HealthMate.Services.Interface.User;
@@ -254,28 +254,48 @@ namespace HealthMate.Services.Service.User
             var user = await _userRepository.GetByEmailAsync(email);
             if (user == null) return false;
 
-            var token = Guid.NewGuid().ToString();
-            var expiry = DateTime.UtcNow.AddMinutes(15);
+            string otp;
+            DateTime expiry;
 
-            await _userRepository.SetResetPasswordTokenAsync(email, token, expiry);
+            // Nếu OTP hiện tại còn hiệu lực → gửi lại
+            if (!string.IsNullOrEmpty(user.ResetPasswordToken) && user.ResetPasswordTokenExpiry > DateTime.UtcNow)
+            {
+                otp = user.ResetPasswordToken!;
+                expiry = user.ResetPasswordTokenExpiry.Value;
+            }
+            else
+            {
+                otp = new Random().Next(100000, 999999).ToString();
+                expiry = DateTime.UtcNow.AddMinutes(5);
+                await _userRepository.SetResetPasswordTokenAsync(email, otp, expiry);
+            }
 
-            var resetUrl = $"https://yourfrontend.com/reset-password?token={token}";
             var htmlMessage = $@"
-        <p>Hello {user.FullName ?? "User"},</p>
-        <p>You requested a password reset. Click below:</p>
-        <p><a href='{resetUrl}'>Reset Password</a></p>
-        <p>This link will expire in 15 minutes.</p>";
+        <p>Xin chào {user.FullName ?? "User"},</p>
+        <p>Bạn đã yêu cầu đặt lại mật khẩu. Đây là mã OTP của bạn:</p>
+        <h2 style='color: #4CAF50; font-size: 24px; text-align: center;'>{otp}</h2>
+        <p>Mã này sẽ hết hạn sau 5 phút.</p>";
 
-            await _emailService.SendEmailAsync(user.Email, "Reset Your Password", htmlMessage);
+            await _emailService.SendEmailAsync(user.Email, "Đặt lại mật khẩu", htmlMessage);
             return true;
         }
 
-        public async Task<bool> ResetPasswordAsync(string token, string newPassword)
+        public async Task<bool> VerifyOtpAsync(string email, string otp)
         {
-            var user = await _userRepository.GetUserByResetTokenAsync(token);
-            if (user == null) return false;
+            var user = await _userRepository.GetUserByResetTokenAsync(email, otp);
+            Console.WriteLine($"OTP = {user.ResetPasswordToken}, Expiry = {user.ResetPasswordTokenExpiry}, Now = {DateTime.UtcNow}");
+
+            return user != null;
+        }
+
+        public async Task<bool> ResetPasswordAsync(string email, string newPassword)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null || user.ResetPasswordTokenExpiry < DateTime.UtcNow)
+                return false;
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
             return await _userRepository.UpdatePasswordAsync(user.UserId, hashedPassword);
         }
     }

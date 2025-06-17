@@ -23,7 +23,7 @@ namespace HealthMate.Repository.Interface.User
         Task<HealthMate.Repository.Models.User> UpdateUserAsync(HealthMate.Repository.Models.User user);
         Task<bool> DeleteUserAsync(int userId);
         Task SetResetPasswordTokenAsync(string email, string token, DateTime expiry);
-        Task<Models.User?> GetUserByResetTokenAsync(string token);
+        Task<Models.User?> GetUserByResetTokenAsync(string email, string token);
         Task<bool> UpdatePasswordAsync(int userId, string newPasswordHash);
 
     }

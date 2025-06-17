@@ -3,21 +3,36 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Chatbot</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        flowise-fullchatbot {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
     <flowise-fullchatbot></flowise-fullchatbot>
     <script type="module">
-        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js";
+
         Chatbot.initFull({
             chatflowid: "892b9440-ba88-475c-9a19-f2246e7154bf",
-            apiHost: "http://192.168.1.100:3000",
-            chatflowConfig: {
-            },
-            observersConfig: {
-            },
+            apiHost: "https://0359-123-20-252-6.ngrok-free.app",
+            chatflowConfig: {},
+            observersConfig: {},
             theme: {
                 button: {
                     backgroundColor: "#72C15F",
@@ -51,8 +66,18 @@
                     },
                 }
             }
-        })
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+        .chat-message {
+            margin-top: 12px !important;
+            margin-bottom: 12px !important;
+        }
+    `;
+        document.head.appendChild(style);
     </script>
+
 </body>
 
 </html>

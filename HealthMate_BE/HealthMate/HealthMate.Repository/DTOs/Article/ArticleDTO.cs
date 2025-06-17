@@ -12,13 +12,44 @@ namespace HealthMate.Repository.DTOs.Article
         public DateTime PublishedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public List<TagDTO> Tags { get; set; } = new();
-
+        public int LikesCount { get; set; }
     }
     public class TagDTO
     {
         public int TagId { get; set; }
         public string TagName { get; set; } = null!;
     }
+    
+    // Thêm CategoryDTO cho Article (sử dụng Tag như category)
+    public class ArticleCategoryDTO
+    {
+        public int TagId { get; set; }
+        public string TagName { get; set; } = null!;
+        public string? Description { get; set; }
+        public int ArticleCount { get; set; }
+    }
+    
+    // Thêm DTOs cho CRUD operations
+    public class CreateArticleCategoryRequest
+    {
+        [Required]
+        [StringLength(100)]
+        public string TagName { get; set; } = null!;
+        
+        [StringLength(500)]
+        public string? Description { get; set; }
+    }
+    
+    public class UpdateArticleCategoryRequest
+    {
+        [Required]
+        [StringLength(100)]
+        public string TagName { get; set; } = null!;
+        
+        [StringLength(500)]
+        public string? Description { get; set; }
+    }
+    
     public class CreateArticleRequest
     {
         public string Title { get; set; } = null!;
@@ -37,4 +68,4 @@ namespace HealthMate.Repository.DTOs.Article
         public string? ImageUrl { get; set; }
         public List<int> TagIds { get; set; } = new();
     }
-} 
+}

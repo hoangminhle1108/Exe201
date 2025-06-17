@@ -140,16 +140,16 @@ export default function Home() {
               <FeatureCard
                 type="ai"
                 title="Trò chuyện với AI"
-                value="7:30 pm"
-                updated="lần cuối 10 phút trước"
+                value="24/7"
+                updated="tìm các lời khuyên bổ ích"
                 color="#72C15F"
                 onPress={() => router.push("/(tabs)/chatbot")}
               />
               <FeatureCard
                 type="nutrition"
                 title="Phân tích dinh dưỡng"
-                value="960 calo"
-                updated="cập nhật 13 tiếng trước"
+                value="mỗi ngày"
+                updated="theo dõi sức khỏe"
                 color="#f39c6b"
                 onPress={() => router.replace("/(nutrition)/overview")}
               />

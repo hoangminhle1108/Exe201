@@ -67,6 +67,95 @@ namespace HealthMate.Services.Service.Recipe
             var updated = await _repo.UpdateRecipeAsync(recipe);
             return updated != null ? MapToDTO(updated) : null;
         }
+        
+        // Implementation cho category operations
+        public async Task<List<RecipeCategoryDTO>> GetAllRecipeCategoriesAsync()
+        {
+            var categories = await _repo.GetAllRecipeCategoriesAsync();
+            return categories.Select(category => new RecipeCategoryDTO
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description,
+                RecipeCount = category.Recipes?.Count ?? 0
+            }).ToList();
+        }
+
+        public async Task<List<RecipeDTO>> GetRecipesByCategoryAsync(int categoryId)
+        {
+            var recipes = await _repo.GetRecipesByCategoryAsync(categoryId);
+            return recipes.Select(MapToDTO).ToList();
+        }
+        
+        // Implementation cho CRUD Recipe Categories
+        public async Task<RecipeCategoryDTO?> GetRecipeCategoryByIdAsync(int categoryId)
+        {
+            var category = await _repo.GetRecipeCategoryByIdAsync(categoryId);
+            return category != null ? new RecipeCategoryDTO
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description,
+                RecipeCount = category.Recipes?.Count ?? 0
+            } : null;
+        }
+
+        public async Task<RecipeCategoryDTO> CreateRecipeCategoryAsync(CreateRecipeCategoryRequest request)
+        {
+            var category = new Repository.Models.RecipeCategory
+            {
+                CategoryName = request.CategoryName,
+                Description = request.Description
+            };
+
+            var created = await _repo.CreateRecipeCategoryAsync(category);
+            return new RecipeCategoryDTO
+            {
+                CategoryId = created.CategoryId,
+                CategoryName = created.CategoryName,
+                Description = created.Description,
+                RecipeCount = 0
+            };
+        }
+
+        public async Task<RecipeCategoryDTO?> UpdateRecipeCategoryAsync(int categoryId, UpdateRecipeCategoryRequest request)
+        {
+            var category = new Repository.Models.RecipeCategory
+            {
+                CategoryId = categoryId,
+                CategoryName = request.CategoryName,
+                Description = request.Description
+            };
+
+            var updated = await _repo.UpdateRecipeCategoryAsync(category);
+            if (updated == null)
+                return null;
+
+            return new RecipeCategoryDTO
+            {
+                CategoryId = updated.CategoryId,
+                CategoryName = updated.CategoryName,
+                Description = updated.Description,
+                RecipeCount = updated.Recipes?.Count ?? 0
+            };
+        }
+
+        public async Task<bool> DeleteRecipeCategoryAsync(int categoryId)
+        {
+            return await _repo.DeleteRecipeCategoryAsync(categoryId);
+        }
+        
+        // Implementation cho Like/Unlike
+        public async Task<bool> LikeRecipeAsync(int recipeId)
+        {
+            return await _repo.LikeRecipeAsync(recipeId);
+        }
+
+        public async Task<bool> UnlikeRecipeAsync(int recipeId)
+        {
+            return await _repo.UnlikeRecipeAsync(recipeId);
+        }
+        
         private static RecipeDTO MapToDTO(Repository.Models.Recipe recipe) => new RecipeDTO
         {
             RecipeId = recipe.RecipeId,
@@ -80,7 +169,12 @@ namespace HealthMate.Services.Service.Recipe
             Difficulty = recipe.Difficulty,
             ImageUrl = recipe.ImageUrl,
             CreatedAt = recipe.CreatedAt,
-            UpdatedAt = recipe.UpdatedAt
+            UpdatedAt = recipe.UpdatedAt,
+            Categories = recipe.Categories?.Select(c => new CategoryDTO
+            {
+                CategoryId = c.CategoryId,
+                CategoryName = c.CategoryName
+            }).ToList() ?? new List<CategoryDTO>()
         };
 
     }
