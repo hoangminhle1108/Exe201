@@ -1,0 +1,9 @@
+{
+    "build": {
+        "android": {
+            "releaseChannel": "default",
+            "developmentClient": false,
+            "distribution": "internal"
+        }
+    }
+}

@@ -85,20 +85,48 @@ export default function EditProfileScreen() {
         }
 
         try {
-            const response = await fetch(`${API_URL}/User/update_by_email/${email}`, {
+            const storedEmail = await AsyncStorage.getItem("email");
+            const userInfoRes = await fetch(`${API_URL}/User/all_user_by_email/${storedEmail}`);
+            const userArray = await userInfoRes.json();
+            if (!userInfoRes.ok || userArray.length === 0) {
+                Alert.alert("Lỗi", "Không thể lấy thông tin người dùng.");
+                return;
+            }
+
+            const user = userArray[0];
+
+            console.log("Update body:", {
+                userId: user.userId,
+                fullName: name,
+                passwordHash: user.passwordHash ?? "",
+                avatarUrl: avatarUrl ?? "",
+                dateOfBirth: dobDate.toISOString().split("T")[0],
+                roleId: user.roleId,
+                premiumExpiry: user.premiumExpiry ?? new Date().toISOString(),
+                isActive: true,
+                updatedAt: new Date().toISOString(),
+            });
+
+
+            const updateRes = await fetch(`${API_URL}/User/update_user`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
+                    userId: user.userId,
                     fullName: name,
+                    passwordHash: user.passwordHash ?? "",
+                    avatarUrl: avatarUrl ?? "",
                     dateOfBirth: dobDate.toISOString().split("T")[0],
-                    avatarUrl: avatarUrl,
-                    email: email,
+                    roleId: user.roleId,
+                    premiumExpiry: user.premiumExpiry ?? new Date().toISOString(),
+                    isActive: true,
+                    updatedAt: new Date().toISOString(),
                 }),
             });
 
-            if (response.ok) {
+            if (updateRes.ok) {
                 Alert.alert("Thành công", "Thông tin đã được cập nhật.");
                 router.replace("/(tabs)/profile");
             } else {
