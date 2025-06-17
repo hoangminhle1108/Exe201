@@ -1,6 +1,7 @@
 ﻿using HealthMate.Repository.DTOs.Recipe;
 using HealthMate.Services.Interface.Recipe;
 using HealthMate.Services.Service.Recipe;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

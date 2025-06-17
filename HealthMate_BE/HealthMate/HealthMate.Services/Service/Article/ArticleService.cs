@@ -178,6 +178,19 @@ namespace HealthMate.Services.Service.Article
             return await _repo.UnlikeArticleAsync(articleId);
         }
 
+        // Implementation cho tìm kiếm và lấy bài viết phổ biến
+        public async Task<List<ArticleDTO>> SearchArticlesByTitleAsync(string title)
+        {
+            var articles = await _repo.SearchArticlesByTitleAsync(title);
+            return articles.Select(MapToDTO).ToList();
+        }
+
+        public async Task<List<ArticleDTO>> GetMostLikedArticlesAsync(int count)
+        {
+            var articles = await _repo.GetMostLikedArticlesAsync(count);
+            return articles.Select(MapToDTO).ToList();
+        }
+
         private static ArticleDTO MapToDTO(Repository.Models.Article article)
         {
             return new ArticleDTO
@@ -189,6 +202,7 @@ namespace HealthMate.Services.Service.Article
                 PublishedAt = article.PublishedAt,
                 UpdatedAt = article.UpdatedAt,
                 ImageUrl = article.ImageUrl,
+                LikesCount = article.Likes,
                 Tags = article.ArticleTagMappings.Select(m => new TagDTO
                 {
                     TagId = m.TagId,
@@ -197,4 +211,4 @@ namespace HealthMate.Services.Service.Article
             };
         }
     }
-} 
+}

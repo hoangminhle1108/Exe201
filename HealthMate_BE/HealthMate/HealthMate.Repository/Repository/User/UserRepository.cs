@@ -254,14 +254,16 @@ namespace HealthMate.Repository.Repository.User
             user.ResetPasswordToken = token;
             user.ResetPasswordTokenExpiry = expiry;
             user.UpdatedAt = DateTime.UtcNow;
-
+            _ctx.Users.Update(user);
             await _ctx.SaveChangesAsync();
         }
 
-        public async Task<Models.User?> GetUserByResetTokenAsync(string token)
+        public async Task<Models.User?> GetUserByResetTokenAsync(string email, string token)
         {
             return await _ctx.Users.FirstOrDefaultAsync(u =>
-                u.ResetPasswordToken == token && u.ResetPasswordTokenExpiry > DateTime.UtcNow);
+                u.Email == email &&
+                u.ResetPasswordToken == token &&
+                u.ResetPasswordTokenExpiry > DateTime.UtcNow);
         }
 
         public async Task<bool> UpdatePasswordAsync(int userId, string newPasswordHash)
@@ -273,6 +275,7 @@ namespace HealthMate.Repository.Repository.User
             user.ResetPasswordToken = null;
             user.ResetPasswordTokenExpiry = null;
             user.UpdatedAt = DateTime.UtcNow;
+            _ctx.Users.Update(user);
 
             await _ctx.SaveChangesAsync();
             return true;

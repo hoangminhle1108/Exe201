@@ -153,5 +153,24 @@ namespace HealthMate.Repository.Repository.Article
             await _ctx.SaveChangesAsync();
             return true;
         }
+
+        // Implementation cho tìm kiếm và lấy bài viết phổ biến
+        public async Task<List<Models.Article>> SearchArticlesByTitleAsync(string title)
+        {
+            return await _ctx.Articles
+                .Include(a => a.ArticleTagMappings).ThenInclude(a => a.Tag)
+                .Where(a => a.Title.Contains(title))
+                .OrderByDescending(a => a.PublishedAt)
+                .ToListAsync();
+        }
+
+        public async Task<List<Models.Article>> GetMostLikedArticlesAsync(int count)
+        {
+            return await _ctx.Articles
+                .Include(a => a.ArticleTagMappings).ThenInclude(a => a.Tag)
+                .OrderByDescending(a => a.Likes)
+                .Take(count)
+                .ToListAsync();
+        }
     }
-} 
+}

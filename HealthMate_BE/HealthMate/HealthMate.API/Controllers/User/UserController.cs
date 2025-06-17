@@ -1,4 +1,4 @@
-﻿using HealthMate.Repository.DTOs.UserDTO;
+using HealthMate.Repository.DTOs.UserDTO;
 using HealthMate.Services.Interface.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -153,18 +153,36 @@ namespace HealthMate.API.Controllers.User
         public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
         {
             var success = await _userService.RequestPasswordResetAsync(email);
-            if (!success) return NotFound(new { message = "User not found." });
+            if (!success) return NotFound(new { message = "Không tìm thấy người dùng." });
 
-            return Ok(new { message = "Password reset link sent." });
+            return Ok(new { message = "Mã OTP đã được gửi đến email của bạn." });
+        }
+
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ResendOTP([FromBody] string email)
+        {
+            var success = await _userService.RequestPasswordResetAsync(email);
+            if (!success) return NotFound(new { message = "Không tìm thấy người dùng." });
+
+            return Ok(new { message = "Mã OTP mới đã được gửi đến email của bạn." });
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOTP([FromBody] VerifyOTPDTO dto)
+        {
+            var success = await _userService.VerifyOtpAsync(dto.Email, dto.OTP);
+            if (!success) return BadRequest(new { message = "Mã OTP không hợp lệ hoặc đã hết hạn." });
+
+            return Ok(new { message = "Mã OTP hợp lệ." });
         }
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
         {
-            var success = await _userService.ResetPasswordAsync(dto.Token, dto.NewPassword);
-            if (!success) return BadRequest(new { message = "Invalid or expired token." });
+            var success = await _userService.ResetPasswordAsync(dto.Email, dto.NewPassword);
+            if (!success) return BadRequest(new { message = "Không thể đổi mật khẩu. Vui lòng thử lại." });
 
-            return Ok(new { message = "Password updated successfully." });
+            return Ok(new { message = "Mật khẩu đã được cập nhật thành công." });
         }
 
     }

@@ -12,7 +12,7 @@ namespace HealthMate.Repository.DTOs.Article
         public DateTime PublishedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public List<TagDTO> Tags { get; set; } = new();
-
+        public int LikesCount { get; set; }
     }
     public class TagDTO
     {
@@ -68,4 +68,4 @@ namespace HealthMate.Repository.DTOs.Article
         public string? ImageUrl { get; set; }
         public List<int> TagIds { get; set; } = new();
     }
-} 
+}

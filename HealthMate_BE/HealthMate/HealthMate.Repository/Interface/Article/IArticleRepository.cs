@@ -25,5 +25,9 @@ namespace HealthMate.Repository.Interface.Article
         // Thêm methods cho Like/Unlike
         Task<bool> LikeArticleAsync(int articleId);
         Task<bool> UnlikeArticleAsync(int articleId);
+
+        // Thêm methods cho tìm kiếm và lấy bài viết phổ biến
+        Task<List<Models.Article>> SearchArticlesByTitleAsync(string title);
+        Task<List<Models.Article>> GetMostLikedArticlesAsync(int count);
     }
-} 
+}
