@@ -158,7 +158,7 @@ export default function Home() {
         );
       case "post":
         return (
-          <View style={styles.content}>
+          <View style={styles.postContent}>
             <View style={styles.section}>
               <SectionHeader
                 title="Bài viết"
@@ -247,6 +247,10 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
+  },
+  postContent: {
+    paddingHorizontal: 24,
+    marginTop: 16,
   },
   content: {
     paddingHorizontal: 24,

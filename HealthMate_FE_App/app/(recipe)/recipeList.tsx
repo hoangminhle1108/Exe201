@@ -1,25 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "@env";
-import { View, FlatList, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+    View,
+    FlatList,
+    Text,
+    ScrollView,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    ActivityIndicator,
+} from "react-native";
 import SearchBar from "../components/SearchBar";
 import RecipeCard from "../components/RecipeCard";
 import Colors from "@/constants/colors";
 import CategoryItem from "../components/CategoryItem";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import { useRouter } from "expo-router";
-import { categories, destinations } from "@/constants/destinations";
 
 type Recipe = {
     recipeId: number;
     title: string;
     imageUrl: string;
     likes: number;
-    tags?: string[] | null;
+    categories?: Category[] | null;
+};
+
+type Category = {
+    categoryId: number;
+    categoryName: string;
+    description: string;
 };
 
 export default function RecipeList() {
     const router = useRouter();
     const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+    const [popularRecipes, setPopularRecipes] = useState<Recipe[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loadingAll, setLoadingAll] = useState(true);
+    const [loadingPopular, setLoadingPopular] = useState(true);
+    const [loadingCategories, setLoadingCategories] = useState(true);
 
     useEffect(() => {
         const fetchRecipes = async () => {
@@ -29,23 +48,74 @@ export default function RecipeList() {
                 setAllRecipes(data);
             } catch (error) {
                 console.error("Error fetching recipes:", error);
+            } finally {
+                setLoadingAll(false);
+            }
+        };
+
+        const fetchPopularRecipes = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Recipe/popular`);
+                const data = await response.json();
+                if (response.ok) {
+                    setPopularRecipes(data);
+                } else {
+                    console.error("Failed to fetch popular recipes");
+                }
+            } catch (error) {
+                console.error("Error fetching popular recipes:", error);
+            } finally {
+                setLoadingPopular(false);
+            }
+        };
+
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Recipe/categories`);
+                const data = await response.json();
+                if (response.ok) {
+                    setCategories(data);
+                } else {
+                    console.error("Failed to fetch recipe categories");
+                }
+            } catch (error) {
+                console.error("Error fetching recipe categories:", error);
+            } finally {
+                setLoadingCategories(false);
             }
         };
 
         fetchRecipes();
+        fetchPopularRecipes();
+        fetchCategories();
     }, []);
 
-    const getTagStyle = (tag: string) => {
-        switch (tag.toLowerCase()) {
+    const getTagStyle = (tagName: string | undefined) => {
+        if (typeof tagName !== "string") {
+            return { backgroundColor: "#e5e7eb", color: "#374151" };
+        }
+
+        switch (tagName.toLowerCase()) {
             case "dinh dưỡng":
                 return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
             case "giảm cân":
                 return { backgroundColor: "#dcfce7", color: "#16a34a" };
+            case "thể dục":
+                return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
+            case "sức khỏe":
+                return { backgroundColor: "#fef9c3", color: "#ca8a04" };
+            case "yoga":
+                return { backgroundColor: "#fae8ff", color: "#a21caf" };
+            case "ăn chay":
+                return { backgroundColor: "#bbf7d0", color: "#15803d" };
+            case "ăn kiêng":
+                return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+            case "món chính":
+                return { backgroundColor: "#e0f2fe", color: "#0284c7" };
             default:
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
     };
-
 
     return (
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -63,91 +133,104 @@ export default function RecipeList() {
                                     params: { q: text },
                                 });
                             }
-                        }} />
+                        }}
+                    />
                 </View>
             </View>
 
-            <Text style={styles.sectionTitle}>Bộ sưu tập</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recommendationContainer}>
-                {["Dinh dưỡng", "Vận động", "Giảm cân", "Tăng cân", "Đồ ăn nhanh"].map((label, idx) => (
-                    <CategoryItem
-                        key={idx}
-                        name={label}
-                        image="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=200"
-                        onPress={() =>
-                            router.push({
-                                pathname: "/(recipe)/recipeCategory",
-                                params: { category: label },
-                            })
-                        }
-                    />
-                ))}
-            </ScrollView>
-
+            <Text style={styles.sectionTitle}>Danh mục công thức</Text>
+            {loadingCategories ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.recommendationContainer}
+                >
+                    {categories.map((category) => (
+                        <CategoryItem
+                            key={category.categoryId}
+                            name={category.categoryName}
+                            description={category.description}
+                            onPress={() => {
+                                router.push({
+                                    pathname: "/(recipe)/recipeCategory",
+                                    params: {
+                                        categoryId: category.categoryId.toString(),
+                                        categoryName: category.categoryName,
+                                    },
+                                });
+                            }}
+                        />
+                    ))}
+                </ScrollView>
+            )}
 
             <Text style={styles.sectionTitle}>Công thức được yêu thích</Text>
-            <View style={styles.content}>
-                <View>
-                    <FlatList
-                        data={destinations.slice(0, 3)}
-                        keyExtractor={(item) => item.id}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <RecipeCard
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                location={item.location}
-                                rating={item.rating}
-                                image={item.image}
-                                tags={["Dinh dưỡng", "Giảm cân"]}
-                            />
-                        )}
-                        contentContainerStyle={styles.horizontalList}
-                    />
-                </View>
-            </View>
-
+            {loadingPopular ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+                <FlatList
+                    data={popularRecipes}
+                    keyExtractor={(item) => item.recipeId.toString()}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <RecipeCard
+                            id={item.recipeId.toString()}
+                            name={item.title}
+                            location=""
+                            rating={item.likes}
+                            image={item.imageUrl}
+                            tags={(item.categories?.map((cat) => cat.categoryName).slice(0, 2)) || ["Dinh dưỡng"]}
+                        />
+                    )}
+                    contentContainerStyle={styles.horizontalList}
+                />
+            )}
 
             <Text style={styles.sectionTitle}>Toàn bộ công thức</Text>
-            <View style={styles.fullRecipeList}>
-                {allRecipes.map((item, idx) => (
-                    <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
-                        <View style={styles.fullRecipeInfo}>
-                            <Text style={styles.fullRecipeTitle}>{item.title}</Text>
+            {loadingAll ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+                <View style={styles.fullRecipeList}>
+                    {allRecipes.map((item, idx) => (
+                        <View key={idx} style={styles.fullRecipeCard}>
+                            <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
+                            <View style={styles.fullRecipeInfo}>
+                                <Text style={styles.fullRecipeTitle}>{item.title}</Text>
 
-                            <View style={styles.tagsContainer}>
-                                {(item.tags && item.tags.length > 0 ? item.tags : ["Dinh dưỡng"]).map((tag, i) => (
-                                    <View
-                                        key={i}
-                                        style={[
-                                            styles.tag,
-                                            { backgroundColor: getTagStyle(tag).backgroundColor },
-                                        ]}
-                                    >
-                                        <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>
-                                            {tag}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-
-                            <View style={styles.bottomRow}>
-                                <View style={styles.likesContainer}>
-                                    <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                    <Text style={styles.likesText}>{item.likes}</Text>
+                                <View style={styles.tagsContainer}>
+                                    {(item.categories?.slice(0, 2) || []).map((tag, i) => {
+                                        const style = getTagStyle(tag.categoryName);
+                                        return (
+                                            <View key={i} style={[styles.tag, { backgroundColor: style.backgroundColor }]}>
+                                                <Text style={[styles.tagText, { color: style.color }]}>
+                                                    {tag.categoryName}
+                                                </Text>
+                                            </View>
+                                        );
+                                    })}
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)}>
-                                    <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
-                                </TouchableOpacity>
+
+                                <View style={styles.bottomRow}>
+                                    <View style={styles.likesContainer}>
+                                        <Heart size={12} color={Colors.rating} fill={Colors.rating} />
+                                        <Text style={styles.likesText}>{item.likes}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)
+                                        }
+                                    >
+                                        <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                ))}
-            </View>
-
+                    ))}
+                </View>
+            )}
         </ScrollView>
     );
 }
@@ -275,5 +358,6 @@ const styles = StyleSheet.create({
     },
     horizontalList: {
         paddingRight: 24,
+        marginLeft: 5
     },
 });
