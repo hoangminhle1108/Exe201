@@ -1,18 +1,88 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView,
+    Alert,
+    ActivityIndicator,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "@env";
 
 export default function ConfirmDeleteScreen() {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+    const handleConfirmDelete = async () => {
+        setLoading(true);
+        try {
+            const email = await AsyncStorage.getItem("email");
+            if (!email) {
+                Alert.alert("Lỗi", "Không tìm thấy email người dùng.");
+                setLoading(false);
+                return;
+            }
+
+            const userRes = await fetch(`${API_URL}/User/all_user_by_email/${encodeURIComponent(email)}`);
+            if (!userRes.ok) {
+                throw new Error("Không thể lấy thông tin người dùng.");
+            }
+            const userData = await userRes.json();
+
+            if (!Array.isArray(userData) || userData.length === 0) {
+                throw new Error("Người dùng không tồn tại.");
+            }
+
+            const userId = userData[0].userId;
+            if (!userId) {
+                throw new Error("Không tìm thấy userId.");
+            }
+
+            const deleteRes = await fetch(`${API_URL}/User/delete_user/${userId}`, {
+                method: "DELETE",
+            });
+            if (!deleteRes.ok) {
+                const errorData = await deleteRes.json();
+                throw new Error(errorData.message || "Xóa tài khoản thất bại.");
+            }
+
+            const agree = await AsyncStorage.getItem("agree");
+            if (agree !== "true") {
+                await AsyncStorage.removeItem("email");
+                await AsyncStorage.removeItem("password");
+            }
+
+            await AsyncStorage.removeItem("token");
+            await AsyncStorage.removeItem("agree");
+
+            Alert.alert("Xóa thành công", "Tài khoản đã được xóa.");
+
+            router.replace("/(authentication)/login");
+        } catch (error: any) {
+            Alert.alert("Lỗi", error.message || "Xảy ra lỗi khi xóa tài khoản.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backIcon} onPress={() => router.replace("/(tabs)/profile")}>
+            <TouchableOpacity
+                style={styles.backIcon}
+                onPress={() => router.replace("/(tabs)/profile")}
+                disabled={loading}
+            >
                 <ChevronLeft size={24} color="#000" />
             </TouchableOpacity>
 
-            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+            <ScrollView
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
+            >
                 <Text style={styles.title}>Xóa tài khoản</Text>
 
                 <Text style={styles.heading}>Bạn có chắc chắn muốn xóa tài khoản này không?</Text>
@@ -32,11 +102,23 @@ export default function ConfirmDeleteScreen() {
             </ScrollView>
 
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.deleteButton} onPress={() => router.push("/(deactivate)/delete")}>
-                    <Text style={styles.deleteButtonText}>Xác nhận xóa tài khoản</Text>
+                <TouchableOpacity
+                    style={[styles.deleteButton, loading && { opacity: 0.7 }]}
+                    onPress={handleConfirmDelete}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={styles.deleteButtonText}>Xác nhận xóa tài khoản</Text>
+                    )}
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.cancelButton} onPress={() => router.replace("/(tabs)/profile")}>
+                <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => router.replace("/(tabs)/profile")}
+                    disabled={loading}
+                >
                     <Text style={styles.cancelButtonText}>Trở về</Text>
                 </TouchableOpacity>
             </View>

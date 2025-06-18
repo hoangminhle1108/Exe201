@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
@@ -16,7 +17,6 @@ import { Feather } from '@expo/vector-icons';
 import SectionHeader from "../components/SectionHeader";
 import FeatureCard from "../components/FeatureCard";
 import BlogCard from "../components/BlogCard";
-import { destinations } from "@/constants/destinations";
 import Colors from "@/constants/colors";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
@@ -44,6 +44,8 @@ export default function Home() {
   const [fullName, setFullName] = useState("Người dùng");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [premiumExpiry, setPremiumExpiry] = useState<string | null>(null);
+  const [popularArticles, setPopularArticles] = useState<any[]>([]);
+  const [loadingPopular, setLoadingPopular] = useState(true);
 
   useEffect(() => {
     const fetchUserFullName = async () => {
@@ -65,6 +67,23 @@ export default function Home() {
       }
     };
 
+    const fetchPopularArticles = async () => {
+      try {
+        const response = await fetch(`${API_URL}/Article/popular`);
+        const data = await response.json();
+        if (response.ok) {
+          setPopularArticles(data);
+        } else {
+          console.error("Failed to fetch popular articles.");
+        }
+      } catch (error) {
+        console.error("Error fetching popular articles:", error);
+      } finally {
+        setLoadingPopular(false);
+      }
+    };
+
+    fetchPopularArticles();
     fetchUserFullName();
   }, []);
 
@@ -164,27 +183,32 @@ export default function Home() {
                 title="Bài viết"
                 onViewAll={() => router.replace("/(blog)/blogList")}
               />
-              <FlatList
-                data={destinations.slice(0, 3)}
-                keyExtractor={(item) => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <BlogCard
-                    key={item.id}
-                    id={item.id}
-                    name={item.name}
-                    location={item.location}
-                    rating={item.rating}
-                    image={item.image}
-                    tags={["Dinh dưỡng", "Giảm cân"]}
-                  />
-                )}
-                contentContainerStyle={styles.horizontalList}
-              />
+              {loadingPopular ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <FlatList
+                  data={popularArticles.slice(0, 3)}
+                  keyExtractor={(item) => item.articleId.toString()}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <BlogCard
+                      key={item.articleId.toString()}
+                      id={item.articleId.toString()}
+                      name={item.title}
+                      location={item.author}
+                      rating={item.likesCount}
+                      image={item.imageUrl}
+                      tags={item.tags.map((tag: any) => tag.tagName)}
+                    />
+                  )}
+                  contentContainerStyle={styles.horizontalList}
+                />
+              )}
             </View>
           </View>
         );
+
 
       default:
         return null;
@@ -251,6 +275,7 @@ const styles = StyleSheet.create({
   postContent: {
     paddingHorizontal: 24,
     marginTop: 16,
+    marginBottom: 20
   },
   content: {
     paddingHorizontal: 24,
