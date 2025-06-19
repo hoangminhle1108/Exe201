@@ -177,5 +177,20 @@ namespace HealthMate.Services.Service.Recipe
             }).ToList() ?? new List<CategoryDTO>()
         };
 
+        // The error is caused by calling .Select on a Task<List<Recipe>> instead of on the resulting List<Recipe>.
+        // You must first await the Task to get the List, then call .Select on the result.
+        // The correct implementation for SearchRecipesByTitleAsync is:
+
+        public async Task<List<RecipeDTO>> SearchRecipesByTitleAsync(string title)
+        {
+            var recipes = await _repo.SearchRecipesByTitleAsync(title);
+            return recipes.Select(MapToDTO).ToList();
+        }
+
+        public async Task<List<RecipeDTO>> GetMostLikedRecipesAsync(int count)
+        {
+           var recipes = await _repo.GetMostLikedRecipesAsync(count);
+            return recipes.Select(MapToDTO).ToList();
+        }
     }
 }

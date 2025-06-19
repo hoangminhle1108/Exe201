@@ -25,6 +25,7 @@ namespace HealthMate.Repository.Interface.User
         Task SetResetPasswordTokenAsync(string email, string token, DateTime expiry);
         Task<Models.User?> GetUserByResetTokenAsync(string email, string token);
         Task<bool> UpdatePasswordAsync(int userId, string newPasswordHash);
+        Task<bool> ChangePasswordAsync(int userId, string oldPasswordHash, string newPasswordHash);
 
     }
 }

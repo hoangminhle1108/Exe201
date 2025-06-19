@@ -298,5 +298,47 @@ namespace HealthMate.Services.Service.User
 
             return await _userRepository.UpdatePasswordAsync(user.UserId, hashedPassword);
         }
+
+        public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+        {
+            if (userId <= 0)
+                throw new ArgumentException("User ID must be a positive integer.", nameof(userId));
+            if (string.IsNullOrEmpty(oldPassword))
+                throw new ArgumentException("Old password cannot be null or empty.", nameof(oldPassword));
+            if (string.IsNullOrEmpty(newPassword))
+                throw new ArgumentException("New password cannot be null or empty.", nameof(newPassword));
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                throw new InvalidOperationException($"User with ID {userId} not found.");
+
+            // Verify old password
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash))
+                return false;
+
+            var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            // Call repository to update password
+            return await _userRepository.ChangePasswordAsync(userId, user.PasswordHash, newPasswordHash);
+        }
+
+        public async Task<bool> SendEvalutionFormAsync(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null) return false;
+            var htmlMessage = $@"
+                <p>Xin chào {user.FullName ?? "User "},</p>
+                <p>Cảm ơn bạn đã đồng hành cùng HealthMate trong thời gian qua.</p>
+                <p>Chúng tôi rất tiếc khi biết rằng bạn đã quyết định xóa tài khoản của mình khỏi ứng dụng. Dù tôn trọng lựa chọn của bạn, nhưng chúng tôi luôn mong muốn được lắng nghe ý kiến và trải nghiệm thực tế từ người dùng để cải thiện sản phẩm ngày một tốt hơn.</p>
+                <p>Vì vậy, chúng tôi kính mời bạn dành ít phút để hoàn thành một bảng khảo sát ngắn tại đây:</p>
+                <p><a href='https://forms.gle/aNQdgtr1NcLDrSmQ6'>Khảo sát</a></p>
+                <p>Khảo sát này giúp chúng tôi hiểu rõ hơn về lý do bạn quyết định rời đi và làm thế nào để HealthMate có thể phục vụ người dùng tốt hơn trong tương lai.</p>
+                <p>Mọi đóng góp của bạn đều rất quý báu đối với đội ngũ phát triển.</p>
+                <p>Một lần nữa, xin chân thành cảm ơn bạn vì đã tin tưởng và sử dụng HealthMate.</p>
+                <p>Chúc bạn thật nhiều sức khỏe và thành công!</p>
+                <p>Trân trọng,<br>Đội ngũ HealthMate</p>";
+            await _emailService.SendEmailAsync(user.Email, "HealthMate – Chúng tôi trân trọng ý kiến đóng góp từ bạn", htmlMessage);
+            return true;
+        }
     }
 }

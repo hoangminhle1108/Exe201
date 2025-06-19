@@ -116,5 +116,18 @@ namespace HealthMate.API.Controllers
             if (!result) return NotFound();
             return Ok();
         }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<List<RecipeDTO>>> SearchRecipesByTitle(string title)
+        {
+            var recipes = await _service.SearchRecipesByTitleAsync(title);
+            return Ok(recipes);
+        }
+        [HttpGet("popular")]
+        public async Task<ActionResult<List<RecipeDTO>>> GetMostLikedRecipes()
+        {
+            var recipes = await _service.GetMostLikedRecipesAsync(5);
+            return Ok(recipes);
+        }
     }
 }
