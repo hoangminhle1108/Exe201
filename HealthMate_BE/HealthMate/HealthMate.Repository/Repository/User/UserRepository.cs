@@ -280,5 +280,24 @@ namespace HealthMate.Repository.Repository.User
             await _ctx.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> ChangePasswordAsync(int userId, string oldPasswordHash, string newPasswordHash)
+        {
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null) return false;
+
+            // Verify old password
+            if (!BCrypt.Net.BCrypt.Verify(oldPasswordHash, user.PasswordHash))
+            {
+                return false;
+            }
+
+            // Set new password hash
+            user.PasswordHash = newPasswordHash;
+            user.UpdatedAt = DateTime.UtcNow;
+            _ctx.Users.Update(user);
+            await _ctx.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -1,14 +1,45 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    Alert,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
+import { API_URL } from "@env";
 
 export default function ForgetScreen() {
     const router = useRouter();
     const [email, setEmail] = useState("");
 
-    const handleSendCode = () => {
-        router.push("/(authentication)/code");
+    const handleSendCode = async () => {
+        try {
+            const response = await fetch(`${API_URL}/User/request-reset-password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(email),
+            });
+
+            if (response.status === 404) {
+                Alert.alert("Thông báo", "Email này chưa đăng ký tài khoản.");
+            } else if (response.ok) {
+                router.push({
+                    pathname: "/(authentication)/code",
+                    params: { email },
+                });
+            } else {
+                Alert.alert("Lỗi", "Đã có lỗi xảy ra. Vui lòng thử lại.");
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert("Lỗi", "Không thể kết nối đến máy chủ.");
+        }
     };
 
     return (
@@ -17,11 +48,7 @@ export default function ForgetScreen() {
                 <ChevronLeft size={24} color="#000" />
             </TouchableOpacity>
 
-            <Image
-                source={require("@/assets/logo.png")}
-                style={styles.logo}
-                resizeMode="contain"
-            />
+            <Image source={require("@/assets/logo.png")} style={styles.logo} resizeMode="contain" />
 
             <Text style={styles.title}>Nhập email đã đăng ký tài khoản</Text>
             <Text style={styles.description}>
@@ -34,6 +61,7 @@ export default function ForgetScreen() {
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
+                autoCapitalize="none"
             />
 
             <TouchableOpacity style={styles.button} onPress={handleSendCode}>
@@ -42,7 +70,6 @@ export default function ForgetScreen() {
         </View>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
         padding: 24,

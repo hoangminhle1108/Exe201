@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    ScrollView,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
+    View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, KeyboardAvoidingView, Platform
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import Colors from "@/constants/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function FavoriteRecipe() {
     const router = useRouter();
+    const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const loadFavorites = async () => {
+                const stored = await AsyncStorage.getItem("favoriteRecipes");
+                const data = stored ? JSON.parse(stored) : [];
+                setFavoriteRecipes(data);
+            };
+            loadFavorites();
+            return () => { };
+        }, [])
+    );
 
     const getTagStyle = (tag: string) => {
         switch (tag.toLowerCase()) {
@@ -22,64 +30,55 @@ export default function FavoriteRecipe() {
                 return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
             case "giảm cân":
                 return { backgroundColor: "#dcfce7", color: "#16a34a" };
+            case "thể dục":
+                return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
+            case "sức khỏe":
+                return { backgroundColor: "#fef9c3", color: "#ca8a04" };
+            case "yoga":
+                return { backgroundColor: "#fae8ff", color: "#a21caf" };
+            case "ăn chay":
+                return { backgroundColor: "#bbf7d0", color: "#15803d" };
+            case "ăn kiêng":
+                return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+            case "món chính":
+                return { backgroundColor: "#e0f2fe", color: "#0284c7" };
             default:
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
     };
 
-    const favoriteRecipes = [
-        {
-            title: "Trứng rán mỡ",
-            likes: 26,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-        {
-            title: "Bắp xào bơ",
-            likes: 88,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-    ];
-
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
-            <TouchableOpacity
-                onPress={() => router.replace("/(tabs)/profile")}
-                style={styles.backIcon}
-            >
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+            <TouchableOpacity onPress={() => router.replace("/(tabs)/profile")} style={styles.backIcon}>
                 <ChevronLeft size={24} color="#000" />
             </TouchableOpacity>
 
-            <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+            <ScrollView contentContainerStyle={styles.content}>
                 <Text style={styles.title}>Công thức yêu thích</Text>
 
                 {favoriteRecipes.map((item, idx) => (
                     <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.image }} style={styles.fullRecipeImage} />
+                        <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
                         <View style={styles.fullRecipeInfo}>
                             <Text style={styles.fullRecipeTitle}>{item.title}</Text>
 
                             <View style={styles.tagsContainer}>
-                                {["Dinh dưỡng", "Giảm cân"].map((tag, i) => (
-                                    <View
-                                        key={i}
-                                        style={[styles.tag, { backgroundColor: getTagStyle(tag).backgroundColor }]}
-                                    >
-                                        <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>
-                                            {tag}
-                                        </Text>
-                                    </View>
-                                ))}
+                                {(item.categories ?? ["Dinh dưỡng"]).map((tag: any, i: number) => {
+                                    const tagName = typeof tag === "string" ? tag : tag.categoryName;
+                                    return (
+                                        <View key={i} style={[styles.tag, { backgroundColor: getTagStyle(tagName).backgroundColor }]}>
+                                            <Text style={[styles.tagText, { color: getTagStyle(tagName).color }]}>{tagName}</Text>
+                                        </View>
+                                    );
+                                })}
                             </View>
 
                             <View style={styles.bottomRow}>
                                 <View style={styles.likesContainer}>
                                     <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                    <Text style={styles.likesText}>{item.likes}</Text>
+                                    <Text style={styles.likesText}>{item.likesCount ?? 0}</Text>
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(favorite)/recipeFavDetail`)}>
+                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)}>
                                     <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
                                 </TouchableOpacity>
                             </View>

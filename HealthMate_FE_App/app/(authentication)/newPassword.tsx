@@ -1,13 +1,48 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { useRouter } from "expo-router";
+import {
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    Alert,
+} from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
+import { API_URL } from "@env";
 
 export default function NewPassword() {
     const router = useRouter();
+    const { email } = useLocalSearchParams();
+    const [password, setPassword] = useState("");
 
-    const handleNewPassword = () => {
-        router.push("/(authentication)/login");
+    const handleNewPassword = async () => {
+        if (password.length < 6) {
+            Alert.alert("Thông báo", "Mật khẩu phải có ít nhất 6 ký tự.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/User/reset-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email,
+                    newPassword: password,
+                }),
+            });
+
+            if (response.ok) {
+                Alert.alert("Thành công", "Mật khẩu đã được cập nhật.");
+                router.push("/(authentication)/login");
+            } else {
+                Alert.alert("Lỗi", "Không thể cập nhật mật khẩu. Vui lòng thử lại.");
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert("Lỗi", "Không thể kết nối đến máy chủ.");
+        }
     };
 
     return (
@@ -27,7 +62,13 @@ export default function NewPassword() {
                 Nên sử dụng mật khẩu mạnh gồm 6 ký tự gồm chữ và số
             </Text>
 
-            <TextInput style={styles.input} placeholder="Mật khẩu" secureTextEntry />
+            <TextInput
+                style={styles.input}
+                placeholder="Mật khẩu"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+            />
 
             <TouchableOpacity style={styles.button} onPress={handleNewPassword}>
                 <Text style={styles.buttonText}>Xác nhận mật khẩu mới</Text>

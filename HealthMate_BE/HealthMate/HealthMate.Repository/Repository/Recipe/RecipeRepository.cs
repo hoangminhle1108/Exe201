@@ -128,5 +128,22 @@ namespace HealthMate.Repository.Repository.Recipe
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<Models.Recipe>> SearchRecipesByTitleAsync(string title)
+        {
+            return await _context.Recipes
+                .Include(r => r.Categories)
+                .Where(r => r.Title.Contains(title))
+                .ToListAsync();
+        }
+
+        public async Task<List<Models.Recipe>> GetMostLikedRecipesAsync(int count)
+        {
+            return await _context.Recipes
+                .OrderByDescending(r => r.Likes)
+                .Take(count)
+                .Include(r => r.Categories)
+                .ToListAsync();
+        }
     }
 }

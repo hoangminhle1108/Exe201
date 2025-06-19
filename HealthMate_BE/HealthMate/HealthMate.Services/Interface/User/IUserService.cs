@@ -22,5 +22,7 @@ namespace HealthMate.Services.Interface.User
         Task<bool> RequestPasswordResetAsync(string email);
         Task<bool> ResetPasswordAsync(string token, string newPassword);
         Task<bool> VerifyOtpAsync(string email, string otp);
+        Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
+        Task<bool> SendEvalutionFormAsync (string email);
     }
 }

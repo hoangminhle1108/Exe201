@@ -28,5 +28,7 @@ namespace HealthMate.Services.Interface.Recipe
         // Thêm methods cho Like/Unlike
         Task<bool> LikeRecipeAsync(int recipeId);
         Task<bool> UnlikeRecipeAsync(int recipeId);
+        Task<List<RecipeDTO>> SearchRecipesByTitleAsync(string title);
+        Task<List<RecipeDTO>> GetMostLikedRecipesAsync(int count);
     }
 }

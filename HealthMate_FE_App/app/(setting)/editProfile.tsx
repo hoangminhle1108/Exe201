@@ -175,16 +175,27 @@ export default function EditProfileScreen() {
             <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
                 <Text style={styles.title}>Chỉnh sửa hồ sơ</Text>
 
-                <View style={styles.avatarContainer}>
-                    <Image
-                        source={{
-                            uri: avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
-                        }}
-                        style={styles.avatar}
+                {/* 
+<View style={styles.avatarContainer}>
+    <Image
+        source={{
+            uri: avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
+        }}
+        style={styles.avatar}
+    />
+    <TouchableOpacity style={styles.editIcon} onPress={pickImage}>
+        <Pencil size={24} color={Colors.text} />
+    </TouchableOpacity>
+</View>
+*/}
+
+                <View style={styles.inputGroup}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Link ảnh đại diện"
+                        value={avatarUrl || ""}
+                        onChangeText={setAvatarUrl}
                     />
-                    <TouchableOpacity style={styles.editIcon} onPress={pickImage}>
-                        <Pencil size={24} color={Colors.text} />
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.inputGroup}>

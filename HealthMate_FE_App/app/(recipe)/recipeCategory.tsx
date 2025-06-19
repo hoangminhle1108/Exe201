@@ -52,6 +52,8 @@ export default function RecipeCategory() {
                 return { backgroundColor: "#bbf7d0", color: "#15803d" };
             case "ăn kiêng":
                 return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+            case "món chính":
+                return { backgroundColor: "#e0f2fe", color: "#0284c7" };
             default:
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
@@ -109,7 +111,7 @@ export default function RecipeCategory() {
                                 <View style={styles.bottomRow}>
                                     <View style={styles.likesContainer}>
                                         <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                        <Text style={styles.likesText}>{item.likesCount}</Text>
+                                        <Text style={styles.likesText}>{item.likes}</Text>
                                     </View>
                                     <TouchableOpacity
                                         onPress={() => router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)}

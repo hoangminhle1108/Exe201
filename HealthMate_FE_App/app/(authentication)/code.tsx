@@ -1,10 +1,20 @@
 import React, { useRef, useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { useRouter } from "expo-router";
+import {
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    Alert,
+} from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
+import { API_URL } from "@env";
 
 export default function CodeScreen() {
     const router = useRouter();
+    const { email } = useLocalSearchParams();
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef<TextInput[]>([]);
 
@@ -19,12 +29,51 @@ export default function CodeScreen() {
         }
     };
 
-    const handleResend = () => {
-        // TODO: handle resend logic
+    const handleResend = async () => {
+        try {
+            const response = await fetch(`${API_URL}/User/resend-otp`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(email),
+            });
+
+            if (response.ok) {
+                Alert.alert("Thông báo", "Đã gửi lại mã xác nhận.");
+            } else {
+                Alert.alert("Lỗi", "Không thể gửi lại mã. Vui lòng thử lại.");
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert("Lỗi", "Không thể kết nối đến máy chủ.");
+        }
     };
 
-    const handleConfirmCode = () => {
-        router.push("/(authentication)/newPassword");
+    const handleConfirmCode = async () => {
+        const otp = code.join("");
+        if (otp.length < 6) {
+            Alert.alert("Thông báo", "Vui lòng nhập đầy đủ mã.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/User/verify-otp`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, otp }),
+            });
+
+            if (response.ok) {
+                router.push({
+                    pathname: "/(authentication)/newPassword",
+                    params: { email },
+                });
+            } else {
+                Alert.alert("Thông báo", "Mã xác nhận không chính xác hoặc đã hết hạn.");
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert("Lỗi", "Không thể kết nối đến máy chủ.");
+        }
     };
 
     return (
@@ -33,11 +82,7 @@ export default function CodeScreen() {
                 <ChevronLeft size={24} color="#000" />
             </TouchableOpacity>
 
-            <Image
-                source={require("@/assets/logo.png")}
-                style={styles.logo}
-                resizeMode="contain"
-            />
+            <Image source={require("@/assets/logo.png")} style={styles.logo} resizeMode="contain" />
 
             <Text style={styles.title}>Nhập vào 6 mã số</Text>
             <Text style={styles.description}>
@@ -49,10 +94,7 @@ export default function CodeScreen() {
                     <TextInput
                         key={index}
                         ref={(ref) => (inputRefs.current[index] = ref!)}
-                        style={[
-                            styles.codeInput,
-                            digit ? styles.filledCode : null,
-                        ]}
+                        style={[styles.codeInput, digit ? styles.filledCode : null]}
                         keyboardType="number-pad"
                         maxLength={1}
                         value={digit}
@@ -62,7 +104,6 @@ export default function CodeScreen() {
                 ))}
             </View>
 
-            {/* <Text style={styles.timerText}>Mã hết hạn trong vòng 10:50</Text> */}
             <TouchableOpacity onPress={handleResend}>
                 <Text style={styles.resendText}>Gửi lại mã</Text>
             </TouchableOpacity>

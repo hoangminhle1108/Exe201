@@ -4,6 +4,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import Colors from "@/constants/colors";
 import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const getTagStyle = (tag: string) => {
     switch (tag.toLowerCase()) {
@@ -33,6 +34,7 @@ export default function RecipeDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const [recipe, setRecipe] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         const fetchRecipe = async () => {
@@ -46,23 +48,52 @@ export default function RecipeDetail() {
                 setLoading(false);
             }
         };
-        if (id) fetchRecipe();
+
+        const checkFavorite = async () => {
+            const stored = await AsyncStorage.getItem("favoriteRecipes");
+            const favorites = stored ? JSON.parse(stored) : [];
+            const exists = favorites.some((r: any) => r.recipeId === Number(id));
+            setIsFavorite(exists);
+        };
+
+        if (id) {
+            fetchRecipe();
+            checkFavorite();
+        }
     }, [id]);
 
+    const handleToggleFavorite = async () => {
+        const stored = await AsyncStorage.getItem("favoriteRecipes");
+        const favorites = stored ? JSON.parse(stored) : [];
+
+        if (isFavorite) {
+            try {
+                await fetch(`${API_URL}/Recipe/${id}/unlike`, { method: "POST" });
+                const updated = favorites.filter((r: any) => r.recipeId !== recipe.recipeId);
+                await AsyncStorage.setItem("favoriteRecipes", JSON.stringify(updated));
+                setIsFavorite(false);
+            } catch (e) {
+                console.error("Unlike failed", e);
+            }
+        } else {
+            try {
+                await fetch(`${API_URL}/Recipe/${id}/like`, { method: "POST" });
+                if (!favorites.some((r: any) => r.recipeId === recipe.recipeId)) {
+                    await AsyncStorage.setItem("favoriteRecipes", JSON.stringify([...favorites, recipe]));
+                }
+                setIsFavorite(true);
+            } catch (e) {
+                console.error("Like failed", e);
+            }
+        }
+    };
+
     if (loading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={Colors.primary} />
-            </View>
-        );
+        return <View style={styles.loadingContainer}><ActivityIndicator size="large" color={Colors.primary} /></View>;
     }
 
     if (!recipe) {
-        return (
-            <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>Không thể tải công thức.</Text>
-            </View>
-        );
+        return <View style={styles.errorContainer}><Text style={styles.errorText}>Không thể tải công thức.</Text></View>;
     }
 
     return (
@@ -73,57 +104,43 @@ export default function RecipeDetail() {
                     <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                         <ChevronLeft size={24} color="#000" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.heartButton}>
-                        <Heart size={24} color="#DE3B40" />
+                    <TouchableOpacity style={styles.heartButton} onPress={handleToggleFavorite}>
+                        <Heart size={24} color="#DE3B40" fill={isFavorite ? "#DE3B40" : "none"} />
                     </TouchableOpacity>
                 </View>
             </View>
 
             <View style={styles.infoContainer}>
                 <View style={styles.tagsContainer}>
-                    {(recipe.categories && recipe.categories.length > 0
-                        ? recipe.categories.map((cat: any) => cat.categoryName)
-                        : ["Dinh dưỡng"]
-                    ).map((tag: string, index: number) => (
-                        <View key={index} style={[styles.tag, { backgroundColor: getTagStyle(tag).backgroundColor }]}>
-                            <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>{tag}</Text>
-                        </View>
-                    ))}
+                    {(recipe.categories ?? ["Dinh dưỡng"]).map((cat: any, idx: number) => {
+                        const name = typeof cat === "string" ? cat : cat.categoryName;
+                        return (
+                            <View key={idx} style={[styles.tag, { backgroundColor: getTagStyle(name).backgroundColor }]}>
+                                <Text style={[styles.tagText, { color: getTagStyle(name).color }]}>{name}</Text>
+                            </View>
+                        );
+                    })}
                 </View>
-
 
                 <Text style={styles.title}>{recipe.title}</Text>
 
                 <View style={styles.statsContainer}>
-                    <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{recipe.difficulty}</Text>
-                        <Text style={styles.statLabel}>Cấp độ</Text>
-                    </View>
-                    <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{recipe.cookingTime} phút</Text>
-                        <Text style={styles.statLabel}>Thời gian</Text>
-                    </View>
-                    <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{recipe.servings} người</Text>
-                        <Text style={styles.statLabel}>Dành cho</Text>
-                    </View>
-                    <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{recipe.calories}</Text>
-                        <Text style={styles.statLabel}>Calo</Text>
-                    </View>
+                    <View style={styles.statItem}><Text style={styles.statValue}>{recipe.difficulty}</Text><Text style={styles.statLabel}>Cấp độ</Text></View>
+                    <View style={styles.statItem}><Text style={styles.statValue}>{recipe.cookingTime} phút</Text><Text style={styles.statLabel}>Thời gian</Text></View>
+                    <View style={styles.statItem}><Text style={styles.statValue}>{recipe.servings} người</Text><Text style={styles.statLabel}>Dành cho</Text></View>
+                    <View style={styles.statItem}><Text style={styles.statValue}>{recipe.calories}</Text><Text style={styles.statLabel}>Calo</Text></View>
                 </View>
 
                 <Text style={styles.sectionTitle}>Giới thiệu món ăn</Text>
                 <Text style={styles.description}>{recipe.description}</Text>
 
                 <View style={styles.divider} />
-
                 <Text style={styles.sectionTitle}>Nguyên liệu cần chuẩn bị</Text>
                 {recipe.ingredients?.replace(/\\n/g, '\n').split("\n").map((item: string, index: number) => (
                     <Text key={index} style={styles.description}>• {item.replace(/^- /, "")}</Text>
                 ))}
-                <View style={styles.divider} />
 
+                <View style={styles.divider} />
                 <Text style={styles.sectionTitle}>Hướng dẫn cách làm</Text>
                 {recipe.instructions?.replace(/\\n/g, '\n').split("\n").map((step: string, index: number) => (
                     <Text key={index} style={styles.description}>{step}</Text>
