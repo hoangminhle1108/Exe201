@@ -1,14 +1,16 @@
-import React from "react";
-import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import SearchBar from "../components/SearchBar";
 import { ChevronLeft, Heart } from "lucide-react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import Colors from "@/constants/colors";
-import { useLocalSearchParams } from "expo-router";
+import { API_URL } from "@env";
 
 export default function BlogSearch() {
     const router = useRouter();
     const { q } = useLocalSearchParams();
+    const [results, setResults] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const getTagStyle = (tag: string) => {
         switch (tag.toLowerCase()) {
@@ -16,28 +18,43 @@ export default function BlogSearch() {
                 return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
             case "giảm cân":
                 return { backgroundColor: "#dcfce7", color: "#16a34a" };
+            case "thể dục":
+                return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
+            case "sức khỏe":
+                return { backgroundColor: "#fef9c3", color: "#ca8a04" };
+            case "yoga":
+                return { backgroundColor: "#fae8ff", color: "#a21caf" };
+            case "ăn chay":
+                return { backgroundColor: "#bbf7d0", color: "#15803d" };
+            case "ăn kiêng":
+                return { backgroundColor: "#fee2e2", color: "#b91c1c" };
             default:
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
     };
 
-    const foundPosts = [
-        {
-            title: "Trứng rán mỡ",
-            likes: 26,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-        {
-            title: "Bắp xào bơ",
-            likes: 88,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-        {
-            title: "Bơ xào bắp",
-            likes: 131,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-    ];
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(`${API_URL}/Article/search?title=${q}`);
+                const data = await response.json();
+                if (response.ok) {
+                    setResults(data);
+                } else {
+                    console.error("Failed to fetch search results.");
+                }
+            } catch (error) {
+                console.error("Search error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (q) {
+            fetchSearchResults();
+        }
+    }, [q]);
 
     return (
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -55,45 +72,52 @@ export default function BlogSearch() {
                                     params: { q: text },
                                 });
                             }
-                        }} />
+                        }}
+                    />
                 </View>
             </View>
 
-            <Text style={styles.resultText}>Tìm được {foundPosts.length} bài viết cho "{q}"</Text>
+            <Text style={styles.resultText}>Tìm được {results.length} bài viết cho "{q}"</Text>
 
-            <View style={styles.fullRecipeList}>
-                {foundPosts.map((item, idx) => (
-                    <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.image }} style={styles.fullRecipeImage} />
-                        <View style={styles.fullRecipeInfo}>
-                            <Text style={styles.fullRecipeTitle}>{item.title}</Text>
+            {loading ? (
+                <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 20 }} />
+            ) : (
+                <View style={styles.fullRecipeList}>
+                    {results.map((item, idx) => (
+                        <View key={idx} style={styles.fullRecipeCard}>
+                            <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
+                            <View style={styles.fullRecipeInfo}>
+                                <Text style={styles.fullRecipeTitle}>{item.title}</Text>
 
-                            <View style={styles.tagsContainer}>
-                                {["Dinh dưỡng", "Giảm cân"].map((tag, i) => (
-                                    <View
-                                        key={i}
-                                        style={[styles.tag, { backgroundColor: getTagStyle(tag).backgroundColor }]}
-                                    >
-                                        <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>
-                                            {tag}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-
-                            <View style={styles.bottomRow}>
-                                <View style={styles.likesContainer}>
-                                    <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                    <Text style={styles.likesText}>{item.likes}</Text>
+                                <View style={styles.tagsContainer}>
+                                    {(item.tags || []).map((tag: any, i: number) => (
+                                        <View
+                                            key={i}
+                                            style={[styles.tag, { backgroundColor: getTagStyle(tag.tagName).backgroundColor }]}
+                                        >
+                                            <Text style={[styles.tagText, { color: getTagStyle(tag.tagName).color }]}>
+                                                {tag.tagName}
+                                            </Text>
+                                        </View>
+                                    ))}
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(blog)/blogDetail`)}>
-                                    <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
-                                </TouchableOpacity>
+
+                                <View style={styles.bottomRow}>
+                                    <View style={styles.likesContainer}>
+                                        <Heart size={12} color={Colors.rating} fill={Colors.rating} />
+                                        <Text style={styles.likesText}>{item.likesCount}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => router.push(`/(blog)/blogDetail?id=${item.articleId}`)}
+                                    >
+                                        <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                ))}
-            </View>
+                    ))}
+                </View>
+            )}
         </ScrollView>
     );
 }

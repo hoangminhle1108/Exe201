@@ -15,7 +15,6 @@ import Colors from "@/constants/colors";
 import CategoryItem from "../components/CategoryItem";
 import { ChevronLeft, Heart } from "lucide-react-native";
 import { useRouter } from "expo-router";
-import { categories, destinations } from "@/constants/destinations";
 import { API_URL } from "@env";
 
 export default function BlogList() {
@@ -23,6 +22,7 @@ export default function BlogList() {
     type Tag = {
         tagId: number;
         tagName: string;
+        description: string;
     };
 
     type Article = {
@@ -31,12 +31,34 @@ export default function BlogList() {
         imageUrl: string;
         tags: Tag[];
         likes: number;
+        likesCount: number;
+        author: string;
     };
 
     const [articles, setArticles] = useState<Article[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingCategories, setLoadingCategories] = useState(true);
+    const [loadingPopular, setLoadingPopular] = useState(true);
+    const [loadingArticles, setLoadingArticles] = useState(true);
+    const [categories, setCategories] = useState<Tag[]>([]);
+    const [popularArticles, setPopularArticles] = useState<Article[]>([]);
 
     useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Article/categories`);
+                const data = await response.json();
+                if (response.ok) {
+                    setCategories(data);
+                } else {
+                    console.error("Failed to fetch categories");
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            } finally {
+                setLoadingCategories(false);
+            }
+        };
+
         const fetchArticles = async () => {
             try {
                 const response = await fetch(`${API_URL}/Article`);
@@ -49,11 +71,29 @@ export default function BlogList() {
             } catch (error) {
                 console.error("Lỗi khi tải bài viết:", error);
             } finally {
-                setLoading(false);
+                setLoadingArticles(false);
+            }
+        };
+
+        const fetchPopularArticles = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Article/popular`);
+                const data = await response.json();
+                if (response.ok) {
+                    setPopularArticles(data);
+                } else {
+                    console.error("Failed to fetch popular articles.");
+                }
+            } catch (error) {
+                console.error("Error fetching popular articles:", error);
+            } finally {
+                setLoadingPopular(false);
             }
         };
 
         fetchArticles();
+        fetchCategories();
+        fetchPopularArticles();
     }, []);
 
 
@@ -103,46 +143,54 @@ export default function BlogList() {
                 </View>
             </View>
 
-            <Text style={styles.sectionTitle}>Bộ sưu tập</Text>
+            <Text style={styles.sectionTitle}>Danh mục bài viết</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recommendationContainer}>
-                {["Dinh dưỡng", "Vận động", "Giảm cân", "Tăng cân", "Đồ ăn nhanh"].map((label, idx) => (
-                    <CategoryItem
-                        key={idx}
-                        name={label}
-                        image="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=200"
-                        onPress={() =>
-                            router.push({
-                                pathname: "/(blog)/blogCategory",
-                                params: { category: label },
-                            })
-                        }
-                    />
-                ))}
+                {loadingCategories ? (
+                    <ActivityIndicator size="small" color={Colors.primary} />
+                ) : (
+                    categories.map((category) => (
+                        <CategoryItem
+                            key={category.tagId}
+                            name={category.tagName}
+                            description={category.description}
+                            onPress={() =>
+                                router.push({
+                                    pathname: "/(blog)/blogCategory",
+                                    params: { tagId: category.tagId.toString(), tagName: category.tagName },
+                                })
+                            }
+                        />
+                    ))
+                )}
             </ScrollView>
 
             <Text style={styles.sectionTitle}>Bài viết được yêu thích</Text>
-            <FlatList
-                data={destinations.slice(0, 3)}
-                keyExtractor={(item) => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <BlogCard
-                        key={item.id}
-                        id={item.id}
-                        name={item.name}
-                        location={item.location}
-                        rating={item.rating}
-                        image={item.image}
-                        tags={["Dinh dưỡng", "Giảm cân"]}
-                    />
-                )}
-                contentContainerStyle={styles.horizontalList}
-            />
+            {loadingPopular ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+                <FlatList
+                    data={popularArticles}
+                    keyExtractor={(item) => item.articleId.toString()}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <BlogCard
+                            key={item.articleId.toString()}
+                            id={item.articleId.toString()}
+                            name={item.title}
+                            location={item.author}
+                            rating={item.likesCount}
+                            image={item.imageUrl}
+                            tags={item.tags.map((tag) => tag.tagName)}
+                        />
+                    )}
+                    contentContainerStyle={styles.horizontalList}
+                />
+            )}
 
             <Text style={styles.sectionTitle}>Toàn bộ bài viết</Text>
             <View style={styles.fullRecipeList}>
-                {loading ? (
+                {loadingArticles ? (
                     <ActivityIndicator size="large" color={Colors.primary} />
                 ) : (
                     articles.map((item, idx) => (
@@ -316,5 +364,6 @@ const styles = StyleSheet.create({
     },
     horizontalList: {
         paddingRight: 24,
+        marginLeft: 5
     },
 });
