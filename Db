@@ -201,8 +201,9 @@ GO
 
 -- PremiumPackage
 INSERT INTO PremiumPackage (PackageName, Description, Price, DurationDays) VALUES
-    (N'Gói 30 Ngày', N'Tư vấn dinh dưỡng đầy đủ trong 30 ngày',  99000, 30),
-    (N'Gói 90 Ngày', N'Tư vấn dinh dưỡng và theo dõi sức khỏe trong 90 ngày', 249000, 90);
+    (N'Gói 30 ngày', N'Được sử dụng AI thông minh hơn trong 30 ngày', 39000, 30),
+    (N'Gói 90 ngày', N'Được sử dụng AI thông minh hơn trong 90 ngày', 99000, 90),
+    (N'Gói 365 ngày', N'Được sử dụng AI thông minh hơn trong 365 ngày', 339000, 365);
 GO
 
 -- PaymentMethod
@@ -224,30 +225,180 @@ GO
 INSERT INTO Tag (TagName, Description) VALUES
     (N'Dinh dưỡng', N'Các bài viết về dinh dưỡng và chế độ ăn'),
     (N'Giảm cân', N'Các bài viết về phương pháp giảm cân'),
-    (N'Tăng cân', N'Các bài viết về phương pháp tăng cân'),
     (N'Thể dục', N'Các bài viết về tập luyện và thể dục'),
     (N'Sức khỏe', N'Các bài viết về sức khỏe tổng quát'),
     (N'Yoga', N'Các bài viết về yoga và thiền'),
     (N'Ăn chay', N'Các bài viết về chế độ ăn chay'),
-    (N'Ăn kiêng', N'Các bài viết về chế độ ăn kiêng');
+    (N'Ăn kiêng', N'Các bài viết về chế độ ăn kiêng'),
+    (N'Món chính', N'Các bài viết về món chính trong thực đơn');
 GO
 
 -- Article (data mẫu đã cập nhật)
 INSERT INTO Article (Title, Content, Author, PublishedAt, ImageUrl, Likes) VALUES
-    (N'5 Mẹo Dinh Dưỡng', N'Bạn nên ăn đủ rau xanh và...', N'Dr. Lê Thị X', '2024-04-01 10:00:00', 'https://example.com/5-meo-dinh-duong.jpg', 12),
-    (N'Lợi Ích Tập Yoga', N'Yoga giúp cải thiện độ dẻo...', N'PT Nguyễn Văn Y', '2024-05-01 14:30:00',  'https://example.com/loi-ich-yoga.jpg', 27),
-    (N'Chế Độ Ăn Giảm Cân Khoa Học', N'Các nguyên tắc cơ bản trong chế độ ăn giảm cân...', N'Dr. Trần Văn Z', '2024-05-15 09:00:00', 'https://example.com/che-do-an-giam-can.jpg', 35),
-    (N'Lợi Ích Của Việc Ăn Chay', N'Ăn chay không chỉ tốt cho sức khỏe mà còn...', N'Dr. Nguyễn Thị A', '2024-05-20 11:00:00', 'https://example.com/loi-ich-an-chay.jpg', 18),
-    (N'Các Bài Tập Yoga Cho Người Mới Bắt Đầu', N'Hướng dẫn chi tiết các tư thế yoga cơ bản...', N'PT Lê Văn B', '2024-05-25 15:00:00', 'https://example.com/yoga-cho-nguoi-moi.jpg', 22);
+    (N'Salad Power – Bữa Trưa Năng Lượng Cho Người Giảm Cân',
+    N'Salad Power là sự kết hợp hoàn hảo giữa các loại rau xanh tươi mát, hạt quinoa giàu dinh dưỡng, bơ mềm mịn và đậu chickpea bổ dưỡng. Món ăn này không chỉ cung cấp đầy đủ chất xơ giúp no lâu mà còn giàu protein thực vật hỗ trợ quá trình giảm cân hiệu quả. Khi sử dụng làm bữa trưa, Salad Power giúp cơ thể tràn đầy năng lượng nhưng vẫn đảm bảo lượng calo hợp lý. Bạn có thể thêm một chút dầu olive và nước cốt chanh để tăng hương vị. Đây là lựa chọn lý tưởng cho những ai muốn duy trì vóc dáng mà vẫn ngon miệng.',
+    N'Nguyễn Thị Ánh',
+    '2025-06-01 09:00:00',
+    'https://bizweb.dktcdn.net/100/011/344/files/thuc-don-giam-can-eat-clean-cap-toc-2.jpg?v=1653464839575',
+    34),
+
+    (N'10 Lợi Ích Của Hạt Quinoa Vào Chế Độ Dinh Dưỡng Hàng Ngày',
+    N'Hạt quinoa đã trở thành siêu thực phẩm được yêu thích trong những năm gần đây nhờ giá trị dinh dưỡng vượt trội. Quinoa cung cấp protein hoàn chỉnh, chứa đầy đủ các axit amin thiết yếu mà cơ thể cần. Ngoài ra, nó còn giàu chất xơ, giúp cải thiện tiêu hóa và hỗ trợ kiểm soát cân nặng. Quinoa cũng có chỉ số đường huyết thấp, phù hợp cho người tiểu đường. Bạn có thể dễ dàng chế biến quinoa thành salad, cháo hay các món trộn với rau củ. Việc bổ sung quinoa vào chế độ ăn uống hằng ngày sẽ giúp cơ thể khỏe mạnh và tràn đầy năng lượng.',
+    N'Lê Minh Hoàng',
+    '2025-05-28 14:30:00',
+    'https://cdn.nhathuoclongchau.com.vn/unsafe/https://cms-prod.s3-sgn09.fptcloud.com/thanh_phan_dinh_duong_cua_hat_quinoa_va_loi_ich_cua_loai_hat_nay1_bf0c879150.jpg',
+    27),
+
+    (N'Bài Tập Thể Dục Buổi Sáng Giúp Khỏe Mạnh',
+    N'Bắt đầu buổi sáng bằng các bài tập thể dục nhẹ nhàng sẽ giúp bạn khởi động cơ thể, tăng cường tuần hoàn máu và cải thiện tinh thần. Bạn có thể thực hiện các động tác như squat để tăng sức mạnh cơ chân, plank để làm săn chắc vùng bụng, và các bài tập yoga nhẹ giúp cơ thể linh hoạt hơn. Việc duy trì thói quen này mỗi ngày sẽ giúp giảm căng thẳng, hỗ trợ giảm cân và nâng cao sức khỏe tổng thể. Đặc biệt, tập thể dục buổi sáng giúp kích thích trao đổi chất, giúp bạn tràn đầy năng lượng cho cả ngày dài làm việc và học tập.',
+    N'Trang Văn Bình',
+    '2025-05-20 07:00:00',
+    'https://tagalaxyfyc.com/wp-content/uploads/2023/02/1-12.jpg',
+    45),
+
+    (N'Các Tư Thế Yoga Thu Giảm Stress',
+    N'Yoga là bộ môn tuyệt vời giúp cơ thể và tâm trí đạt trạng thái cân bằng, đặc biệt là trong những lúc căng thẳng. Những tư thế như Child’s Pose giúp thả lỏng lưng và vai, Cat-Cow hỗ trợ làm mềm cột sống và cải thiện hô hấp, trong khi Savasana giúp thư giãn toàn thân và xua tan mệt mỏi. Khi thực hành đều đặn, các tư thế này không chỉ giảm stress mà còn tăng cường sức khỏe tổng thể. Hãy kết hợp với nhịp thở sâu để đạt hiệu quả tối đa. Yoga phù hợp với mọi lứa tuổi và đặc biệt hữu ích trong nhịp sống hiện đại bận rộn.',
+    N'PT Lê Văn',
+    '2025-05-15 15:00:00',
+    'https://storage.googleapis.com/leep_app_website/2020/07/yoga-thu-gian.jpg',
+    22),
+
+    (N'Chế Độ Ăn Chay Đúng Cách Cho Người Mới',
+    N'Chế độ ăn chay không chỉ đơn giản là loại bỏ thịt ra khỏi khẩu phần ăn mà còn đòi hỏi sự cân đối giữa các nhóm dinh dưỡng để đảm bảo sức khỏe. Người mới bắt đầu nên chú ý bổ sung đầy đủ protein từ đậu, đậu hũ, hạt và các loại ngũ cốc nguyên hạt. Đồng thời, vitamin B12, sắt và canxi cũng cần được lưu ý thông qua thực phẩm hoặc viên bổ sung. Chế độ ăn chay đúng cách giúp cơ thể khỏe mạnh, giảm nguy cơ mắc bệnh tim mạch, tiểu đường và béo phì. Hãy bắt đầu từng bước, tìm hiểu kỹ và lên thực đơn phù hợp để duy trì lâu dài.',
+    N'Phạm Quốc Cường',
+    '2025-05-10 11:00:00',
+    'https://thuanchay.vn/congdong/wp-content/uploads/2024/02/Cach-an-chay-cho-nguoi-moi-bat-dau-6.webp',
+    30),
+
+(N'Detox Cơ Thể Với Nước Ép Rau Củ',
+    N'Nước ép rau củ là một trong những phương pháp đơn giản và hiệu quả để thanh lọc cơ thể, loại bỏ độc tố và cung cấp nhiều vitamin cần thiết. Sự kết hợp giữa cần tây, dưa leo và táo xanh không chỉ giúp mát gan, hỗ trợ tiêu hóa mà còn tăng cường hệ miễn dịch, giúp làn da tươi sáng và cơ thể khỏe mạnh. Uống nước ép vào buổi sáng trước bữa ăn giúp cơ thể hấp thụ tốt hơn các dưỡng chất. Bạn cũng có thể thêm chút gừng hoặc chanh để tăng hương vị và hiệu quả detox. Hãy duy trì thói quen này mỗi ngày để cảm nhận sự khác biệt.',
+    N'Hoàng Thị Mai',
+    '2025-05-05 08:00:00',
+    'https://ausimex.com.vn/wp-content/uploads/2024/04/nuoc-ep-detox-thai-doc-02.jpg',
+    18),
+
+    (N'Hướng Dẫn Giảm Cân Lành Mạnh Sau Sinh',
+    N'Giảm cân sau sinh là vấn đề khiến nhiều bà mẹ băn khoăn vì vừa phải đảm bảo dinh dưỡng cho bé, vừa muốn lấy lại vóc dáng. Bí quyết là kết hợp chế độ ăn giàu dinh dưỡng, đủ sữa cho bé, với luyện tập nhẹ nhàng như đi bộ, yoga hoặc các bài tập co giãn đơn giản. Việc uống đủ nước, nghỉ ngơi hợp lý cũng giúp quá trình giảm cân hiệu quả hơn. Bạn nên chia nhỏ bữa ăn, hạn chế đồ chiên rán, tinh bột tinh chế và bổ sung nhiều rau xanh, trái cây tươi. Hãy kiên nhẫn và lắng nghe cơ thể trong hành trình giảm cân.',
+    N'Vũ Thị Lan',
+    '2025-04-30 09:30:00',
+    'https://rubissdetox.vn/wp-content/uploads/2022/12/giam-can-sau-sinh-1.jpg',
+    29),
+
+    (N'Thực Đơn Món Chính Cho Người Ăn Kiêng',
+    N'Việc lựa chọn thực đơn món chính cho người ăn kiêng đòi hỏi sự cân đối giữa các nhóm chất để đảm bảo cơ thể vẫn đủ dinh dưỡng mà không nạp quá nhiều calo. Những món như cá hấp, gà luộc, ức gà nướng kết hợp với rau củ luộc hoặc salad là lựa chọn lý tưởng. Bạn nên hạn chế dầu mỡ, thay vào đó sử dụng dầu olive hoặc hấp, luộc để giữ trọn vị và giá trị dinh dưỡng. Thực đơn này vừa ngon miệng vừa giúp kiểm soát cân nặng hiệu quả, đặc biệt phù hợp với những ai đang trong quá trình giảm cân hoặc duy trì vóc dáng.',
+    N'Đặng Văn Sơn',
+    '2025-04-25 12:00:00',
+    'https://bazaarvietnam.vn/wp-content/uploads/2021/08/thuc-don-eat-clean-7-ngay-18.jpg',
+    38),
+
+    (N'Tác Dụng Kỳ Diệu Của Trà Matcha Đối Với Cân Nặng',
+    N'Trà matcha không chỉ là thức uống thơm ngon mà còn là trợ thủ đắc lực trong việc kiểm soát cân nặng nhờ chứa nhiều catechin và chất chống oxy hóa. Matcha giúp tăng cường trao đổi chất, đốt cháy calo và mỡ thừa hiệu quả hơn khi kết hợp với chế độ ăn uống lành mạnh và tập luyện. Ngoài ra, uống trà matcha còn giúp tinh thần tỉnh táo, giảm căng thẳng và cải thiện khả năng tập trung. Bạn có thể thưởng thức matcha nguyên chất hoặc pha cùng sữa hạt để tạo thành latte matcha thơm ngon. Hãy bổ sung matcha vào thực đơn mỗi ngày để cảm nhận sự thay đổi.',
+    N'Trần Thị Hồng',
+    '2025-04-20 10:00:00',
+    'https://www.inucha.com/cdn/shop/articles/shutterstock_403488673.jpg?v=1695132484',
+    24),
+
+    (N'Thực Đơn Cho Người Tập Gym Tăng Cơ',
+    N'Để tăng cơ hiệu quả, chế độ ăn của người tập gym cần giàu protein và đầy đủ các dưỡng chất cần thiết. Ưu tiên các thực phẩm như ức gà, trứng, sữa chua Hy Lạp, chuối và bột whey giúp phục hồi và phát triển cơ bắp sau mỗi buổi tập. Bên cạnh đó, việc bổ sung rau xanh, hạt ngũ cốc và chất béo lành mạnh từ dầu olive, quả bơ cũng rất quan trọng. Bữa ăn nên được chia thành nhiều bữa nhỏ trong ngày để cơ thể hấp thu dinh dưỡng tốt nhất. Một thực đơn hợp lý sẽ giúp bạn đạt mục tiêu tăng cơ nhanh và bền vững.',
+    N'Hà Văn Đồng',
+    '2025-04-15 17:00:00',
+    'https://wikisport.vn/uploads/2021/cach-xay-dung-thuc-don-cho-nguoi-tap-the-hinh.jpg',
+    50),
+
+(N'Yoga Cho Người Bị Thoát Vị Đĩa Đệm',
+    N'Yoga có thể hỗ trợ rất tốt cho những người bị thoát vị đĩa đệm nếu được thực hiện đúng cách và dưới sự hướng dẫn của chuyên gia. Các tư thế như Cobra, Sphinx nhẹ và Child’s Pose giúp kéo giãn nhẹ nhàng cột sống, cải thiện sự linh hoạt và giảm áp lực lên các đĩa đệm. Thực hành đều đặn giúp giảm đau, tăng tuần hoàn và hỗ trợ phục hồi chức năng cột sống. Tuy nhiên, người tập cần tránh những động tác xoay vặn mạnh hoặc cúi gập sâu. Việc kết hợp với hít thở sâu và chánh niệm càng làm tăng hiệu quả trị liệu của yoga.',
+    N'Nguyễn Thùy Dương',
+    '2025-04-10 07:00:00',
+    'https://thoaihoacotsong.vn/wp-content/uploads/Bai-tap-thoat-vi-dia-dem.jpg',
+    32),
+
+    (N'Ăn Kiêng Keto – Lợi và Hại',
+    N'Chế độ ăn kiêng Keto đã trở nên phổ biến nhờ khả năng giảm cân nhanh chóng bằng cách cắt giảm gần như toàn bộ lượng carb và tăng chất béo. Tuy nhiên, bên cạnh lợi ích như kiểm soát đường huyết và giảm cân, Keto cũng có những mặt hạn chế. Nhiều người gặp phải tình trạng mệt mỏi, táo bón hoặc rối loạn tiêu hóa trong giai đoạn đầu. Việc áp dụng Keto cần có sự tư vấn của chuyên gia dinh dưỡng để đảm bảo an toàn, đặc biệt với người có bệnh lý nền. Keto không phải phù hợp với tất cả mọi người và cần được thực hiện khoa học.',
+    N'Trần Hải Nam',
+    '2025-04-05 13:00:00',
+    'https://media-cdn-v2.laodong.vn/storage/newsportal/2021/9/12/952853/Keto.jpeg?w=800&h=496&crop=auto&scale=both',
+    41),
+
+    (N'Món Chính Tốt Cho Người Tiểu Đường',
+    N'Người bị tiểu đường cần chú trọng thực đơn món chính vừa cung cấp đủ dinh dưỡng vừa giúp kiểm soát đường huyết. Những món ăn như cá hồi, ức gà luộc hoặc nướng, salad rau củ ít tinh bột và ngũ cốc nguyên hạt là lựa chọn hàng đầu. Các món này không chỉ giàu protein, omega-3 mà còn ít chất béo bão hòa và đường. Bạn nên tránh thực phẩm chế biến sẵn, nhiều muối và đường ẩn. Việc ăn đúng giờ, chia nhỏ bữa ăn sẽ giúp ổn định lượng đường trong máu và duy trì sức khỏe lâu dài. Hãy lên thực đơn khoa học theo tư vấn của bác sĩ.',
+    N'Lê Thùy Linh',
+    '2025-03-30 11:00:00',
+    'https://login.medlatec.vn//ImagePath/images/20220725/20220725_che-do-an-cua-nguoi-tieu-duong-2.png',
+    36),
+
+    (N'Thực Đơn Ăn Chay Giảm Cân',
+    N'Ăn chay kết hợp cùng luyện tập nhẹ nhàng là phương pháp giảm cân an toàn và lành mạnh. Thực đơn ăn chay giảm cân nên tập trung vào các món giàu chất xơ như đậu hũ, rau xanh, nấm, ngũ cốc nguyên hạt để vừa no lâu vừa hạn chế calo nạp vào. Hãy tránh các món ăn chiên rán, sử dụng dầu thực vật ở mức vừa phải để đảm bảo sức khỏe tim mạch. Bên cạnh đó, tập yoga, đi bộ nhẹ giúp cơ thể đốt cháy mỡ thừa hiệu quả hơn. Việc duy trì chế độ ăn chay đúng cách giúp cải thiện sức khỏe tổng thể và vóc dáng cân đối.',
+    N'Nguyễn Mỹ Anh',
+    '2025-03-25 09:00:00',
+    'https://lh7-us.googleusercontent.com/iSGVaZ61N6mXDapEF_0uQKyoRE1rhbhxfOnDGh3iVJxc2UqJnR80DZiVyMmc3TzWys1t-Ys3XjNacVFxC3JxZfw0CirtJUXBkfRK3m0WdZ4s2z_5ZxWBdz5E0TojLYqFNsqtIk-ORRRHxHeNuxcjgOE',
+    28),
+
+    (N'Uống Bổ Sung Collagen – Nên Hay Không?',
+    N'Collagen là thành phần quan trọng giúp duy trì độ săn chắc, đàn hồi cho da, móng và xương khớp. Nhiều người lựa chọn bổ sung collagen để chống lão hóa và cải thiện sức khỏe tổng thể. Tuy nhiên, việc uống collagen cần đúng liều lượng, chọn sản phẩm uy tín và phù hợp với độ tuổi, thể trạng. Collagen dạng nước, viên hay bột đều có ưu nhược điểm riêng, cần cân nhắc khi sử dụng. Ngoài bổ sung, bạn nên ăn nhiều thực phẩm giàu vitamin C, kẽm để cơ thể tự tổng hợp collagen tự nhiên. Tham khảo ý kiến bác sĩ trước khi dùng để đảm bảo an toàn.',
+    N'Phùng Văn Tú',
+    '2025-03-20 15:00:00',
+    'https://tiki.vn/blog/wp-content/uploads/2023/12/cach-uong-collagen.webp',
+    20),
+
+(N'Tác Dụng Của Chế Độ Món Chính Ít Tinh Bột',
+    N'Áp dụng chế độ ăn món chính ít tinh bột là giải pháp hữu hiệu để giảm cân, kiểm soát đường huyết và giảm tích tụ mỡ bụng. Các món chính ưu tiên protein nạc như ức gà, cá hồi, kết hợp nhiều rau xanh giàu chất xơ giúp cơ thể no lâu mà vẫn đảm bảo dinh dưỡng. Việc hạn chế tinh bột tinh chế không chỉ hỗ trợ giảm cân mà còn giúp giảm nguy cơ mắc tiểu đường type 2. Bên cạnh đó, chế độ này còn cải thiện sức khỏe tim mạch và tăng cường chuyển hóa. Để đạt hiệu quả, cần kết hợp tập thể dục đều đặn và uống đủ nước mỗi ngày.',
+    N'Võ Thị Huệ',
+    '2025-03-15 12:00:00',
+    'https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2024/6/30/z5587444830936c2c036cfe37cd794ad67ae3a206a04db-17197162803791756557311.jpg',
+    31),
+
+    (N'Thể Dục Tại Nhà Không Cần Dụng Cụ',
+    N'Tập thể dục tại nhà không cần dụng cụ đang trở thành xu hướng bởi sự tiện lợi và tiết kiệm chi phí. Bạn có thể thực hiện các bài tập như squat, lunges, push-up, plank để tăng cường sức mạnh cơ bắp và cải thiện vóc dáng. Chỉ với một tấm thảm tập và không gian nhỏ, bạn đã có thể duy trì thói quen vận động mỗi ngày. Ngoài giúp đốt cháy calo, những bài tập này còn hỗ trợ tuần hoàn máu, giảm căng thẳng và nâng cao sức khỏe tim mạch. Hãy bắt đầu từ cường độ nhẹ, tăng dần theo thời gian để tránh chấn thương.',
+    N'Đỗ Minh Quân',
+    '2025-03-10 07:30:00',
+    'https://24hsport.vn/webroot/img/images/g%E1%BA%ADp%20b%E1%BB%A5ng.jpg',
+    37),
+
+    (N'Ăn Chay Và Cân Bằng Protein',
+    N'Ăn chay không đồng nghĩa với thiếu protein nếu bạn biết lựa chọn thực phẩm hợp lý. Các nguồn protein thực vật như đậu nành, đậu xanh, hạt chia, quinoa, hạt hướng dương, sữa thực vật giàu dinh dưỡng và dễ tiêu hóa. Việc kết hợp đa dạng thực phẩm giúp cơ thể nhận đủ các loại acid amin thiết yếu, hỗ trợ cơ bắp phát triển và tăng cường hệ miễn dịch. Ngoài ra, chế độ ăn giàu protein thực vật còn giúp kiểm soát cân nặng và bảo vệ sức khỏe tim mạch. Người ăn chay nên chú ý đến tỷ lệ các nhóm thực phẩm để đảm bảo cân bằng dinh dưỡng.',
+    N'Phan Thị Khuyên',
+    '2025-03-05 11:00:00',
+    'https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2023/4/14/thuc-don-an-chay-truong-du-chat-cach-tap-an-chay-truong-1681439457951952357450.jpg',
+    26),
+
+    (N'Yoga Buổi Tối – Sinh Học Phục Hồi Cơ Thể',
+    N'Tập yoga buổi tối là cách tuyệt vời để thư giãn sau một ngày dài làm việc căng thẳng. Những tư thế restorative như Legs Up The Wall, Child’s Pose hay Savasana giúp cơ thể thả lỏng, giải tỏa căng cơ và cân bằng hệ thần kinh. Thực hiện đều đặn không chỉ cải thiện giấc ngủ mà còn hỗ trợ phục hồi cơ bắp, giảm đau nhức và tăng cường sức khỏe tim mạch. Kết hợp cùng hít thở sâu và chánh niệm, yoga buổi tối mang lại cảm giác bình an và tái tạo năng lượng cho ngày mới. Đây là lựa chọn lý tưởng cho mọi lứa tuổi.',
+    N'Lý Thị Phương',
+    '2025-03-01 18:00:00',
+    'https://gymone.vn/wp-content/uploads/2022/10/nen-tap-yoga-bao-nhieu-lan-mot-tuan-2.jpg',
+    33),
+
+    (N'Ăn Kiêng Paleo – Có Thể Thử Không?',
+    N'Chế độ ăn kiêng Paleo lấy cảm hứng từ thực đơn của tổ tiên, tập trung vào thực phẩm tự nhiên, nguyên thủy như thịt nạc, cá, rau xanh, trái cây, các loại hạt và bỏ hoàn toàn thực phẩm chế biến sẵn, ngũ cốc và đường tinh luyện. Paleo giúp giảm cân, kiểm soát đường huyết và giảm viêm nhờ giảm hấp thụ các chất gây hại. Tuy nhiên, chế độ này cũng có hạn chế nếu không thực hiện đúng cách, có thể dẫn đến thiếu hụt dinh dưỡng. Trước khi áp dụng, bạn nên tham khảo ý kiến chuyên gia để đảm bảo phù hợp với thể trạng.',
+    N'Bùi Văn Đức',
+    '2025-02-25 10:00:00',
+    'https://www.vinmec.com/static/uploads/20201130_015255_184872_che_do_an_kieng_pal_max_1800x1800_jpg_02092e0744.jpg',
+    40);
 GO
+
 
 -- ArticleTagMapping (data mẫu)
 INSERT INTO ArticleTagMapping (ArticleId, TagId) VALUES
-    (1, 1), (1, 5),
-    (2, 4), (2, 6), (2, 5),
-    (3, 1), (3, 2), (3, 8),
-    (4, 1), (4, 7), (4, 5),
-    (5, 4), (5, 6), (5, 5);
+    (1, 1), (1, 2), (1, 6),
+    (2, 1), (2, 4),
+    (3, 3), (3, 4),
+    (4, 5), (4, 4),
+    (5, 6), (5, 1),
+    (6, 1), (6, 4), (6, 2),
+    (7, 2), (7, 5), (7, 4),
+    (8, 8), (8, 7),
+    (9, 4), (9, 2),
+    (10, 3), (10, 1),
+    (11, 5), (11, 4),
+    (12, 7), (12, 4),
+    (13, 8), (13, 1), (13, 4),
+    (14, 6), (14, 2),
+    (15, 1), (15, 4),
+    (16, 8), (16, 2),
+    (17, 3), (17, 4),
+    (18, 6), (18, 1),
+    (19, 5), (19, 4),
+    (20, 7), (20, 4);
 GO
 
 -- HealthMetric (data mẫu)
@@ -259,37 +410,262 @@ GO
 
 -- RecipeCategory (data mẫu)
 INSERT INTO RecipeCategory (CategoryName, Description) VALUES
-    (N'Món chính', N'Các món ăn chính trong bữa ăn'),
-    (N'Món phụ', N'Các món ăn kèm'),
-    (N'Tráng miệng', N'Các món tráng miệng'),
-    (N'Ăn kiêng', N'Các món ăn dành cho người ăn kiêng'),
-    (N'Ăn chay', N'Các món ăn chay');
+    (N'Dinh dưỡng', N'Các công thức về dinh dưỡng'),
+    (N'Giảm cân', N'Các công thức dành cho giảm cân'),
+    (N'Thể dục', N'Các công thức dành cho tập luyện và thể dục'),
+    (N'Sức khỏe', N'Các công thức về sức khỏe'),
+    (N'Yoga', N'Các công thức dành cho tập yoga và thiền'),
+    (N'Ăn chay', N'Các công thức cho người ăn chay'),
+    (N'Ăn kiêng', N'Các công thức dành cho ăn kiêng'),
+    (N'Món chính', N'Các công thức món ăn chính trong thực đơn');
 GO
 
 -- Recipe (data mẫu đã bỏ IsPremium)
 INSERT INTO Recipe (Title, Description, Ingredients, Instructions, CookingTime, Servings, Calories, Difficulty, ImageUrl, CreatedBy, Likes) VALUES
-    (N'Salad Gà Nướng', 
-     N'Salad gà nướng thơm ngon, bổ dưỡng', 
-     N'- Ức gà: 200g\n- Rau xà lách: 100g\n- Cà chua: 2 quả\n- Dầu oliu: 2 muỗng\n- Gia vị: muối, tiêu, tỏi',
-     N'1. Ướp gà với gia vị\n2. Nướng gà trong 20 phút\n3. Trộn salad với sốt',
-     30, 2, 350, N'Dễ', 
-     'https://example.com/salad-ga.jpg', 
-     1, 45),
-    (N'Cá Hồi Áp Chảo', 
-     N'Cá hồi áp chảo với sốt bơ chanh', 
-     N'- Phi lê cá hồi: 300g\n- Bơ: 50g\n- Chanh: 1 quả\n- Gia vị: muối, tiêu, tỏi',
-     N'1. Ướp cá với gia vị\n2. Áp chảo cá trong 5-7 phút mỗi mặt\n3. Làm sốt bơ chanh',
-     25, 2, 450, N'Trung bình', 
-     'https://example.com/ca-hoi.jpg', 
-     2, 38);
+(N'Cháo Yến Mạch Chuối', 
+ N'Cháo yến mạch thơm ngon, dễ tiêu cho bữa sáng', 
+ N'- Yến mạch: 50g\n- Chuối chín: 1 quả\n- Sữa tươi: 200ml\n- Mật ong: 1 muỗng', 
+ N'1. Nấu yến mạch với sữa\n2. Xay nhuyễn chuối\n3. Trộn chuối với cháo, thêm mật ong', 
+ 15, 1, 250, N'Dễ', 
+ 'https://cdn.nhathuoclongchau.com.vn/unsafe/https://cms-prod.s3-sgn09.fptcloud.com/tong_hop_5_mon_chao_chuoi_cho_be_an_dam_giup_doi_vi_tang_can_Rf_GAT_1663806091_a2616e9b7c.jpg', 1, 30),
+
+(N'Gỏi Cuốn Tôm Thịt', 
+ N'Món gỏi cuốn thanh mát, dễ làm', 
+ N'- Bánh tráng: 5 cái\n- Tôm luộc: 150g\n- Thịt ba chỉ luộc: 100g\n- Rau sống: 100g\n- Bún tàu: 100g\n- Nước chấm', 
+ N'1. Ngâm bánh tráng\n2. Cuộn tôm, thịt, rau và bún\n3. Pha nước chấm chua ngọt', 
+ 25, 3, 200, N'Trung bình', 
+ 'https://cdn.tgdd.vn/2021/08/CookRecipe/Avatar/goi-cuon-tom-thit-thumbnail-1.jpg', 2, 40),
+
+(N'Canh Bí Đỏ Nấu Tôm', 
+ N'Canh bí đỏ ngọt thơm, tốt cho sức khỏe', 
+ N'- Bí đỏ: 300g\n- Tôm tươi: 150g\n- Hành lá, gia vị', 
+ N'1. Gọt bí đỏ, cắt miếng\n2. Luộc tôm đến chín\n3. Nấu bí đỏ với tôm và gia vị', 
+ 30, 2, 180, N'Dễ', 
+ 'https://i.ytimg.com/vi/D2QjH8o-h8U/maxresdefault.jpg', 1, 25),
+
+(N'Salad Rau Củ Quả', 
+ N'Salad tươi mát, giàu vitamin', 
+ N'- Xà lách: 100g\n- Cà chua: 2 quả\n- Dưa leo: 1 quả\n- Dầu oliu: 2 muỗng\n- Giấm táo: 1 muỗng\n- Muối, tiêu', 
+ N'1. Rửa sạch rau củ\n2. Cắt nhỏ và trộn đều với dầu oliu, giấm\n3. Nêm nếm gia vị vừa ăn', 
+ 15, 2, 120, N'Dễ', 
+ 'https://img-global.cpcdn.com/recipes/ca5e129ad5e05cef/1200x630cq90/photo.jpg', 2, 35),
+
+(N'Ức Gà Áp Chảo', 
+ N'Ức gà áp chảo thơm ngon, giàu protein', 
+ N'- Ức gà: 200g\n- Tỏi băm: 1 muỗng\n- Dầu oliu: 1 muỗng\n- Gia vị: muối, tiêu', 
+ N'1. Ướp ức gà với tỏi và gia vị\n2. Áp chảo với dầu oliu đến chín vàng\n3. Thưởng thức', 
+ 20, 1, 220, N'Trung bình', 
+ 'https://cdn.tgdd.vn/Files/2020/06/20/1264271/cach-lam-uc-ga-ap-chao-giam-can-ngon-me-ly-an-mai-chang-ngan-202209100125060232.jpg', 1, 45),
+
+(N'Mì Ý Sốt Bò', 
+ N'Món mì Ý với sốt bò đậm đà', 
+ N'- Mì Ý: 150g\n- Thịt bò băm: 100g\n- Cà chua: 2 quả\n- Hành tây, tỏi\n- Gia vị', 
+ N'1. Luộc mì Ý\n2. Xào thịt bò với hành, tỏi\n3. Thêm cà chua, nấu sốt\n4. Trộn mì với sốt bò', 
+ 40, 3, 400, N'Khó', 
+ 'https://hidafoods.vn/wp-content/uploads/2024/06/cach-lam-mi-y-sot-thit-bo-bam-ngon-chuan-vi-Y-1.jpg', 2, 50),
+
+(N'Smoothie Bơ Chuối', 
+ N'Smoothie bơ chuối bổ dưỡng và mát lạnh', 
+ N'- Bơ: 1 quả\n- Chuối: 1 quả\n- Sữa hạnh nhân: 200ml\n- Mật ong: 1 muỗng', 
+ N'1. Cắt nhỏ bơ và chuối\n2. Cho vào máy xay cùng sữa và mật ong\n3. Xay nhuyễn và thưởng thức', 
+ 10, 1, 280, N'Dễ', 
+ 'https://nineshield.com.vn/wp-content/uploads/2024/05/sinh-to-xoai-chuoi.jpg', 1, 28),
+
+(N'Đậu Hũ Xào Rau Cải', 
+ N'Món chay đơn giản, giàu dinh dưỡng', 
+ N'- Đậu hũ non: 200g\n- Rau cải ngọt: 150g\n- Tỏi băm, dầu ăn, gia vị', 
+ N'1. Xào tỏi thơm\n2. Cho đậu hũ và rau cải vào xào chín\n3. Nêm gia vị vừa ăn', 
+ 20, 2, 180, N'Dễ', 
+ 'https://i.ytimg.com/vi/aMc9r6ZQaro/maxresdefault.jpg', 2, 38),
+
+(N'Cháo Gà Hạt Sen', 
+ N'Cháo gà hạt sen thơm ngon, bổ dưỡng', 
+ N'- Gà ta: 200g\n- Gạo tẻ: 100g\n- Hạt sen: 50g\n- Hành lá, gia vị', 
+ N'1. Ninh gà và hạt sen\n2. Nấu gạo thành cháo\n3. Cho gà vào, nêm gia vị', 
+ 60, 4, 300, N'Trung bình', 
+ 'https://file.hstatic.net/200000700229/article/chao-ga-hat-sen-1_d1e14b7e87da461e935cda4d2485d503.jpg', 1, 42),
+
+(N'Trà Thảo Mộc Giảm Cân', 
+ N'Trà thảo mộc giúp thanh lọc cơ thể', 
+ N'- Lá sen: 10g\n- Trà xanh: 5g\n- Hoa cúc: 5g\n- Mật ong: 1 muỗng', 
+ N'1. Đun sôi nước\n2. Cho lá sen, trà xanh, hoa cúc vào\n3. Hãm trong 10 phút\n4. Thêm mật ong', 
+ 15, 1, 10, N'Dễ', 
+ 'https://bazaarvietnam.vn/wp-content/uploads/2021/03/uong-tra-giam-can-co-hai-khong_450374944.jpg', 2, 33),
+
+(N'Súp Lơ Xào Tỏi', 
+ N'Món súp lơ xanh giòn ngon, giàu vitamin', 
+ N'- Súp lơ xanh: 200g\n- Tỏi: 2 tép\n- Dầu oliu: 1 muỗng\n- Muối, tiêu', 
+ N'1. Rửa sạch súp lơ, cắt miếng\n2. Phi tỏi thơm\n3. Xào súp lơ với gia vị', 
+ 15, 2, 110, N'Dễ', 
+ 'https://afamilycdn.com/2019/12/12/photo-1576136852847-15761368528491314630370.jpg', 1, 29),
+
+(N'Thịt Viên Sốt Cà', 
+ N'Thịt viên sốt cà chua đậm đà, hấp dẫn', 
+ N'- Thịt heo xay: 200g\n- Cà chua: 2 quả\n- Hành, tỏi, gia vị', 
+ N'1. Viên tròn thịt xay, ướp gia vị\n2. Áp chảo thịt viên\n3. Nấu sốt cà chua và cho thịt viên vào', 
+ 35, 3, 350, N'Trung bình', 
+ 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2023_10_14_638329065104583071_thit-vien-sot-ca-chua-thumb.jpg', 2, 37),
+
+(N'Salad Trái Cây', 
+ N'Salad trái cây tươi ngon, thanh mát', 
+ N'- Táo: 1 quả\n- Nho: 100g\n- Dưa hấu: 100g\n- Sữa chua: 1 hũ', 
+ N'1. Cắt nhỏ trái cây\n2. Trộn với sữa chua\n3. Ướp lạnh và thưởng thức', 
+ 10, 2, 150, N'Dễ', 
+ 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2024_1_23_638416217857385936_cac-cong-thuc-salad-hoa-qua-tuoi-mat-thanh-loc-co-the-de-lam-khong-nen-bo-qua.jpg', 1, 34),
+
+(N'Ức Gà Sốt Cam', 
+ N'Ức gà sốt cam thơm lừng, lạ miệng', 
+ N'- Ức gà: 200g\n- Cam: 1 quả\n- Tỏi, mật ong, gia vị', 
+ N'1. Áp chảo ức gà\n2. Nấu sốt cam với mật ong\n3. Rưới sốt lên gà', 
+ 25, 1, 270, N'Trung bình', 
+ 'https://cdn.tgdd.vn/2021/09/CookProduct/thumb-1200x676-3.jpg', 2, 45),
+
+(N'Smoothie Dâu Tằm', 
+ N'Smoothie dâu tằm mát lạnh, giàu vitamin C', 
+ N'- Dâu tằm: 100g\n- Chuối: 1 quả\n- Sữa chua: 100ml\n- Mật ong: 1 muỗng', 
+ N'1. Xay nhuyễn dâu tằm, chuối\n2. Thêm sữa chua, mật ong\n3. Thưởng thức lạnh', 
+ 10, 1, 200, N'Dễ', 
+ 'https://file.hstatic.net/200000700229/article/sinh-to-dau-tam-1_71c64ef25d7f44ae93d8a0536ab042d0.jpg', 1, 31),
+
+(N'Bò Xào Bông Cải', 
+ N'Món bò xào bông cải giàu sắt, tốt cho sức khỏe', 
+ N'- Thịt bò: 150g\n- Bông cải: 200g\n- Tỏi, gia vị', 
+ N'1. Ướp thịt bò\n2. Xào bò với bông cải và gia vị\n3. Thưởng thức nóng', 
+ 20, 2, 320, N'Trung bình', 
+ 'https://i.ytimg.com/vi/Pi8pSWHqxcc/maxresdefault.jpg', 2, 40),
+
+(N'Canh Rong Biển Đậu Hũ', 
+ N'Món canh thanh mát, giàu i-ốt', 
+ N'- Rong biển: 10g\n- Đậu hũ: 150g\n- Gừng, hành', 
+ N'1. Đun sôi nước với gừng\n2. Cho rong biển và đậu hũ vào\n3. Nêm gia vị', 
+ 20, 2, 150, N'Dễ', 
+ 'https://assets.unileversolutions.com/recipes-v2/157820.jpg', 1, 28),
+
+(N'Bánh Mì Trứng Ốp La', 
+ N'Món ăn sáng nhanh gọn, giàu năng lượng', 
+ N'- Bánh mì: 1 ổ\n- Trứng gà: 2 quả\n- Bơ, muối, tiêu', 
+ N'1. Chiên trứng ốp la\n2. Ăn kèm bánh mì nướng bơ', 
+ 10, 1, 350, N'Dễ', 
+ 'https://img-global.cpcdn.com/recipes/b97fd01daca41b4e/1200x630cq90/photo.jpg', 2, 33),
+
+(N'Súp Bí Đỏ', 
+ N'Món súp bí đỏ béo ngậy, dễ tiêu hóa', 
+ N'- Bí đỏ: 300g\n- Sữa tươi: 100ml\n- Hành tây: 1/2 củ\n- Gia vị', 
+ N'1. Xào hành tây, bí đỏ\n2. Nấu mềm, xay nhuyễn\n3. Thêm sữa, nêm gia vị', 
+ 30, 2, 220, N'Dễ', 
+ 'https://file.hstatic.net/200000700229/article/nau-sup-bi-do-bang-may-lam-sua-hat-da-nang_6d664dd9cf2f4dcda057cd92a401bb72.jpg', 1, 36),
+
+(N'Phở Gà', 
+ N'Phở gà đậm đà hương vị truyền thống', 
+ N'- Gà ta: 300g\n- Bánh phở: 200g\n- Hành, gừng, gia vị', 
+ N'1. Ninh gà lấy nước dùng\n2. Trụng bánh phở\n3. Chan nước dùng, thêm thịt gà', 
+ 45, 2, 400, N'Khó', 
+ 'https://cdn.tgdd.vn/2021/09/CookProduct/1200(3)-1200x676-2.jpg', 2, 48),
+
+(N'Trà Gừng Mật Ong', 
+ N'Trà gừng mật ong ấm áp, tăng sức đề kháng', 
+ N'- Gừng tươi: 5g\n- Mật ong: 1 muỗng\n- Nước sôi: 200ml', 
+ N'1. Hãm gừng với nước sôi 10 phút\n2. Thêm mật ong và khuấy đều', 
+ 10, 1, 40, N'Dễ', 
+ 'https://file.hstatic.net/1000164870/article/gnmo__9__6d1570d749774e52b451150ab9584a76.jpg', 1, 30),
+
+(N'Bún Chay Nấm', 
+ N'Món bún chay thanh đạm, dễ ăn', 
+ N'- Bún: 200g\n- Nấm rơm: 150g\n- Đậu hũ: 100g\n- Hành, gia vị', 
+ N'1. Nấu nước dùng nấm\n2. Trụng bún\n3. Chan nước dùng, thêm nấm, đậu hũ', 
+ 35, 2, 300, N'Trung bình', 
+ 'https://congdong.thuanchay.vn/wp-content/uploads/2024/10/bun-chay-6.webp', 2, 38),
+
+(N'Cơm Rang Trứng', 
+ N'Món cơm rang đơn giản, dễ làm tại nhà', 
+ N'- Cơm nguội: 200g\n- Trứng: 2 quả\n- Hành lá, gia vị', 
+ N'1. Xào trứng với hành\n2. Cho cơm vào rang đều\n3. Nêm gia vị', 
+ 15, 2, 350, N'Dễ', 
+ 'https://tiki.vn/blog/wp-content/uploads/2023/08/com-chien-trung.jpeg', 1, 35),
+
+(N'Bò Kho Bánh Mì', 
+ N'Món bò kho thơm lừng, mềm ngọt', 
+ N'- Bò nạm: 300g\n- Cà rốt: 100g\n- Gia vị bò kho, bánh mì', 
+ N'1. Ướp bò với gia vị\n2. Hầm mềm bò với cà rốt\n3. Ăn kèm bánh mì', 
+ 60, 3, 450, N'Khó', 
+ 'https://i.ytimg.com/vi/KFPdOaY3wCg/maxresdefault.jpg', 2, 42),
+
+(N'Rau Muống Xào Tỏi', 
+ N'Món rau muống xào tỏi thơm ngon, dễ làm', 
+ N'- Rau muống: 200g\n- Tỏi: 2 tép\n- Dầu ăn, muối', 
+ N'1. Phi tỏi thơm\n2. Xào rau với gia vị\n3. Dọn ra đĩa', 
+ 10, 2, 100, N'Dễ', 
+ 'https://i-giadinh.vnecdn.net/2022/03/28/Thanh-pham-1-2759-1648467981.jpg', 1, 30),
+
+(N'Bánh Xèo Chay', 
+ N'Bánh xèo giòn rụm, nhân chay hấp dẫn', 
+ N'- Bột bánh xèo: 200g\n- Nấm: 100g\n- Giá: 100g\n- Hành, gia vị', 
+ N'1. Pha bột, đổ bánh xèo\n2. Cho nhân nấm, giá vào\n3. Gấp bánh và thưởng thức', 
+ 40, 3, 350, N'Trung bình', 
+ 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2024_1_9_638404138182200942_che-bien-banh-xeo-chay-thom-ngon-4.png', 2, 39),
+
+(N'Chè Đậu Xanh', 
+ N'Món chè đậu xanh ngọt mát, giải nhiệt', 
+ N'- Đậu xanh: 100g\n- Đường: 50g\n- Nước cốt dừa: 50ml', 
+ N'1. Nấu mềm đậu xanh\n2. Thêm đường, nước cốt dừa\n3. Dùng nóng hoặc lạnh', 
+ 30, 2, 250, N'Dễ', 
+ 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREW0595TJ5WPLiD2Q_ACqHMmp6T8rotSGu7g&s', 1, 31),
+
+(N'Cháo Cá Hồi', 
+ N'Cháo cá hồi thơm ngon, giàu omega 3', 
+ N'- Cá hồi: 150g\n- Gạo: 100g\n- Gừng, hành, gia vị', 
+ N'1. Ninh gạo thành cháo\n2. Thêm cá hồi nấu chín\n3. Nêm gia vị', 
+ 45, 2, 320, N'Trung bình', 
+ 'https://cdn.tgdd.vn/2021/04/CookProduct/Cachnauchaocahoichobeandamthomngondaydinhduongdelamtainha-1200x676.jpg', 2, 44),
+
+(N'Mì Trứng Rau Củ', 
+ N'Món mì trứng rau củ đơn giản, giàu chất xơ', 
+ N'- Mì trứng: 150g\n- Cà rốt: 50g\n- Bắp cải: 100g\n- Gia vị', 
+ N'1. Luộc mì\n2. Xào rau củ\n3. Trộn mì với rau củ', 
+ 20, 2, 300, N'Dễ', 
+ 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2024_1_30_638422124269857288_mi-xao-rau-cu.png', 1, 36),
+
+(N'Bánh Chuối Hấp', 
+ N'Bánh chuối hấp dẻo mềm, thơm ngon', 
+ N'- Chuối chín: 200g\n- Bột năng: 100g\n- Nước cốt dừa: 100ml', 
+ N'1. Trộn chuối, bột năng\n2. Hấp chín\n3. Thêm nước cốt dừa', 
+ 40, 3, 280, N'Trung bình', 
+ 'https://lh4.googleusercontent.com/proxy/GzyOGRRsQTOg7DDpaWdIIPPcRo3r1_c-X64wupOJaijjkJBpVhfrHQ28Vbrz9Czd8os4ySA5v6i33fTODsEnKNf1dse9C0MfrrIMQ0ILPcS2h7RXMg', 2, 37);
 GO
+
 
 -- RecipeCategoryMapping (data mẫu)
 INSERT INTO RecipeCategoryMapping (RecipeId, CategoryId) VALUES
-    (1, 1), -- Salad Gà Nướng -> Món chính
-    (1, 4), -- Salad Gà Nướng -> Ăn kiêng
-    (2, 1), -- Cá Hồi Áp Chảo -> Món chính
-    (2, 4); -- Cá Hồi Áp Chảo -> Ăn kiêng
+    (1, 1),
+    (2, 4), (2, 2), 
+    (3, 4), (3, 1), 
+    (4, 1), (4, 4),
+    (5, 1), (5, 2), 
+    (6, 1),
+    (7, 1), (7, 4),
+    (8, 6),
+    (9, 1), (9, 4),
+    (10, 2), (10, 4), 
+    (11, 4), (11, 1),
+    (12, 8),
+    (13, 1), (13, 4),
+    (14, 2), (14, 1),
+    (15, 1), (15, 4),
+    (16, 1), (16, 4),
+    (17, 4),
+    (18, 8),
+    (19, 4), (19, 1),
+    (20, 8),
+    (21, 4),
+    (22, 6), (22, 4),
+    (23, 8),
+    (24, 8),
+    (25, 4), (25, 1),
+    (26, 6), (26, 8),
+    (27, 4),
+    (28, 1), (28, 4),
+    (29, 2), (29, 1),
+    (30, 8);
 GO
 
 -- Banner (data mẫu)
