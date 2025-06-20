@@ -17,6 +17,12 @@ export default function StackLayout() {
                 }}
             />
             <Stack.Screen
+                name="qr"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
                 name="success"
                 options={{
                     headerShown: false,

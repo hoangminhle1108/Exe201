@@ -50,6 +50,15 @@ export default function ConfirmDeleteScreen() {
                 throw new Error(errorData.message || "Xóa tài khoản thất bại.");
             }
 
+            const evalRes = await fetch(`${API_URL}/User/send-eval-form`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(email),
+            });
+            if (!evalRes.ok) {
+                console.warn("Gửi email khảo sát thất bại");
+            }
+
             const agree = await AsyncStorage.getItem("agree");
             if (agree !== "true") {
                 await AsyncStorage.removeItem("email");
@@ -60,7 +69,6 @@ export default function ConfirmDeleteScreen() {
             await AsyncStorage.removeItem("agree");
 
             Alert.alert("Xóa thành công", "Tài khoản đã được xóa.");
-
             router.replace("/(authentication)/login");
         } catch (error: any) {
             Alert.alert("Lỗi", error.message || "Xảy ra lỗi khi xóa tài khoản.");
@@ -68,6 +76,7 @@ export default function ConfirmDeleteScreen() {
             setLoading(false);
         }
     };
+
 
     return (
         <View style={styles.container}>
