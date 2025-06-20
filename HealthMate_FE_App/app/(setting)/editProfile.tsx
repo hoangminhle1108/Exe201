@@ -14,9 +14,8 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
-import { Pencil, ChevronLeft, Mail, User, Calendar } from "lucide-react-native";
+import { ImageIcon, ChevronLeft, Mail, User, Calendar } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Colors from "@/constants/colors";
 import { API_URL } from "@env";
 import * as ImagePicker from "expo-image-picker";
 
@@ -138,28 +137,6 @@ export default function EditProfileScreen() {
         }
     };
 
-    const pickImage = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert("Quyền bị từ chối", "Ứng dụng cần quyền truy cập thư viện ảnh.");
-            return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-            base64: false,
-        });
-
-        if (!result.canceled) {
-            const selectedImage = result.assets[0];
-            setAvatarUrl(selectedImage.uri);
-        }
-    };
-
-
     return (
         <KeyboardAvoidingView
             style={styles.container}
@@ -174,28 +151,23 @@ export default function EditProfileScreen() {
 
             <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
                 <Text style={styles.title}>Chỉnh sửa hồ sơ</Text>
-
-                {/* 
-<View style={styles.avatarContainer}>
-    <Image
-        source={{
-            uri: avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
-        }}
-        style={styles.avatar}
-    />
-    <TouchableOpacity style={styles.editIcon} onPress={pickImage}>
-        <Pencil size={24} color={Colors.text} />
-    </TouchableOpacity>
-</View>
-*/}
+                <View style={styles.avatarContainer}>
+                    <Image
+                        source={{
+                            uri: avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
+                        }}
+                        style={styles.avatar}
+                    />
+                </View>
 
                 <View style={styles.inputGroup}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Link ảnh đại diện"
+                        placeholder="Ảnh đại diện"
                         value={avatarUrl || ""}
-                        onChangeText={setAvatarUrl}
+                        onChangeText={(text) => setAvatarUrl(text)}
                     />
+                    <ImageIcon size={18} color="#999" style={styles.iconEnd} />
                 </View>
 
                 <View style={styles.inputGroup}>
@@ -239,6 +211,7 @@ export default function EditProfileScreen() {
                     />
                 )}
             </ScrollView>
+
 
             <TouchableOpacity style={styles.button} onPress={handleSave}>
                 <Text style={styles.buttonText}>Lưu thông tin</Text>

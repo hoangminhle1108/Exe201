@@ -126,12 +126,22 @@ export default function RecipeList() {
                 <View style={styles.searchBarContainer}>
                     <SearchBar
                         placeholder="Tìm kiếm công thức theo tên"
-                        onSubmit={(text) => {
+                        onSubmit={async (text) => {
                             if (text.trim()) {
-                                router.push({
-                                    pathname: "/(recipe)/recipeSearch",
-                                    params: { q: text },
-                                });
+                                try {
+                                    const response = await fetch(`${API_URL}/Recipe/search?title=${encodeURIComponent(text)}`);
+                                    if (response.ok) {
+                                        const data = await response.json();
+                                        router.push({
+                                            pathname: "/(recipe)/recipeSearch",
+                                            params: { q: text, results: JSON.stringify(data) },
+                                        });
+                                    } else {
+                                        console.error("Search failed");
+                                    }
+                                } catch (err) {
+                                    console.error("Error searching recipes:", err);
+                                }
                             }
                         }}
                     />
@@ -179,10 +189,9 @@ export default function RecipeList() {
                         <RecipeCard
                             id={item.recipeId.toString()}
                             name={item.title}
-                            location=""
                             rating={item.likes}
                             image={item.imageUrl}
-                            tags={(item.categories?.map((cat) => cat.categoryName).slice(0, 2)) || ["Dinh dưỡng"]}
+                            tags={(item.categories?.map((cat) => cat.categoryName)) || ["Dinh dưỡng"]}
                         />
                     )}
                     contentContainerStyle={styles.horizontalList}

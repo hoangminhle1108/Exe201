@@ -4,7 +4,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { ChevronLeft } from "lucide-react-native";
 import Colors from "@/constants/colors";
-import { Laptop2, Banknote, Calendar, Check } from "lucide-react-native";
+import { Banknote, Calendar, Check } from "lucide-react-native";
 import { API_URL } from "@env";
 
 type PremiumPackage = {
@@ -76,7 +76,6 @@ export default function Detail() {
 
                 <View style={styles.benefits}>
                     {[
-                        "AI thông minh hơn",
                         "AI được cá nhân hóa phù hợp hơn cho người dùng",
                         pkg?.description,
                     ].map((benefit, index) => (
@@ -88,7 +87,7 @@ export default function Detail() {
                 </View>
             </ScrollView>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push("/(premium)/success")}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push(`/(premium)/qr?id=${id}`)}>
                 <Text style={styles.buttonText}>Tiến hành thanh toán</Text>
             </TouchableOpacity>
         </View>
