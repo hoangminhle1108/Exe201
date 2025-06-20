@@ -205,7 +205,7 @@ namespace HealthMate.API.Controllers.User
                 {
                     return NotFound(new { message = "Người dùng không tồn tại." });
                 }
-                var success = await _userService.ChangePasswordAsync(user.UserId, dto.OldPassword, dto.NewPassword);
+                var success = await _userService.ChangePasswordAsync(user.Email, dto.OldPassword, dto.NewPassword);
                 if (!success)
                 {
                     return BadRequest(new { message = "Mật khẩu cũ không đúng." });
@@ -216,6 +216,15 @@ namespace HealthMate.API.Controllers.User
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
+        }
+        [HttpPut("update-profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDTO dto)
+        {
+            var success = await _userService.UpdateProfileAsync(dto);
+            if (!success)
+                return NotFound(new { message = "User not found" });
+
+            return Ok(new { message = "Profile updated successfully" });
         }
     }
 }

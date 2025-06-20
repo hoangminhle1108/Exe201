@@ -126,7 +126,7 @@ namespace HealthMate.API.Controllers
         [HttpGet("popular")]
         public async Task<ActionResult<List<RecipeDTO>>> GetMostLikedRecipes()
         {
-            var recipes = await _service.GetMostLikedRecipesAsync(5);
+            var recipes = await _service.GetMostLikedRecipesAsync(3);
             return Ok(recipes);
         }
     }

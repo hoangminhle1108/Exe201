@@ -299,27 +299,27 @@ namespace HealthMate.Services.Service.User
             return await _userRepository.UpdatePasswordAsync(user.UserId, hashedPassword);
         }
 
-        public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+        public async Task<bool> ChangePasswordAsync(string email, string oldPassword, string newPassword)
         {
-            if (userId <= 0)
-                throw new ArgumentException("User ID must be a positive integer.", nameof(userId));
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentException("Email cannot be null or empty.", nameof(email));
             if (string.IsNullOrEmpty(oldPassword))
                 throw new ArgumentException("Old password cannot be null or empty.", nameof(oldPassword));
             if (string.IsNullOrEmpty(newPassword))
                 throw new ArgumentException("New password cannot be null or empty.", nameof(newPassword));
 
-            var user = await _userRepository.GetByIdAsync(userId);
+            var user = await _userRepository.GetByEmailAsync(email);
             if (user == null)
-                throw new InvalidOperationException($"User with ID {userId} not found.");
+                throw new InvalidOperationException($"User with email {email} not found.");
 
-            // Verify old password
+            // ✅ Verify old password with hashed password in DB
             if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash))
                 return false;
 
+            // ✅ Hash new password
             var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
-            // Call repository to update password
-            return await _userRepository.ChangePasswordAsync(userId, user.PasswordHash, newPasswordHash);
+            return await _userRepository.ChangePasswordAsync(user.UserId, newPasswordHash);
         }
 
         public async Task<bool> SendEvalutionFormAsync(string email)
@@ -339,6 +339,13 @@ namespace HealthMate.Services.Service.User
                 <p>Trân trọng,<br>Đội ngũ HealthMate</p>";
             await _emailService.SendEmailAsync(user.Email, "HealthMate – Chúng tôi trân trọng ý kiến đóng góp từ bạn", htmlMessage);
             return true;
+        }
+        public async Task<bool> UpdateProfileAsync(UpdateProfileDTO dto)
+        {
+            var existingUser = await _userRepository.GetByIdAsync(dto.UserId);
+            if (existingUser == null)
+                throw new InvalidOperationException("User not found.");
+            return await _userRepository.UpdateProfileAsync(dto);
         }
     }
 }
