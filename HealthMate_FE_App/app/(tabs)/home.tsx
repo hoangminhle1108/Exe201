@@ -143,7 +143,7 @@ export default function Home() {
               <FeatureCard
                 type="post"
                 title="Bài viết"
-                value="50+"
+                value="20+"
                 updated="bài viết về sức khỏe"
                 color="#8a9eff"
                 onPress={() => router.replace("/(blog)/blogList")}
@@ -151,7 +151,7 @@ export default function Home() {
               <FeatureCard
                 type="recipe"
                 title="Công thức"
-                value="100+"
+                value="30+"
                 updated="công thức nấu ăn"
                 color="#d15d5d"
                 onPress={() => router.replace("/(recipe)/recipeList")}

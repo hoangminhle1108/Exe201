@@ -76,7 +76,6 @@ export default function Detail() {
 
                 <View style={styles.benefits}>
                     {[
-                        "AI thông minh hơn",
                         "AI được cá nhân hóa phù hợp hơn cho người dùng",
                         pkg?.description,
                     ].map((benefit, index) => (
