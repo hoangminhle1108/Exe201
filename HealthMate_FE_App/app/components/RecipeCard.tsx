@@ -5,17 +5,15 @@ import {
     View,
     TouchableOpacity,
     Dimensions,
-    Platform,
 } from "react-native";
 import { Image } from "expo-image";
-import { Heart, ChevronRight } from "lucide-react-native";
+import { Heart } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
 
 interface RecipeCardProps {
     id: string;
     name: string;
-    location: string;
     rating: number;
     image: string;
     tags: string[];
@@ -38,6 +36,8 @@ const getTagStyle = (tag: string) => {
             return { backgroundColor: "#bbf7d0", color: "#15803d" };
         case "ăn kiêng":
             return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+        case "món chính":
+            return { backgroundColor: "#e0f2fe", color: "#0284c7" };
         default:
             return { backgroundColor: "#e5e7eb", color: "#374151" };
     }
@@ -46,7 +46,6 @@ const getTagStyle = (tag: string) => {
 const RecipeCard = ({
     id,
     name,
-    location,
     rating,
     image,
     tags,
@@ -55,7 +54,7 @@ const RecipeCard = ({
     const router = useRouter();
 
     const handlePress = () => {
-        router.push(`/destinations/${id}`);
+        router.push(`/(recipe)/recipeDetail?id=${id}`);
     };
 
     return (
@@ -89,17 +88,7 @@ const RecipeCard = ({
                 </View>
 
                 <Text style={styles.name} numberOfLines={1}>{name}</Text>
-
-                <View style={styles.locationContainer}>
-                    <Text style={styles.location} numberOfLines={1}>Xem chi tiết &gt;</Text>
-                </View>
             </View>
-
-            {isLarge && (
-                <View style={styles.arrowContainer}>
-                    <ChevronRight size={20} color={Colors.primary} />
-                </View>
-            )}
         </TouchableOpacity>
     );
 };

@@ -9,13 +9,14 @@ import {
     Alert,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react-native";
 import { API_URL } from "@env";
 
 export default function NewPassword() {
     const router = useRouter();
     const { email } = useLocalSearchParams();
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleNewPassword = async () => {
         if (password.length < 6) {
@@ -62,13 +63,25 @@ export default function NewPassword() {
                 Nên sử dụng mật khẩu mạnh gồm 6 ký tự gồm chữ và số
             </Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Mật khẩu"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-            />
+            <View style={{ position: "relative" }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Mật khẩu"
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                />
+                <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={{ position: "absolute", right: 12, top: 14 }}
+                >
+                    {showPassword ? (
+                        <EyeOff size={20} color="#666" />
+                    ) : (
+                        <Eye size={20} color="#666" />
+                    )}
+                </TouchableOpacity>
+            </View>
 
             <TouchableOpacity style={styles.button} onPress={handleNewPassword}>
                 <Text style={styles.buttonText}>Xác nhận mật khẩu mới</Text>

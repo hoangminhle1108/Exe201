@@ -1,14 +1,46 @@
-import React from "react";
-import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+    View,
+    ScrollView,
+    Text,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    ActivityIndicator,
+} from "react-native";
 import SearchBar from "../components/SearchBar";
 import { ChevronLeft, Heart } from "lucide-react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import Colors from "@/constants/colors";
-import { useLocalSearchParams } from "expo-router";
+import { API_URL } from "@env";
 
 export default function RecipeSearch() {
     const router = useRouter();
     const { q } = useLocalSearchParams();
+    const [foundRecipes, setFoundRecipes] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+            try {
+                const response = await fetch(`${API_URL}/Recipe/search?title=${encodeURIComponent(q as string)}`);
+                const data = await response.json();
+                if (response.ok) {
+                    setFoundRecipes(data);
+                } else {
+                    console.error("Search failed");
+                }
+            } catch (err) {
+                console.error("Error searching recipes:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (q) {
+            fetchSearchResults();
+        }
+    }, [q]);
 
     const getTagStyle = (tag: string) => {
         switch (tag.toLowerCase()) {
@@ -16,28 +48,22 @@ export default function RecipeSearch() {
                 return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
             case "giảm cân":
                 return { backgroundColor: "#dcfce7", color: "#16a34a" };
+            case "thể dục":
+                return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
+            case "sức khỏe":
+                return { backgroundColor: "#fef9c3", color: "#ca8a04" };
+            case "yoga":
+                return { backgroundColor: "#fae8ff", color: "#a21caf" };
+            case "ăn chay":
+                return { backgroundColor: "#bbf7d0", color: "#15803d" };
+            case "ăn kiêng":
+                return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+            case "món chính":
+                return { backgroundColor: "#e0f2fe", color: "#0284c7" };
             default:
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
     };
-
-    const foundRecipes = [
-        {
-            title: "Trứng rán mỡ",
-            likes: 26,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-        {
-            title: "Bắp xào bơ",
-            likes: 88,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-        {
-            title: "Bơ xào bắp",
-            likes: 131,
-            image: "https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=200",
-        },
-    ];
 
     return (
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -55,45 +81,61 @@ export default function RecipeSearch() {
                                     params: { q: text },
                                 });
                             }
-                        }} />
+                        }}
+                    />
                 </View>
             </View>
 
-            <Text style={styles.resultText}>Tìm được {foundRecipes.length} công thức cho "{q}"</Text>
+            <Text style={styles.resultText}>
+                {loading
+                    ? "Đang tìm kiếm..."
+                    : `Tìm được ${foundRecipes.length} công thức cho "${q}"`}
+            </Text>
 
-            <View style={styles.fullRecipeList}>
-                {foundRecipes.map((item, idx) => (
-                    <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.image }} style={styles.fullRecipeImage} />
-                        <View style={styles.fullRecipeInfo}>
-                            <Text style={styles.fullRecipeTitle}>{item.title}</Text>
+            {loading ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+                <View style={styles.fullRecipeList}>
+                    {foundRecipes.map((item, idx) => (
+                        <View key={idx} style={styles.fullRecipeCard}>
+                            <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
+                            <View style={styles.fullRecipeInfo}>
+                                <Text style={styles.fullRecipeTitle}>{item.title}</Text>
 
-                            <View style={styles.tagsContainer}>
-                                {["Dinh dưỡng", "Giảm cân"].map((tag, i) => (
-                                    <View
-                                        key={i}
-                                        style={[styles.tag, { backgroundColor: getTagStyle(tag).backgroundColor }]}
-                                    >
-                                        <Text style={[styles.tagText, { color: getTagStyle(tag).color }]}>
-                                            {tag}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-
-                            <View style={styles.bottomRow}>
-                                <View style={styles.likesContainer}>
-                                    <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                    <Text style={styles.likesText}>{item.likes}</Text>
+                                <View style={styles.tagsContainer}>
+                                    {item.categories?.slice(0, 2).map((cat: any, i: number) => {
+                                        const style = getTagStyle(cat.categoryName);
+                                        return (
+                                            <View
+                                                key={i}
+                                                style={[styles.tag, { backgroundColor: style.backgroundColor }]}
+                                            >
+                                                <Text style={[styles.tagText, { color: style.color }]}>
+                                                    {cat.categoryName}
+                                                </Text>
+                                            </View>
+                                        );
+                                    })}
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail`)}>
-                                    <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
-                                </TouchableOpacity>
+
+                                <View style={styles.bottomRow}>
+                                    <View style={styles.likesContainer}>
+                                        <Heart size={12} color={Colors.rating} fill={Colors.rating} />
+                                        <Text style={styles.likesText}>{item.likes}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)
+                                        }
+                                    >
+                                        <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                ))}
-            </View>
+                    ))}
+                </View>
+            )}
         </ScrollView>
     );
 }
