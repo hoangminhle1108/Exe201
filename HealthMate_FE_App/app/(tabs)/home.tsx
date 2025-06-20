@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 16,
-    paddingBottom: 24,
+    paddingBottom: 16,
   },
   userInfo: {
     flexDirection: "row",
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 24,
-    paddingBottom: 16,
+    paddingBottom: 14,
     paddingTop: 0,
   },
   dateIcon: {
