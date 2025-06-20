@@ -41,7 +41,7 @@ export default function BlogCategory() {
             case "dinh dưỡng":
                 return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
             case "giảm cân":
-                return { backgroundColor: "#dcfce7", color: "#16a34a" };
+                return { backgroundColor: "#fef3c7", color: "#f97316" };
             case "thể dục":
                 return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
             case "sức khỏe":
@@ -52,13 +52,15 @@ export default function BlogCategory() {
                 return { backgroundColor: "#bbf7d0", color: "#15803d" };
             case "ăn kiêng":
                 return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+            case "món chính":
+                return { backgroundColor: "#e0f2fe", color: "#0284c7" };
             default:
                 return { backgroundColor: "#e5e7eb", color: "#374151" };
         }
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
             <View style={styles.searchHeader}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <ChevronLeft size={24} color={Colors.text} />
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
         padding: 16,
         paddingBottom: 32,
         backgroundColor: "#fff",
-        height: "100%",
+        // height: "100%",
     },
     emptyText: {
         textAlign: "center",

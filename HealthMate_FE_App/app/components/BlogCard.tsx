@@ -26,7 +26,7 @@ const getTagStyle = (tag: string) => {
     case "dinh dưỡng":
       return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
     case "giảm cân":
-      return { backgroundColor: "#dcfce7", color: "#16a34a" };
+      return { backgroundColor: "#fef3c7", color: "#f97316" };
     case "thể dục":
       return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
     case "sức khỏe":
@@ -169,8 +169,8 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     position: "absolute",
-    top: 8,
-    right: 8,
+    top: 10,
+    right: 10,
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 12,
     paddingHorizontal: 8,

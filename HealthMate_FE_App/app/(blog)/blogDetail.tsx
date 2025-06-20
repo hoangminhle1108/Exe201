@@ -8,14 +8,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const getTagStyle = (tag: string) => {
     switch (tag.toLowerCase()) {
-        case "dinh dưỡng": return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
-        case "giảm cân": return { backgroundColor: "#dcfce7", color: "#16a34a" };
-        case "thể dục": return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
-        case "sức khỏe": return { backgroundColor: "#fef9c3", color: "#ca8a04" };
-        case "yoga": return { backgroundColor: "#fae8ff", color: "#a21caf" };
-        case "ăn chay": return { backgroundColor: "#bbf7d0", color: "#15803d" };
-        case "ăn kiêng": return { backgroundColor: "#fee2e2", color: "#b91c1c" };
-        default: return { backgroundColor: "#e5e7eb", color: "#374151" };
+        case "dinh dưỡng":
+            return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
+        case "giảm cân":
+            return { backgroundColor: "#fef3c7", color: "#f97316" };
+        case "thể dục":
+            return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
+        case "sức khỏe":
+            return { backgroundColor: "#fef9c3", color: "#ca8a04" };
+        case "yoga":
+            return { backgroundColor: "#fae8ff", color: "#a21caf" };
+        case "ăn chay":
+            return { backgroundColor: "#bbf7d0", color: "#15803d" };
+        case "ăn kiêng":
+            return { backgroundColor: "#fee2e2", color: "#b91c1c" };
+        case "món chính":
+            return { backgroundColor: "#e0f2fe", color: "#0284c7" };
+        default:
+            return { backgroundColor: "#e5e7eb", color: "#374151" };
     }
 };
 

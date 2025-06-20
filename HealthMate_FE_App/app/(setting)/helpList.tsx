@@ -98,14 +98,14 @@ export default function HelpList() {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                onPress={() => router.replace("/(tabs)/profile")}
-                style={styles.backIcon}
-            >
-                <ChevronLeft size={24} color="#000" />
-            </TouchableOpacity>
 
             <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+                <TouchableOpacity
+                    onPress={() => router.replace("/(tabs)/profile")}
+                    style={styles.backIcon}
+                >
+                    <ChevronLeft size={24} color="#000" />
+                </TouchableOpacity>
                 <Text style={styles.title}>Các câu hỏi thường gặp</Text>
 
                 {QUESTIONS.map((item, index) => (
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     content: {
         padding: 24,
         paddingTop: 65,
-        paddingBottom: 120,
+        paddingBottom: 32,
     },
     backIcon: {
         position: "absolute",

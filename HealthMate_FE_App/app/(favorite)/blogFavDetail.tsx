@@ -9,7 +9,7 @@ const getTagStyle = (tag: string) => {
         case "dinh dưỡng":
             return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
         case "giảm cân":
-            return { backgroundColor: "#dcfce7", color: "#16a34a" };
+            return { backgroundColor: "#fef3c7", color: "#f97316" };
         default:
             return { backgroundColor: "#e5e7eb", color: "#374151" };
     }
