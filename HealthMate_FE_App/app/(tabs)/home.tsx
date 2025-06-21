@@ -52,8 +52,6 @@ type Recipe = {
   }[] | null;
 };
 
-const [popularRecipes, setPopularRecipes] = useState<Recipe[]>([]);
-
 export default function Home() {
   const router = useRouter();
   const [fullName, setFullName] = useState("Người dùng");
