@@ -17,6 +17,7 @@ import { Feather } from '@expo/vector-icons';
 import SectionHeader from "../components/SectionHeader";
 import FeatureCard from "../components/FeatureCard";
 import BlogCard from "../components/BlogCard";
+import RecipeCard from "../components/RecipeCard";
 import Colors from "@/constants/colors";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
@@ -29,6 +30,7 @@ const DATA = [
   { type: "date" },
   { type: "features" },
   { type: "post" },
+  { type: "recipe" },
 ];
 
 const capitalizeWords = (str: string) =>
@@ -39,6 +41,19 @@ const capitalizeWords = (str: string) =>
 const today = dayjs().format("dddd, [Ngày] DD [Tháng] MM [Năm] YYYY");
 const formattedDate = capitalizeWords(today);
 
+type Recipe = {
+  recipeId: number;
+  title: string;
+  imageUrl: string;
+  likes: number;
+  categories?: {
+    categoryId: number;
+    categoryName: string;
+  }[] | null;
+};
+
+const [popularRecipes, setPopularRecipes] = useState<Recipe[]>([]);
+
 export default function Home() {
   const router = useRouter();
   const [fullName, setFullName] = useState("Người dùng");
@@ -46,6 +61,8 @@ export default function Home() {
   const [premiumExpiry, setPremiumExpiry] = useState<string | null>(null);
   const [popularArticles, setPopularArticles] = useState<any[]>([]);
   const [loadingPopular, setLoadingPopular] = useState(true);
+  const [popularRecipes, setPopularRecipes] = useState<Recipe[]>([]);
+  const [loadingPopularRecipe, setLoadingPopularRecipe] = useState(true);
 
   useEffect(() => {
     const fetchUserFullName = async () => {
@@ -83,6 +100,23 @@ export default function Home() {
       }
     };
 
+    const fetchPopularRecipes = async () => {
+      try {
+        const response = await fetch(`${API_URL}/Recipe/popular`);
+        const data = await response.json();
+        if (response.ok) {
+          setPopularRecipes(data);
+        } else {
+          console.error("Failed to fetch popular recipes.");
+        }
+      } catch (error) {
+        console.error("Error fetching popular recipes:", error);
+      } finally {
+        setLoadingPopularRecipe(false);
+      }
+    };
+
+    fetchPopularRecipes();
     fetchPopularArticles();
     fetchUserFullName();
   }, []);
@@ -187,7 +221,7 @@ export default function Home() {
                 <ActivityIndicator size="small" color={Colors.primary} />
               ) : (
                 <FlatList
-                  data={popularArticles.slice(0, 3)}
+                  data={popularArticles.slice(0, 5)}
                   keyExtractor={(item) => item.articleId.toString()}
                   horizontal
                   showsHorizontalScrollIndicator={false}
@@ -208,7 +242,37 @@ export default function Home() {
             </View>
           </View>
         );
-
+      case "recipe":
+        return (
+          <View style={styles.recipeContent}>
+            <View style={styles.section}>
+              <SectionHeader
+                title="Công thức"
+                onViewAll={() => router.replace("/(recipe)/recipeList")}
+              />
+              {loadingPopularRecipe ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <FlatList
+                  data={popularRecipes.slice(0, 5)}
+                  keyExtractor={(item) => item.recipeId.toString()}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <RecipeCard
+                      id={item.recipeId.toString()}
+                      name={item.title}
+                      rating={item.likes}
+                      image={item.imageUrl}
+                      tags={(item.categories?.map((cat) => cat.categoryName)) || ["Dinh dưỡng"]}
+                    />
+                  )}
+                  contentContainerStyle={styles.horizontalList}
+                />
+              )}
+            </View>
+          </View>
+        );
 
       default:
         return null;
@@ -275,7 +339,11 @@ const styles = StyleSheet.create({
   postContent: {
     paddingHorizontal: 24,
     marginTop: 16,
-    marginBottom: 20
+  },
+  recipeContent: {
+    paddingHorizontal: 24,
+    marginTop: 16,
+    marginBottom: 32
   },
   content: {
     paddingHorizontal: 24,

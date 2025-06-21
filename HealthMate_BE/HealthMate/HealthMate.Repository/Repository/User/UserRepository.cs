@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BCrypt.Net;
+using HealthMate.Repository.DTOs.UserDTO;
 
 namespace HealthMate.Repository.Repository.User
 {
@@ -281,20 +282,29 @@ namespace HealthMate.Repository.Repository.User
             return true;
         }
 
-        public async Task<bool> ChangePasswordAsync(int userId, string oldPasswordHash, string newPasswordHash)
+        public async Task<bool> ChangePasswordAsync(int userId, string newPasswordHash)
         {
             var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null) return false;
 
-            // Verify old password
-            if (!BCrypt.Net.BCrypt.Verify(oldPasswordHash, user.PasswordHash))
-            {
-                return false;
-            }
+            // Không cần verify ở đây nữa
 
-            // Set new password hash
             user.PasswordHash = newPasswordHash;
             user.UpdatedAt = DateTime.UtcNow;
+            _ctx.Users.Update(user);
+            await _ctx.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> UpdateProfileAsync(UpdateProfileDTO dto)
+        {
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+            if (user == null) return false;
+
+            user.FullName = dto.FullName;
+            user.AvatarUrl = dto.AvatarUrl;
+            user.DateOfBirth = dto.DateOfBirth;
+            user.UpdatedAt = DateTime.UtcNow;
+
             _ctx.Users.Update(user);
             await _ctx.SaveChangesAsync();
             return true;

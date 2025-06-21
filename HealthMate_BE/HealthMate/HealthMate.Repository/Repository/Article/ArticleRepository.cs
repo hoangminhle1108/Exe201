@@ -141,6 +141,7 @@ namespace HealthMate.Repository.Repository.Article
             var article = await _ctx.Articles.FirstOrDefaultAsync(a => a.ArticleId == articleId);
             if (article == null) return false;
             article.Likes++;
+            _ctx.Articles.Update(article);
             await _ctx.SaveChangesAsync();
             return true;
         }
@@ -150,6 +151,7 @@ namespace HealthMate.Repository.Repository.Article
             var article = await _ctx.Articles.FirstOrDefaultAsync(a => a.ArticleId == articleId);
             if (article == null) return false;
             if (article.Likes > 0) article.Likes--;
+            _ctx.Articles.Update(article);
             await _ctx.SaveChangesAsync();
             return true;
         }

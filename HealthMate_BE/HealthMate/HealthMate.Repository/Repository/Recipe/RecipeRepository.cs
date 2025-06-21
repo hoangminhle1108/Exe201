@@ -116,6 +116,7 @@ namespace HealthMate.Repository.Repository.Recipe
             var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.RecipeId == recipeId);
             if (recipe == null) return false;
             recipe.Likes++;
+            _context.Recipes.Update(recipe);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -125,6 +126,7 @@ namespace HealthMate.Repository.Repository.Recipe
             var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.RecipeId == recipeId);
             if (recipe == null) return false;
             if (recipe.Likes > 0) recipe.Likes--;
+            _context.Recipes.Update(recipe);
             await _context.SaveChangesAsync();
             return true;
         }

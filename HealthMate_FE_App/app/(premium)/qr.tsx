@@ -171,13 +171,15 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#fff",
         paddingHorizontal: 20,
-        padding: 20,
+        paddingTop: 20,
+        paddingRight: 20,
+        paddingLeft: 20
     },
     backButton: {
         marginBottom: 20,
     },
     scrollContent: {
-        paddingBottom: 50,
+        paddingBottom: 32,
     },
     title: { fontSize: 20, fontWeight: "bold", textAlign: "center", marginBottom: 16 },
     box: { backgroundColor: "#f9f9f9", padding: 16, borderRadius: 8, marginBottom: 16 },

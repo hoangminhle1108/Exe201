@@ -11,7 +11,7 @@ const getTagStyle = (tag: string) => {
         case "dinh dưỡng":
             return { backgroundColor: "#f3e8ff", color: "#7e22ce" };
         case "giảm cân":
-            return { backgroundColor: "#dcfce7", color: "#16a34a" };
+            return { backgroundColor: "#fef3c7", color: "#f97316" };
         case "thể dục":
             return { backgroundColor: "#dbeafe", color: "#1d4ed8" };
         case "sức khỏe":
@@ -125,7 +125,7 @@ export default function RecipeDetail() {
                 <Text style={styles.title}>{recipe.title}</Text>
 
                 <View style={styles.statsContainer}>
-                    <View style={styles.statItem}><Text style={styles.statValue}>{recipe.difficulty}</Text><Text style={styles.statLabel}>Cấp độ</Text></View>
+                    <View style={styles.statItem}><Text style={styles.statValue}>{recipe.difficulty}</Text><Text style={styles.statLabel}>Độ khó</Text></View>
                     <View style={styles.statItem}><Text style={styles.statValue}>{recipe.cookingTime} phút</Text><Text style={styles.statLabel}>Thời gian</Text></View>
                     <View style={styles.statItem}><Text style={styles.statValue}>{recipe.servings} người</Text><Text style={styles.statLabel}>Dành cho</Text></View>
                     <View style={styles.statItem}><Text style={styles.statValue}>{recipe.calories}</Text><Text style={styles.statLabel}>Calo</Text></View>

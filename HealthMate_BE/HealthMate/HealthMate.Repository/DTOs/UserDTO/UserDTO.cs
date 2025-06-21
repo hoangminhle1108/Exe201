@@ -34,4 +34,23 @@ namespace HealthMate.Repository.DTOs.UserDTO
 
         public DateTime? UpdatedAt { get; set; }
     }
+    public class UserUpdateDTO
+    {
+        public int UserId { get; set; }
+        public string FullName { get; set; }
+        public string PasswordHash { get; set; }
+        public string AvatarUrl { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
+        public int RoleId { get; set; }
+        public DateTime? PremiumExpiry { get; set; }
+        public bool IsActive { get; set; } = true;
+        public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+    public class UpdateProfileDTO
+    {
+        public int UserId { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string AvatarUrl { get; set; } = string.Empty;
+        public DateOnly? DateOfBirth { get; set; }
+    }
 }

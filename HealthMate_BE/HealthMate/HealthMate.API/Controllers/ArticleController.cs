@@ -148,7 +148,7 @@ namespace HealthMate.API.Controllers
         [HttpGet("popular")]
         public async Task<ActionResult<List<ArticleDTO>>> GetPopularArticles()
         {
-            var articles = await _articleService.GetMostLikedArticlesAsync(5);
+            var articles = await _articleService.GetMostLikedArticlesAsync(3);
             return Ok(articles);
         }
     }
