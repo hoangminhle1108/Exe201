@@ -170,6 +170,7 @@ namespace HealthMate.Services.Service.Recipe
             ImageUrl = recipe.ImageUrl,
             CreatedAt = recipe.CreatedAt,
             UpdatedAt = recipe.UpdatedAt,
+            Likes = recipe.Likes,
             Categories = recipe.Categories?.Select(c => new CategoryDTO
             {
                 CategoryId = c.CategoryId,

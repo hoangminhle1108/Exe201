@@ -55,7 +55,6 @@ namespace HealthMate.Repository.DTOs.Recipe
         public int? Calories { get; set; }
         public string Difficulty { get; set; } = null!;
         public string? ImageUrl { get; set; }
-        public bool IsPremium { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int Likes { get; set; }
