@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { ChevronLeft } from "lucide-react-native";
 import Colors from "@/constants/colors";
 import { Banknote, Calendar, Check } from "lucide-react-native";
 import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type PremiumPackage = {
     packageId: number;
@@ -35,11 +36,39 @@ export default function Detail() {
                 console.error("Lỗi khi gọi API:", error);
             }
         };
-
         if (id) {
             fetchPackageDetail();
         }
     }, [id]);
+
+    const handleProceed = async () => {
+        try {
+            const email = await AsyncStorage.getItem("email");
+            if (!email) {
+                Alert.alert("Lỗi", "Không tìm thấy email người dùng.");
+                return;
+            }
+
+            const response = await fetch(`${API_URL}/User/all_user_by_email/${email}`);
+            const userArray = await response.json();
+            if (response.ok && userArray.length > 0) {
+                const user = userArray[0];
+                if (user.premiumExpiry) {
+                    Alert.alert(
+                        "Thông báo",
+                        "Gói bạn đang dùng hiện tại vẫn còn hạn sử dụng, không thể mua thêm gói mới."
+                    );
+                } else {
+                    router.push(`/(premium)/qr?id=${id}`);
+                }
+            } else {
+                Alert.alert("Lỗi", "Không thể lấy thông tin người dùng.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            Alert.alert("Lỗi", "Đã xảy ra lỗi khi xử lý.");
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -51,7 +80,7 @@ export default function Detail() {
                 <Image
                     source={require("@/assets/logo.png")}
                     style={styles.image}
-                    resizeMode="contain"
+                    contentFit="contain"
                 />
 
                 <Text style={styles.title}>{pkg?.packageName || "Gói trả phí"}</Text>
@@ -60,25 +89,17 @@ export default function Detail() {
                 <View style={styles.features}>
                     <View style={styles.featureRow}>
                         <Banknote size={18} color="black" style={styles.icon} />
-                        <Text style={styles.featureText}>
-                            Giá: {pkg ? `${pkg.price.toLocaleString()} VND` : "49.000 VND"}
-                        </Text>
+                        <Text style={styles.featureText}>Giá: {pkg ? `${pkg.price.toLocaleString()} VND` : "49.000 VND"}</Text>
                     </View>
                     <View style={styles.featureRow}>
                         <Calendar size={18} color="black" style={styles.icon} />
-                        <Text style={styles.featureText}>
-                            Hiệu lực: {pkg ? `${pkg.durationDays} ngày` : "30 ngày"} sau khi thanh toán thành công
-                        </Text>
+                        <Text style={styles.featureText}>Hiệu lực: {pkg ? `${pkg.durationDays} ngày` : "30 ngày"} sau khi thanh toán thành công</Text>
                     </View>
                 </View>
 
                 <Text style={styles.includedTitle}>Gói này bao gồm:</Text>
-
                 <View style={styles.benefits}>
-                    {[
-                        "AI được cá nhân hóa phù hợp hơn cho người dùng",
-                        pkg?.description,
-                    ].map((benefit, index) => (
+                    {["AI được cá nhân hóa phù hợp hơn cho người dùng", pkg?.description].map((benefit, index) => (
                         <View key={index} style={styles.benefitRow}>
                             <Check size={18} color="#72C15F" style={styles.icon} />
                             <Text style={styles.benefitText}>{benefit}</Text>
@@ -87,12 +108,13 @@ export default function Detail() {
                 </View>
             </ScrollView>
 
-            <TouchableOpacity style={styles.button} onPress={() => router.push(`/(premium)/qr?id=${id}`)}>
+            <TouchableOpacity style={styles.button} onPress={handleProceed}>
                 <Text style={styles.buttonText}>Tiến hành thanh toán</Text>
             </TouchableOpacity>
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
