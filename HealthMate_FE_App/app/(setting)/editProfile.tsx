@@ -17,7 +17,6 @@ import { useRouter } from "expo-router";
 import { ImageIcon, ChevronLeft, Mail, User, Calendar } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
-import * as ImagePicker from "expo-image-picker";
 
 export default function EditProfileScreen() {
     const router = useRouter();
@@ -28,13 +27,13 @@ export default function EditProfileScreen() {
     const [dobDate, setDobDate] = useState<Date | undefined>();
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [userId, setUserId] = useState<number | null>(null);
 
     const isOver13 = (dob: Date) => {
         const today = new Date();
         const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
         return dob <= minDate;
     };
-
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -47,6 +46,7 @@ export default function EditProfileScreen() {
 
                 if (response.ok && userArray.length > 0) {
                     const user = userArray[0];
+                    setUserId(user.userId);
                     setEmail(user.email || storedEmail);
                     setName(user.fullName || "");
                     setAvatarUrl(user.avatarUrl || null);
@@ -60,7 +60,6 @@ export default function EditProfileScreen() {
                 console.error("Lỗi khi lấy thông tin người dùng:", error);
             }
         };
-
         fetchUserInfo();
     }, []);
 
@@ -84,45 +83,22 @@ export default function EditProfileScreen() {
         }
 
         try {
-            const storedEmail = await AsyncStorage.getItem("email");
-            const userInfoRes = await fetch(`${API_URL}/User/all_user_by_email/${storedEmail}`);
-            const userArray = await userInfoRes.json();
-            if (!userInfoRes.ok || userArray.length === 0) {
-                Alert.alert("Lỗi", "Không thể lấy thông tin người dùng.");
+            if (!userId) {
+                Alert.alert("Lỗi", "Không tìm thấy thông tin người dùng.");
                 return;
             }
 
-            const user = userArray[0];
-
-            console.log("Update body:", {
-                userId: user.userId,
+            const payload = {
+                userId: userId,
                 fullName: name,
-                passwordHash: user.passwordHash ?? "",
                 avatarUrl: avatarUrl ?? "",
                 dateOfBirth: dobDate.toISOString().split("T")[0],
-                roleId: user.roleId,
-                premiumExpiry: user.premiumExpiry ?? new Date().toISOString(),
-                isActive: true,
-                updatedAt: new Date().toISOString(),
-            });
+            };
 
-
-            const updateRes = await fetch(`${API_URL}/User/update_user`, {
+            const updateRes = await fetch(`${API_URL}/User/update-profile`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userId: user.userId,
-                    fullName: name,
-                    passwordHash: user.passwordHash ?? "",
-                    avatarUrl: avatarUrl ?? "",
-                    dateOfBirth: dobDate.toISOString().split("T")[0],
-                    roleId: user.roleId,
-                    premiumExpiry: user.premiumExpiry ?? new Date().toISOString(),
-                    isActive: true,
-                    updatedAt: new Date().toISOString(),
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             });
 
             if (updateRes.ok) {
@@ -138,24 +114,17 @@ export default function EditProfileScreen() {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
-            <TouchableOpacity
-                onPress={() => router.replace("/(tabs)/profile")}
-                style={styles.backIcon}
-            >
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+            <TouchableOpacity onPress={() => router.replace("/(tabs)/profile")} style={styles.backIcon}>
                 <ChevronLeft size={24} color="#000" />
             </TouchableOpacity>
 
             <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
                 <Text style={styles.title}>Chỉnh sửa hồ sơ</Text>
+
                 <View style={styles.avatarContainer}>
                     <Image
-                        source={{
-                            uri: avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
-                        }}
+                        source={{ uri: avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png" }}
                         style={styles.avatar}
                     />
                 </View>
@@ -165,53 +134,30 @@ export default function EditProfileScreen() {
                         style={styles.input}
                         placeholder="Ảnh đại diện"
                         value={avatarUrl || ""}
-                        onChangeText={(text) => setAvatarUrl(text)}
+                        onChangeText={setAvatarUrl}
                     />
                     <ImageIcon size={18} color="#999" style={styles.iconEnd} />
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <TextInput
-                        style={[styles.input, styles.disabledInput]}
-                        placeholder="Email"
-                        value={email}
-                        editable={false}
-                        selectTextOnFocus={false}
-                    />
+                    <TextInput style={[styles.input, styles.disabledInput]} placeholder="Email" value={email} editable={false} selectTextOnFocus={false} />
                     <Mail size={18} color="#999" style={styles.iconEnd} />
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Họ và tên"
-                        value={name}
-                        onChangeText={setName}
-                    />
+                    <TextInput style={styles.input} placeholder="Họ và tên" value={name} onChangeText={setName} />
                     <User size={18} color="#999" style={styles.iconEnd} />
                 </View>
 
                 <Pressable style={styles.inputGroup} onPress={() => setShowDatePicker(true)}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ngày tháng năm sinh"
-                        value={dob}
-                        editable={false}
-                        pointerEvents="none"
-                    />
+                    <TextInput style={styles.input} placeholder="Ngày tháng năm sinh" value={dob} editable={false} pointerEvents="none" />
                     <Calendar size={18} color="#999" style={styles.iconEnd} />
                 </Pressable>
 
                 {showDatePicker && (
-                    <DateTimePicker
-                        mode="date"
-                        display="spinner"
-                        value={dobDate || new Date()}
-                        onChange={handleDateChange}
-                    />
+                    <DateTimePicker mode="date" display="spinner" value={dobDate || new Date()} onChange={handleDateChange} />
                 )}
             </ScrollView>
-
 
             <TouchableOpacity style={styles.button} onPress={handleSave}>
                 <Text style={styles.buttonText}>Lưu thông tin</Text>
@@ -221,76 +167,16 @@ export default function EditProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    content: {
-        padding: 24,
-        paddingTop: 65,
-        paddingBottom: 120,
-    },
-    backIcon: {
-        position: "absolute",
-        top: 30,
-        left: 24,
-        zIndex: 10,
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 20,
-    },
-    avatarContainer: {
-        alignItems: "center",
-        marginBottom: 24,
-    },
-    avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-    },
-    editIcon: {
-        position: "absolute",
-        bottom: 0,
-        right: '35%',
-        backgroundColor: "#fff",
-        borderRadius: 20,
-        padding: 4,
-    },
-    inputGroup: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 12,
-        paddingHorizontal: 12,
-        marginBottom: 16,
-    },
-    input: {
-        flex: 1,
-        height: 48,
-    },
-    disabledInput: {
-        color: "#999",
-    },
-    iconEnd: {
-        marginLeft: 8,
-    },
-    button: {
-        position: "absolute",
-        bottom: 24,
-        left: 24,
-        right: 24,
-        backgroundColor: "#72C15F",
-        paddingVertical: 14,
-        borderRadius: 12,
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: 16,
-    },
+    container: { flex: 1, backgroundColor: "#fff" },
+    content: { padding: 24, paddingTop: 65, paddingBottom: 120 },
+    backIcon: { position: "absolute", top: 30, left: 24, zIndex: 10 },
+    title: { fontSize: 18, fontWeight: "bold", textAlign: "center", marginBottom: 20 },
+    avatarContainer: { alignItems: "center", marginBottom: 24 },
+    avatar: { width: 100, height: 100, borderRadius: 50 },
+    inputGroup: { flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#ccc", borderRadius: 12, paddingHorizontal: 12, marginBottom: 16 },
+    input: { flex: 1, height: 48 },
+    disabledInput: { color: "#999" },
+    iconEnd: { marginLeft: 8 },
+    button: { position: "absolute", bottom: 24, left: 24, right: 24, backgroundColor: "#72C15F", paddingVertical: 14, borderRadius: 12, alignItems: "center" },
+    buttonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
 });
