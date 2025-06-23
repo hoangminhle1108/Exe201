@@ -70,7 +70,9 @@ CREATE TABLE [Transaction] (
     TransactionCode  NVARCHAR(100) NOT NULL UNIQUE,
     Amount           DECIMAL(10,2) NOT NULL,
     Status           NVARCHAR(50) NOT NULL,
+	CreatedDate		 DATETIME,
     PurchasedAt      DATETIME NOT NULL DEFAULT GETDATE(),
+	ExpiredDate 	 DATETIME,
     FOREIGN KEY(UserId)          REFERENCES [User](UserId),
     FOREIGN KEY(PackageId)       REFERENCES PremiumPackage(PackageId),
     FOREIGN KEY(PaymentMethodId) REFERENCES PaymentMethod(PaymentMethodId)
