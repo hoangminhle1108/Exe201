@@ -18,8 +18,11 @@ public partial class Transaction
     public decimal Amount { get; set; }
 
     public string Status { get; set; } = null!;
+    public DateTime? CreatedDate { get; set; } 
 
     public DateTime PurchasedAt { get; set; }
+
+    public DateTime? ExpiredDate { get; set; } 
 
     public virtual PremiumPackage Package { get; set; } = null!;
 
