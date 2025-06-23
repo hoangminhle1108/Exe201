@@ -55,36 +55,42 @@ export default function FavoriteRecipe() {
 
             <ScrollView contentContainerStyle={styles.content}>
                 <Text style={styles.title}>Công thức yêu thích</Text>
+                {favoriteRecipes.length === 0 ? (
+                    <Text style={styles.noFavoriteText}>
+                        Không có công thức nào trong danh sách yêu thích.
+                    </Text>
+                ) : (
+                    favoriteRecipes.map((item, idx) => (
+                        <View key={idx} style={styles.fullRecipeCard}>
+                            <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
+                            <View style={styles.fullRecipeInfo}>
+                                <Text style={styles.fullRecipeTitle}>{item.title}</Text>
 
-                {favoriteRecipes.map((item, idx) => (
-                    <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
-                        <View style={styles.fullRecipeInfo}>
-                            <Text style={styles.fullRecipeTitle}>{item.title}</Text>
-
-                            <View style={styles.tagsContainer}>
-                                {(item.categories ?? ["Dinh dưỡng"]).map((tag: any, i: number) => {
-                                    const tagName = typeof tag === "string" ? tag : tag.categoryName;
-                                    return (
-                                        <View key={i} style={[styles.tag, { backgroundColor: getTagStyle(tagName).backgroundColor }]}>
-                                            <Text style={[styles.tagText, { color: getTagStyle(tagName).color }]}>{tagName}</Text>
-                                        </View>
-                                    );
-                                })}
-                            </View>
-
-                            <View style={styles.bottomRow}>
-                                <View style={styles.likesContainer}>
-                                    <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                    <Text style={styles.likesText}>{item.likesCount ?? 0}</Text>
+                                <View style={styles.tagsContainer}>
+                                    {(item.categories ?? ["Dinh dưỡng"]).map((tag: any, i: number) => {
+                                        const tagName = typeof tag === "string" ? tag : tag.categoryName;
+                                        return (
+                                            <View key={i} style={[styles.tag, { backgroundColor: getTagStyle(tagName).backgroundColor }]}>
+                                                <Text style={[styles.tagText, { color: getTagStyle(tagName).color }]}>{tagName}</Text>
+                                            </View>
+                                        );
+                                    })}
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)}>
-                                    <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
-                                </TouchableOpacity>
+
+                                <View style={styles.bottomRow}>
+                                    <View style={styles.likesContainer}>
+                                        <Heart size={12} color={Colors.rating} fill={Colors.rating} />
+                                        <Text style={styles.likesText}>{item.likesCount ?? 0}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)}>
+                                        <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                ))}
+                    ))
+                )}
+
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -94,6 +100,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
+    },
+    noFavoriteText: {
+        marginTop: 10,
+        fontSize: 16,
+        textAlign: "center",
+        color: "#999",
+        fontStyle: "italic",
     },
     content: {
         padding: 24,

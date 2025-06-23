@@ -198,11 +198,11 @@ export default function Home() {
               />
               <FeatureCard
                 type="nutrition"
-                title="Phân tích dinh dưỡng"
+                title="Theo dõi sức khỏe"
                 value="mỗi ngày"
-                updated="theo dõi sức khỏe"
+                updated="duy trì sức khỏe tốt"
                 color="#f39c6b"
-                onPress={() => router.replace("/(nutrition)/overview")}
+                onPress={() => router.replace("/(metric)/overview")}
               />
             </View>
           </View >

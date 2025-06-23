@@ -54,21 +54,10 @@ function RootLayoutNav() {
       <Stack.Screen name="(premium)" options={{ headerShown: false }} />
       <Stack.Screen name="(recipe)" options={{ headerShown: false }} />
       <Stack.Screen name="(blog)" options={{ headerShown: false }} />
-      <Stack.Screen name="(nutrition)" options={{ headerShown: false }} />
+      <Stack.Screen name="(metric)" options={{ headerShown: false }} />
       <Stack.Screen name="(deactivate)" options={{ headerShown: false }} />
       <Stack.Screen name="(favorite)" options={{ headerShown: false }} />
       <Stack.Screen name="(setting)" options={{ headerShown: false }} />
-
-      {/* <Stack.Screen
-        name="destinations/[id]"
-        options={{
-          headerShown: true,
-          headerTitle: "",
-          headerTransparent: true,
-          headerBackVisible: false,
-        }}
-      />
-      <Stack.Screen name="NewDestinations" /> */}
     </Stack>
   );
 }

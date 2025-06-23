@@ -16,18 +16,6 @@ export default function StackLayout() {
                     headerShown: false,
                 }}
             />
-            <Stack.Screen
-                name="recipeFavDetail"
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen
-                name="blogFavDetail"
-                options={{
-                    headerShown: false,
-                }}
-            />
         </Stack>
     );
 }

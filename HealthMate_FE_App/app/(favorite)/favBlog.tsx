@@ -68,38 +68,43 @@ export default function FavoriteBlog() {
 
             <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
                 <Text style={styles.title}>Bài viết yêu thích</Text>
+                {favoriteBlogs.length === 0 ? (
+                    <Text style={styles.noFavoriteText}>
+                        Không có bài viết nào trong danh sách yêu thích.
+                    </Text>
+                ) : (
+                    favoriteBlogs.map((item, idx) => (
+                        <View key={idx} style={styles.fullRecipeCard}>
+                            <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
+                            <View style={styles.fullRecipeInfo}>
+                                <Text style={styles.fullRecipeTitle}>{item.title}</Text>
 
-                {favoriteBlogs.map((item, idx) => (
-                    <View key={idx} style={styles.fullRecipeCard}>
-                        <Image source={{ uri: item.imageUrl }} style={styles.fullRecipeImage} />
-                        <View style={styles.fullRecipeInfo}>
-                            <Text style={styles.fullRecipeTitle}>{item.title}</Text>
-
-                            <View style={styles.tagsContainer}>
-                                {item.tags.map((tag: any, i: number) => (
-                                    <View
-                                        key={i}
-                                        style={[styles.tag, { backgroundColor: getTagStyle(tag.tagName).backgroundColor }]}
-                                    >
-                                        <Text style={[styles.tagText, { color: getTagStyle(tag.tagName).color }]}>
-                                            {tag.tagName}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-
-                            <View style={styles.bottomRow}>
-                                <View style={styles.likesContainer}>
-                                    <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                    <Text style={styles.likesText}>{item.likesCount ?? 0}</Text>
+                                <View style={styles.tagsContainer}>
+                                    {item.tags.map((tag: any, i: number) => (
+                                        <View
+                                            key={i}
+                                            style={[styles.tag, { backgroundColor: getTagStyle(tag.tagName).backgroundColor }]}
+                                        >
+                                            <Text style={[styles.tagText, { color: getTagStyle(tag.tagName).color }]}>
+                                                {tag.tagName}
+                                            </Text>
+                                        </View>
+                                    ))}
                                 </View>
-                                <TouchableOpacity onPress={() => router.push(`/(blog)/blogDetail?id=${item.articleId}`)}>
-                                    <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
-                                </TouchableOpacity>
+
+                                <View style={styles.bottomRow}>
+                                    <View style={styles.likesContainer}>
+                                        <Heart size={12} color={Colors.rating} fill={Colors.rating} />
+                                        <Text style={styles.likesText}>{item.likesCount ?? 0}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={() => router.push(`/(blog)/blogDetail?id=${item.articleId}`)}>
+                                        <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                ))}
+                    ))
+                )}
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -109,6 +114,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
+    },
+    noFavoriteText: {
+        marginTop: 10,
+        fontSize: 16,
+        textAlign: "center",
+        color: "#999",
+        fontStyle: "italic",
     },
     content: {
         padding: 24,
