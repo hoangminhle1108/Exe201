@@ -51,7 +51,7 @@ namespace HealthMate.Repository.Repository.Transaction
         {
             var transaction = await _ctx.Transactions
                 .FirstOrDefaultAsync(t => t.TransactionId == transactionId);
-            
+
             if (transaction == null) return null;
 
             transaction.Status = status;
@@ -94,12 +94,17 @@ namespace HealthMate.Repository.Repository.Transaction
 
         public async Task<TransactionDTONew> UpdateTransactionAsync(Models.Transaction transaction)
         {
-            var existing = _ctx.Transactions
-                .FirstOrDefault(t => t.TransactionId == transaction.TransactionId);
+            var existing = await _ctx.Transactions
+                .Include(t => t.User)
+                .Include(t => t.Package)
+                .FirstOrDefaultAsync(t => t.TransactionId == transaction.TransactionId);
             if (existing == null) throw new InvalidOperationException("Transaction not found");
             existing.Status = transaction.Status;
             existing.PurchasedAt = transaction.PurchasedAt;
             existing.ExpiredDate = transaction.ExpiredDate;
+            existing.PackageId = transaction.PackageId;
+            existing.PaymentMethodId = transaction.PaymentMethodId;
+            existing.Amount = transaction.Amount;
             await _ctx.SaveChangesAsync();
             return new TransactionDTONew
             {
@@ -125,4 +130,4 @@ namespace HealthMate.Repository.Repository.Transaction
             return await _ctx.SaveChangesAsync() > 0;
         }
     }
-} 
+}

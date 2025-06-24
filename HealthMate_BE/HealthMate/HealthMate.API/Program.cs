@@ -36,7 +36,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<NutritionAppContext>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+        //.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );
 
 // Add CORS
