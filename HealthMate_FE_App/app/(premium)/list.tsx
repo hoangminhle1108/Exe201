@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
@@ -25,6 +26,7 @@ export default function List() {
     const router = useRouter();
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [packages, setPackages] = useState<PremiumPackage[]>([]);
+    const [loading, setLoading] = useState(true); // 👈 thêm state loading
 
     useEffect(() => {
         const fetchPackages = async () => {
@@ -39,11 +41,20 @@ export default function List() {
                 }
             } catch (error) {
                 console.error("Lỗi khi gọi API:", error);
+            } finally {
+                setLoading(false); // 👈 sau khi fetch xong (thành công hay lỗi) thì dừng loading
             }
         };
-
         fetchPackages();
     }, []);
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={Colors.primary} />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -86,13 +97,13 @@ export default function List() {
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => router.push(`/(premium)/detail?id=${selectedId}`)}
+                disabled={selectedId === null}
             >
                 <Text style={styles.buttonText}>Tiếp tục</Text>
             </TouchableOpacity>
         </View>
     );
 }
-
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: "#fff" },
     backBtn: { marginBottom: 20 },
@@ -175,5 +186,11 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 16,
         fontWeight: "bold",
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
     },
 });

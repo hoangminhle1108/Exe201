@@ -161,13 +161,14 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     card: {
-        backgroundColor: "#F6F8F4",
+        backgroundColor: "#fafafa",
         borderRadius: 12,
         padding: 16,
         flexDirection: "row",
         alignItems: "center",
         height: 70,
-
+        borderWidth: 1,
+        borderColor: "#ddd",
     },
     iconBox: {
         width: 24,

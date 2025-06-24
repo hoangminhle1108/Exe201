@@ -39,10 +39,18 @@ export default function PayDetailScreen() {
                     const data = await txnRes.json();
 
                     setOrderId(data.transactionCode || "");
-                    setCustomerName(
-                        data.fullName && data.email ? `${data.fullName} (${data.email})` : ""
-                    );
-                    setCreatedAt(data.createdDate || "");
+                    setCustomerName(`${data.fullName} (${data.email})`);
+
+                    if (data.createdDate) {
+                        const date = new Date(data.createdDate);
+                        const hours = date.getHours().toString().padStart(2, "0");
+                        const minutes = date.getMinutes().toString().padStart(2, "0");
+                        const day = date.getDate().toString().padStart(2, "0");
+                        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                        const year = date.getFullYear();
+                        setCreatedAt(`${hours}:${minutes} ${day}/${month}/${year}`);
+                    }
+
                     setPackageName(data.packageName || "");
                     setPrice(data.amount ? `${data.amount.toLocaleString()} VND` : "");
                     setStatus(data.status || "");
@@ -54,6 +62,7 @@ export default function PayDetailScreen() {
         };
         fetchData();
     }, [transactionId, userId]);
+
 
     let statusColor = "#999";
     let statusLabel = status;
@@ -200,7 +209,11 @@ const styles = StyleSheet.create({
         paddingBottom: 32,
     },
     title: { fontSize: 20, fontWeight: "bold", textAlign: "center", marginBottom: 16 },
-    box: { backgroundColor: "#f9f9f9", padding: 16, borderRadius: 8, marginBottom: 16 },
+    box: {
+        backgroundColor: "#fafafa",
+        borderWidth: 1,
+        borderColor: "#ddd", padding: 16, borderRadius: 8, marginBottom: 16
+    },
     orderId: { fontWeight: "bold", color: "#72C15F" },
     label: { fontWeight: "bold", marginTop: 8 },
     amount: { color: "red", fontWeight: "bold", fontSize: 16 },
@@ -208,7 +221,11 @@ const styles = StyleSheet.create({
     notice: { color: "red", marginBottom: 4 },
     qr: { width: 200, height: 200, alignSelf: "center", marginVertical: 16 },
     qrNote: { textAlign: "center", fontSize: 12, color: "#666" },
-    orderDetail: { padding: 12, backgroundColor: "#f9f9f9", borderRadius: 8, marginBottom: 16 },
+    orderDetail: {
+        backgroundColor: "#fafafa",
+        borderWidth: 1,
+        borderColor: "#ddd", padding: 12, borderRadius: 8, marginBottom: 16
+    },
     orderRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 8 },
     total: { fontWeight: "bold", textAlign: "right", marginTop: 8 },
     copyRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },

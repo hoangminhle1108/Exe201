@@ -44,31 +44,48 @@ export default function Detail() {
     const handleProceed = async () => {
         try {
             const email = await AsyncStorage.getItem("email");
-            if (!email) {
-                Alert.alert("Lỗi", "Không tìm thấy email người dùng.");
+            const token = await AsyncStorage.getItem("token");
+
+            if (!email || !token) {
+                Alert.alert("Lỗi", "Chưa đăng nhập. Vui lòng đăng nhập lại.");
                 return;
             }
 
-            const response = await fetch(`${API_URL}/User/all_user_by_email/${email}`);
-            const userArray = await response.json();
-            if (response.ok && userArray.length > 0) {
-                const user = userArray[0];
-                if (user.premiumExpiry) {
-                    Alert.alert(
-                        "Thông báo",
-                        "Gói bạn đang dùng hiện tại vẫn còn hạn sử dụng, không thể mua thêm gói mới."
-                    );
-                } else {
-                    router.push(`/(premium)/qr?id=${id}`);
-                }
-            } else {
+            if (!pkg?.packageId) {
+                Alert.alert("Lỗi", "Không thể lấy thông tin gói.");
+                return;
+            }
+
+            const userRes = await fetch(`${API_URL}/User/all_user_by_email/${email}`);
+            const userData = await userRes.json();
+            if (!userRes.ok || userData.length === 0) {
                 Alert.alert("Lỗi", "Không thể lấy thông tin người dùng.");
+                return;
+            }
+            const user = userData[0];
+
+            const response = await fetch(`${API_URL}/Transaction/create_transaction`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ email, packageId: pkg.packageId }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                const transactionId = data.transactionId;
+                router.push(`/(premium)/qr?transactionId=${transactionId}&userId=${user.userId}`);
+            } else {
+                Alert.alert("Lỗi", data.message || "Không thể tạo transaction.");
             }
         } catch (error) {
             console.error("Error:", error);
-            Alert.alert("Lỗi", "Đã xảy ra lỗi khi xử lý.");
+            Alert.alert("Lỗi", "Đã xảy ra lỗi khi xử lý thanh toán.");
         }
     };
+
 
     return (
         <View style={styles.container}>

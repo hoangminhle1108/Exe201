@@ -10,60 +10,56 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, Copy } from "lucide-react-native";
 import * as Clipboard from "expo-clipboard";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { Image } from "expo-image";
 
 export default function QrScreen() {
     const router = useRouter();
-    const { id } = useLocalSearchParams<{ id: string }>();
+    const { transactionId, userId } = useLocalSearchParams<{ transactionId: string; userId: string }>();
 
+    const [orderId, setOrderId] = useState("");
     const [customerName, setCustomerName] = useState("");
-    const [customerEmail, setCustomerEmail] = useState("");
     const [createdAt, setCreatedAt] = useState("");
     const [packageName, setPackageName] = useState("");
     const [price, setPrice] = useState("");
+    const [status, setStatus] = useState("");
+    const [transferContent, setTransferContent] = useState("");
 
-    const orderId = "#WKBT28556822732";
     const bankName = "Sacombank - Ngân hàng thương mại cổ phần Sài Gòn Thương Tín";
     const accountName = "NGUYEN HOANG BAO TRAN";
     const accountNumber = "050124800983";
-    const transferContent = "WKBT28556822732";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const email = await AsyncStorage.getItem("email");
-                if (!email) return;
+                if (!transactionId || !userId) return;
 
-                const userRes = await fetch(`${API_URL}/User/all_user_by_email/${email}`);
-                const userData = await userRes.json();
-                if (userRes.ok && userData.length > 0) {
-                    const user = userData[0];
-                    setCustomerName(`${user.fullName} (${user.email})`);
-                    setCustomerEmail(user.email);
+                const txnRes = await fetch(`${API_URL}/Transaction/transaction/${transactionId}/${userId}`);
+                if (txnRes.ok) {
+                    const data = await txnRes.json();
+                    setOrderId(data.transactionCode || "");
+                    setCustomerName(`${data.fullName} (${data.email})`);
+                    if (data.createdDate) {
+                        const date = new Date(data.createdDate);
+                        const hours = date.getHours().toString().padStart(2, "0");
+                        const minutes = date.getMinutes().toString().padStart(2, "0");
+                        const day = date.getDate().toString().padStart(2, "0");
+                        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                        const year = date.getFullYear();
+
+                        setCreatedAt(`${hours}:${minutes} ${day}/${month}/${year}`);
+                    } setPackageName(data.packageName || "");
+                    setPrice(data.amount ? `${data.amount.toLocaleString()} VND` : "");
+                    setStatus(data.status || "");
+                    setTransferContent(data.transactionCode || "");
                 }
-
-                if (id) {
-                    const pkgRes = await fetch(`${API_URL}/PremiumPackage/${id}`);
-                    const pkgData = await pkgRes.json();
-                    if (pkgRes.ok) {
-                        setPackageName(pkgData.packageName);
-                        setPrice(`${pkgData.price.toLocaleString()} VND`);
-                    }
-                }
-
-                const now = new Date();
-                const dateStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")} ${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
-                setCreatedAt(dateStr);
-
             } catch (error) {
-                console.error("Lỗi khi fetch data:", error);
+                console.error("Lỗi khi fetch transaction:", error);
+                Alert.alert("Lỗi", "Không thể tải thông tin giao dịch.");
             }
         };
-
         fetchData();
-    }, [id]);
+    }, [transactionId, userId]);
 
     const copyToClipboard = (text: string) => {
         Clipboard.setStringAsync(text);
@@ -80,13 +76,25 @@ export default function QrScreen() {
                 <Text style={styles.title}>Thanh toán đơn hàng</Text>
 
                 <View style={styles.box}>
-                    <Text style={styles.orderId}>Đơn hàng {orderId}</Text>
-                    <Text style={styles.label}>Thông tin khách hàng:</Text>
-                    <Text>{customerName}</Text>
-                    <Text style={styles.label}>Tạo lúc:</Text>
-                    <Text>{createdAt}</Text>
-                    <Text style={styles.label}>Số tiền:</Text>
-                    <Text style={styles.amount}>{price}</Text>
+                    {orderId ? <Text style={styles.orderId}>Đơn hàng #{orderId}</Text> : null}
+                    {customerName ? (
+                        <>
+                            <Text style={styles.label}>Thông tin khách hàng:</Text>
+                            <Text>{customerName}</Text>
+                        </>
+                    ) : null}
+                    {createdAt ? (
+                        <>
+                            <Text style={styles.label}>Tạo lúc:</Text>
+                            <Text>{createdAt}</Text>
+                        </>
+                    ) : null}
+                    {price ? (
+                        <>
+                            <Text style={styles.label}>Số tiền:</Text>
+                            <Text style={styles.amount}>{price}</Text>
+                        </>
+                    ) : null}
                     <Text style={styles.label}>Trạng thái:</Text>
                     <View style={styles.statusButton}>
                         <Text style={styles.statusText}>Chưa thanh toán</Text>
@@ -186,7 +194,11 @@ const styles = StyleSheet.create({
         paddingBottom: 32,
     },
     title: { fontSize: 20, fontWeight: "bold", textAlign: "center", marginBottom: 16 },
-    box: { backgroundColor: "#f9f9f9", padding: 16, borderRadius: 8, marginBottom: 16 },
+    box: {
+        backgroundColor: "#fafafa",
+        borderWidth: 1,
+        borderColor: "#ddd", padding: 16, borderRadius: 8, marginBottom: 16
+    },
     orderId: { fontWeight: "bold", color: "#72C15F" },
     label: { fontWeight: "bold", marginTop: 8 },
     amount: { color: "red", fontWeight: "bold", fontSize: 16 },
@@ -194,7 +206,11 @@ const styles = StyleSheet.create({
     notice: { color: "red", marginBottom: 4 },
     qr: { width: 200, height: 200, alignSelf: "center", marginVertical: 16 },
     qrNote: { textAlign: "center", fontSize: 12, color: "#666" },
-    orderDetail: { padding: 12, backgroundColor: "#f9f9f9", borderRadius: 8, marginBottom: 16 },
+    orderDetail: {
+        backgroundColor: "#fafafa",
+        borderWidth: 1,
+        borderColor: "#ddd", padding: 12, borderRadius: 8, marginBottom: 16
+    },
     orderRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 8 },
     total: { fontWeight: "bold", textAlign: "right", marginTop: 8 },
     copyRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },

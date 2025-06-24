@@ -20,6 +20,7 @@ interface Transaction {
     amount: number;
     status: string;
     purchasedAt: string;
+    createdDate: string;
     packageId: number;
     packageName: string;
 }
@@ -28,6 +29,15 @@ interface PremiumPackage {
     packageId: number;
     durationDays: number;
 }
+
+const formatVNDateTime = (date: Date) => {
+    const hh = date.getHours().toString().padStart(2, "0");
+    const mm = date.getMinutes().toString().padStart(2, "0");
+    const dd = date.getDate().toString().padStart(2, "0");
+    const MM = (date.getMonth() + 1).toString().padStart(2, "0");
+    const yyyy = date.getFullYear();
+    return `${hh}:${mm} ${dd}/${MM}/${yyyy}`;
+};
 
 export default function PayHistoryScreen() {
     const router = useRouter();
@@ -64,14 +74,19 @@ export default function PayHistoryScreen() {
                     const pkgRes = await fetch(`${API_URL}/PremiumPackage/${txn.packageId}`);
                     const pkgData: PremiumPackage = await pkgRes.json();
 
+                    const createdDate = new Date(txn.createdDate);
                     const purchasedDate = new Date(txn.purchasedAt);
                     const expiryDate = new Date(purchasedDate);
                     expiryDate.setDate(expiryDate.getDate() + pkgData.durationDays);
+                    const paymentDeadline = new Date(createdDate);
+                    paymentDeadline.setHours(paymentDeadline.getHours() + 24);
 
                     return {
                         ...txn,
-                        expiryDate: expiryDate.toLocaleString("vi-VN"),
-                        purchasedAtFormatted: purchasedDate.toLocaleString("vi-VN"),
+                        createdTimeFormatted: formatVNDateTime(createdDate),
+                        paymentDeadlineFormatted: formatVNDateTime(paymentDeadline),
+                        purchasedAtFormatted: formatVNDateTime(purchasedDate),
+                        expiryDateFormatted: formatVNDateTime(expiryDate),
                         priceDisplay: `${txn.amount.toLocaleString()} VND`,
                     };
                 })
@@ -90,10 +105,7 @@ export default function PayHistoryScreen() {
             behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
             <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-                <TouchableOpacity
-                    onPress={() => router.replace("/(tabs)/profile")}
-                    style={styles.backIcon}
-                >
+                <TouchableOpacity onPress={() => router.replace("/(tabs)/profile")} style={styles.backIcon}>
                     <ChevronLeft size={24} color="#000" />
                 </TouchableOpacity>
 
@@ -116,13 +128,19 @@ export default function PayHistoryScreen() {
                                 status={txn.status}
                                 statusColor={statusColor}
                                 transactionId={txn.transactionCode}
+                                createdTime={txn.createdTimeFormatted}
+                                paymentDeadlineTime={txn.paymentDeadlineFormatted}
                                 purchaseTime={txn.purchasedAtFormatted}
-                                expiryTime={txn.expiryDate}
+                                expiryTime={txn.expiryDateFormatted}
                                 packageName={txn.packageName}
                                 price={txn.priceDisplay}
                                 onDetailPress={() =>
-                                    userId && router.push(`/(setting)/payDetail?transactionId=${txn.transactionId}&userId=${userId}`)
-                                } />
+                                    userId &&
+                                    router.push(
+                                        `/(setting)/payDetail?transactionId=${txn.transactionId}&userId=${userId}`
+                                    )
+                                }
+                            />
                         );
                     })
                 )}
@@ -135,6 +153,8 @@ function PaymentCard({
     status,
     statusColor,
     transactionId,
+    createdTime,
+    paymentDeadlineTime,
     purchaseTime,
     expiryTime,
     packageName,
@@ -144,12 +164,22 @@ function PaymentCard({
     status: string;
     statusColor: string;
     transactionId: string;
+    createdTime: string;
+    paymentDeadlineTime: string;
     purchaseTime: string;
     expiryTime: string;
     packageName: string;
     price: string;
     onDetailPress?: () => void;
 }) {
+    let statusLabel = status;
+    if (status === "Unpaid") statusLabel = "Chưa thanh toán";
+    else if (status === "Paid") statusLabel = "Đã thanh toán";
+    else if (status === "Expired") statusLabel = "Hết hạn thanh toán";
+
+    const displayedPurchaseTime = status === "Paid" ? purchaseTime : "Không có";
+    const displayedExpiryTime = status === "Paid" ? expiryTime : "Không có";
+
     return (
         <View style={cardStyles.card}>
             <View style={cardStyles.header}>
@@ -160,7 +190,7 @@ function PaymentCard({
             <View style={cardStyles.row}>
                 <Text style={cardStyles.label}>Trạng thái:</Text>
                 <Text style={[cardStyles.statusBadge, { color: statusColor, borderColor: statusColor }]}>
-                    {status}
+                    {statusLabel}
                 </Text>
             </View>
 
@@ -170,13 +200,23 @@ function PaymentCard({
             </View>
 
             <View style={cardStyles.row}>
-                <Text style={cardStyles.label}>Thời gian mua:</Text>
-                <Text style={cardStyles.value}>{purchaseTime}</Text>
+                <Text style={cardStyles.label}>Thời gian tạo đơn:</Text>
+                <Text style={cardStyles.value}>{createdTime}</Text>
             </View>
 
             <View style={cardStyles.row}>
-                <Text style={cardStyles.label}>Ngày hết hạn:</Text>
-                <Text style={cardStyles.value}>{expiryTime}</Text>
+                <Text style={cardStyles.label}>Hạn thanh toán:</Text>
+                <Text style={cardStyles.value}>{paymentDeadlineTime}</Text>
+            </View>
+
+            <View style={cardStyles.row}>
+                <Text style={cardStyles.label}>Thời gian thanh toán:</Text>
+                <Text style={cardStyles.value}>{displayedPurchaseTime}</Text>
+            </View>
+
+            <View style={cardStyles.row}>
+                <Text style={cardStyles.label}>Ngày gói hết hạn:</Text>
+                <Text style={cardStyles.value}>{displayedExpiryTime}</Text>
             </View>
 
             <TouchableOpacity style={cardStyles.locationContainer} onPress={onDetailPress}>
@@ -185,7 +225,6 @@ function PaymentCard({
         </View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -220,12 +259,12 @@ const styles = StyleSheet.create({
 
 const cardStyles = StyleSheet.create({
     card: {
-        backgroundColor: "#F6F8F4",
+        backgroundColor: "#fafafa",
         borderRadius: 12,
         padding: 16,
         marginBottom: 16,
         borderWidth: 1,
-        borderColor: "#eee",
+        borderColor: "#ddd",
     },
     header: {
         flexDirection: "row",
