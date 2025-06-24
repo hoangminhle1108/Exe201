@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    Image as RNImage,
     TouchableOpacity,
     ScrollView,
 } from "react-native";
@@ -13,6 +12,7 @@ import {
     Timer,
     Pencil,
     Headset,
+    Crown,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
@@ -25,6 +25,7 @@ export default function ProfileScreen() {
     const [fullName, setFullName] = useState("Người dùng");
     const [email, setEmail] = useState("example@gmail.com");
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [premiumExpiry, setPremiumExpiry] = useState<string | null>(null); // ✅ store premiumExpiry
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -34,7 +35,9 @@ export default function ProfileScreen() {
 
                 setEmail(storedEmail);
 
-                const response = await fetch(`${API_URL}/User/all_user_by_email/${storedEmail}`);
+                const response = await fetch(
+                    `${API_URL}/User/all_user_by_email/${storedEmail}`
+                );
                 const userArray = await response.json();
 
                 if (response.ok && userArray.length > 0) {
@@ -42,18 +45,21 @@ export default function ProfileScreen() {
                     setFullName(user.fullName || "Người dùng");
                     setAvatarUrl(user.avatarUrl);
                     setEmail(user.email || storedEmail);
+                    setPremiumExpiry(user.premiumExpiry || null);
                 }
             } catch (error) {
                 console.error("Lỗi khi lấy thông tin người dùng:", error);
             }
         };
-
         fetchUserInfo();
     }, []);
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <TouchableOpacity style={styles.editIcon} onPress={() => router.replace("/(setting)/editProfile")}>
+            <TouchableOpacity
+                style={styles.editIcon}
+                onPress={() => router.replace("/(setting)/editProfile")}
+            >
                 <Pencil size={22} color={Colors.text} />
             </TouchableOpacity>
 
@@ -67,7 +73,12 @@ export default function ProfileScreen() {
                 contentFit="cover"
             />
 
-            <Text style={styles.name}>{fullName}</Text>
+            <View style={styles.nameRow}>
+                <Text style={styles.name}>{fullName}</Text>
+                {premiumExpiry !== null && (
+                    <Crown size={24} color="#FFB800" style={styles.crownIcon} />
+                )}
+            </View>
             <Text style={styles.email}>{email}</Text>
 
             <View style={styles.cardList}>
@@ -155,6 +166,16 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#777",
         marginBottom: 24,
+    },
+    nameRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 4,
+        marginLeft: 5
+    },
+    crownIcon: {
+        marginLeft: 5,
     },
     cardList: {
         width: "100%",

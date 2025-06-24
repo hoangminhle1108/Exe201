@@ -62,7 +62,16 @@ export default function Detail() {
                 Alert.alert("Lỗi", "Không thể lấy thông tin người dùng.");
                 return;
             }
+
             const user = userData[0];
+
+            if (user.premiumExpiry !== null) {
+                Alert.alert(
+                    "Thông báo",
+                    "Gói bạn đang dùng hiện tại vẫn còn hạn sử dụng. Không thể mua thêm gói mới."
+                );
+                return;
+            }
 
             const response = await fetch(`${API_URL}/Transaction/create_transaction`, {
                 method: "POST",
@@ -85,7 +94,6 @@ export default function Detail() {
             Alert.alert("Lỗi", "Đã xảy ra lỗi khi xử lý thanh toán.");
         }
     };
-
 
     return (
         <View style={styles.container}>
