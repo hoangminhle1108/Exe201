@@ -53,7 +53,7 @@ namespace HealthMate.API.Controllers
         }
 
         [HttpGet("all_transactions/{userId}")]
-        public IActionResult GetAllFromUser(int userId) 
+        public IActionResult GetAllFromUser(int userId)
         {
             try
             {
@@ -182,6 +182,26 @@ namespace HealthMate.API.Controllers
             }
         }
 
-
+        [HttpDelete("delete/{transactionId}")]
+        public async Task<IActionResult> DeleteTransaction(int transactionId)
+        {
+            if (transactionId <= 0)
+            {
+                return BadRequest("Invalid transaction ID");
+            }
+            try
+            {
+                var result = await _transactionService.DeleteTransactionAsync(transactionId);
+                if (!result)
+                {
+                    return NotFound(new { message = "Transaction not found" });
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
     }
 }
