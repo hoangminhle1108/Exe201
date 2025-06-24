@@ -17,6 +17,12 @@ export default function StackLayout() {
                 }}
             />
             <Stack.Screen
+                name="payDetail"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
                 name="helpList"
                 options={{
                     headerShown: false,

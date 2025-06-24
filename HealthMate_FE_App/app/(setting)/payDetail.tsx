@@ -10,60 +10,64 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, Copy } from "lucide-react-native";
 import * as Clipboard from "expo-clipboard";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { Image } from "expo-image";
 
-export default function QrScreen() {
+export default function PayDetailScreen() {
     const router = useRouter();
-    const { id } = useLocalSearchParams<{ id: string }>();
+    const { transactionId, userId } = useLocalSearchParams<{ transactionId: string; userId: string }>();
 
+    const [orderId, setOrderId] = useState("");
     const [customerName, setCustomerName] = useState("");
-    const [customerEmail, setCustomerEmail] = useState("");
     const [createdAt, setCreatedAt] = useState("");
     const [packageName, setPackageName] = useState("");
     const [price, setPrice] = useState("");
+    const [status, setStatus] = useState("");
+    const [transferContent, setTransferContent] = useState("");
 
-    const orderId = "#WKBT28556822732";
     const bankName = "Sacombank - Ngân hàng thương mại cổ phần Sài Gòn Thương Tín";
     const accountName = "NGUYEN HOANG BAO TRAN";
     const accountNumber = "050124800983";
-    const transferContent = "WKBT28556822732";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const email = await AsyncStorage.getItem("email");
-                if (!email) return;
+                if (!transactionId || !userId) return;
 
-                const userRes = await fetch(`${API_URL}/User/all_user_by_email/${email}`);
-                const userData = await userRes.json();
-                if (userRes.ok && userData.length > 0) {
-                    const user = userData[0];
-                    setCustomerName(`${user.fullName} (${user.email})`);
-                    setCustomerEmail(user.email);
+                const txnRes = await fetch(`${API_URL}/Transaction/transaction/${transactionId}/${userId}`);
+                if (txnRes.ok) {
+                    const data = await txnRes.json();
+
+                    setOrderId(data.transactionCode || "");
+                    setCustomerName(
+                        data.fullName && data.email ? `${data.fullName} (${data.email})` : ""
+                    );
+                    setCreatedAt(data.createdDate || "");
+                    setPackageName(data.packageName || "");
+                    setPrice(data.amount ? `${data.amount.toLocaleString()} VND` : "");
+                    setStatus(data.status || "");
+                    setTransferContent(data.transactionCode || "");
                 }
-
-                if (id) {
-                    const pkgRes = await fetch(`${API_URL}/PremiumPackage/${id}`);
-                    const pkgData = await pkgRes.json();
-                    if (pkgRes.ok) {
-                        setPackageName(pkgData.packageName);
-                        setPrice(`${pkgData.price.toLocaleString()} VND`);
-                    }
-                }
-
-                const now = new Date();
-                const dateStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")} ${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
-                setCreatedAt(dateStr);
-
             } catch (error) {
-                console.error("Lỗi khi fetch data:", error);
+                console.error(error);
             }
         };
-
         fetchData();
-    }, [id]);
+    }, [transactionId, userId]);
+
+    let statusColor = "#999";
+    let statusLabel = status;
+
+    if (status === "Unpaid") {
+        statusColor = "#FF9800";
+        statusLabel = "Chưa thanh toán";
+    } else if (status === "Paid") {
+        statusColor = "#72C15F";
+        statusLabel = "Đã thanh toán";
+    } else if (status === "Expired") {
+        statusColor = "#FF4D4D";
+        statusLabel = "Hết hạn thanh toán";
+    }
 
     const copyToClipboard = (text: string) => {
         Clipboard.setStringAsync(text);
@@ -73,24 +77,43 @@ export default function QrScreen() {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                <TouchableOpacity onPress={() => router.replace("/(tabs)/home")} style={styles.backButton}>
+                <TouchableOpacity
+                    onPress={() => router.replace("/(setting)/payHistory")}
+                    style={styles.backButton}
+                >
                     <ChevronLeft size={24} color="#000" />
                 </TouchableOpacity>
 
                 <Text style={styles.title}>Thanh toán đơn hàng</Text>
 
                 <View style={styles.box}>
-                    <Text style={styles.orderId}>Đơn hàng {orderId}</Text>
-                    <Text style={styles.label}>Thông tin khách hàng:</Text>
-                    <Text>{customerName}</Text>
-                    <Text style={styles.label}>Tạo lúc:</Text>
-                    <Text>{createdAt}</Text>
-                    <Text style={styles.label}>Số tiền:</Text>
-                    <Text style={styles.amount}>{price}</Text>
-                    <Text style={styles.label}>Trạng thái:</Text>
-                    <View style={styles.statusButton}>
-                        <Text style={styles.statusText}>Chưa thanh toán</Text>
-                    </View>
+                    {orderId ? <Text style={styles.orderId}>Đơn hàng #{orderId}</Text> : null}
+                    {customerName ? (
+                        <>
+                            <Text style={styles.label}>Thông tin khách hàng:</Text>
+                            <Text>{customerName}</Text>
+                        </>
+                    ) : null}
+                    {createdAt ? (
+                        <>
+                            <Text style={styles.label}>Tạo lúc:</Text>
+                            <Text>{createdAt}</Text>
+                        </>
+                    ) : null}
+                    {price ? (
+                        <>
+                            <Text style={styles.label}>Số tiền:</Text>
+                            <Text style={styles.amount}>{price}</Text>
+                        </>
+                    ) : null}
+                    {status ? (
+                        <>
+                            <Text style={styles.label}>Trạng thái:</Text>
+                            <View style={[styles.statusButton, { borderColor: statusColor }]}>
+                                <Text style={[styles.statusText, { color: statusColor }]}>{statusLabel}</Text>
+                            </View>
+                        </>
+                    ) : null}
                 </View>
 
                 <View style={styles.noticeBox}>
@@ -108,48 +131,38 @@ export default function QrScreen() {
 
                 <View style={styles.box}>
                     <Text style={styles.label}>THÔNG TIN CHUYỂN KHOẢN</Text>
+                    <Text style={styles.copyRow}>Ngân hàng: {bankName}</Text>
+                    <Text style={styles.copyRow}>Chủ tài khoản: {accountName}</Text>
                     <View style={styles.copyRow}>
-                        <Text>Ngân hàng: {bankName}</Text>
-                    </View>
-                    <View style={styles.copyRow}>
-                        <Text>Chủ tài khoản: {accountName}</Text>
-                    </View>
-                    <View style={styles.copyRow}>
-                        <Text style={styles.copyText}>Số tài khoản: {accountNumber}</Text>
+                        <Text>Số tài khoản: {accountNumber}</Text>
                         <TouchableOpacity onPress={() => copyToClipboard(accountNumber)}>
                             <Copy size={18} color="#000" />
                         </TouchableOpacity>
                     </View>
-
                     <View style={styles.copyRow}>
-                        <Text style={styles.copyText}>Nội dung: {transferContent}</Text>
+                        <Text>Nội dung: {transferContent}</Text>
                         <TouchableOpacity onPress={() => copyToClipboard(transferContent)}>
                             <Copy size={18} color="#000" />
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.copyRow}>
-                        <Text>Số tiền: {price}</Text>
-                    </View>
-
-                    <Image
-                        source={require("@/assets/qr.jpg")}
-                        style={styles.qr}
-                    />
-                    <Text style={styles.qrNote}>
-                        Quét mã QRCode từ các app Ngân Hàng và Momo
-                    </Text>
+                    {price ? <Text style={styles.copyRow}>Số tiền: {price}</Text> : null}
+                    <Image source={require("@/assets/qr.jpg")} style={styles.qr} />
+                    <Text style={styles.qrNote}>Quét mã QRCode từ các app Ngân Hàng và Momo</Text>
                 </View>
 
-                <View style={styles.orderDetail}>
-                    <Text style={styles.label}>Chi tiết đơn hàng</Text>
-                    <View style={styles.orderRow}>
-                        <Text>1</Text>
-                        <Text>{packageName}</Text>
-                        <Text>1</Text>
-                        <Text>{price}</Text>
+                {packageName ? (
+                    <View style={styles.orderDetail}>
+                        <Text style={styles.label}>Chi tiết đơn hàng</Text>
+                        <View style={styles.orderRow}>
+                            <Text>1</Text>
+                            <Text>{packageName}</Text>
+                            <Text>1</Text>
+                            <Text>{price}</Text>
+                        </View>
+                        <Text style={styles.total}>TỔNG: 1 gói</Text>
                     </View>
-                    <Text style={styles.total}>TỔNG: 1 gói</Text>
-                </View>
+                ) : null}
+
 
                 <View style={styles.noticeBox}>
                     <Text style={styles.notice}>
@@ -174,15 +187,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingRight: 20,
-        paddingLeft: 20
     },
     backButton: {
-        marginBottom: 20,
+        position: "absolute",
+        top: 30,
+        left: 24,
+        zIndex: 10,
     },
     scrollContent: {
+        padding: 24,
+        paddingTop: 65,
         paddingBottom: 32,
     },
     title: { fontSize: 20, fontWeight: "bold", textAlign: "center", marginBottom: 16 },
@@ -201,7 +215,6 @@ const styles = StyleSheet.create({
     copyText: { flex: 1, marginRight: 8 },
     statusButton: {
         borderWidth: 1,
-        borderColor: "#FF9800",
         borderRadius: 8,
         paddingVertical: 8,
         paddingHorizontal: 12,
@@ -212,6 +225,5 @@ const styles = StyleSheet.create({
     statusText: {
         fontSize: 14,
         textAlign: "center",
-        color: "#FF9800"
     },
 });

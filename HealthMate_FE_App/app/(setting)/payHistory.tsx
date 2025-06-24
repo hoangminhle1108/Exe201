@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -7,51 +7,125 @@ import {
     ScrollView,
     KeyboardAvoidingView,
     Platform,
+    ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "@env";
+
+interface Transaction {
+    transactionId: number;
+    transactionCode: string;
+    amount: number;
+    status: string;
+    purchasedAt: string;
+    packageId: number;
+    packageName: string;
+}
+
+interface PremiumPackage {
+    packageId: number;
+    durationDays: number;
+}
 
 export default function PayHistoryScreen() {
     const router = useRouter();
+    const [transactions, setTransactions] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [userId, setUserId] = useState<number | null>(null);
+
+    useEffect(() => {
+        loadTransactions();
+    }, []);
+
+    async function loadTransactions() {
+        setLoading(true);
+        try {
+            const email = await AsyncStorage.getItem("email");
+            if (!email) throw new Error("Email not found");
+
+            const userRes = await fetch(`${API_URL}/User/all_user_by_email/${email}`);
+            if (!userRes.ok) throw new Error("Failed to fetch user");
+
+            const users = await userRes.json();
+            const user = users[0];
+            if (!user) throw new Error("User not found");
+
+            setUserId(user.userId);
+
+            const txnRes = await fetch(`${API_URL}/Transaction/all_transactions/${user.userId}`);
+            if (!txnRes.ok) throw new Error("Failed to fetch transactions");
+
+            const txnData: Transaction[] = await txnRes.json();
+
+            const enrichedTxns = await Promise.all(
+                txnData.map(async (txn) => {
+                    const pkgRes = await fetch(`${API_URL}/PremiumPackage/${txn.packageId}`);
+                    const pkgData: PremiumPackage = await pkgRes.json();
+
+                    const purchasedDate = new Date(txn.purchasedAt);
+                    const expiryDate = new Date(purchasedDate);
+                    expiryDate.setDate(expiryDate.getDate() + pkgData.durationDays);
+
+                    return {
+                        ...txn,
+                        expiryDate: expiryDate.toLocaleString("vi-VN"),
+                        purchasedAtFormatted: purchasedDate.toLocaleString("vi-VN"),
+                        priceDisplay: `${txn.amount.toLocaleString()} VND`,
+                    };
+                })
+            );
+
+            setTransactions(enrichedTxns);
+        } catch (e) {
+            console.error(e);
+        }
+        setLoading(false);
+    }
 
     return (
         <KeyboardAvoidingView
             style={styles.container}
             behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-            <TouchableOpacity
-                onPress={() => router.replace("/(tabs)/profile")}
-                style={styles.backIcon}
-            >
-                <ChevronLeft size={24} color="#000" />
-            </TouchableOpacity>
-
             <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+                <TouchableOpacity
+                    onPress={() => router.replace("/(tabs)/profile")}
+                    style={styles.backIcon}
+                >
+                    <ChevronLeft size={24} color="#000" />
+                </TouchableOpacity>
+
                 <Text style={styles.title}>Lịch sử thanh toán</Text>
 
-                <PaymentCard
-                    status="Gói đã hết thời hạn"
-                    statusColor="#FF4D4D"
-                    transactionId="1234567789"
-                    purchaseTime="10:00 PM 20/11/2025"
-                    expiryTime="10:00 PM 20/12/2025"
-                />
+                {loading ? (
+                    <ActivityIndicator size="large" color="#72C15F" />
+                ) : transactions.length === 0 ? (
+                    <Text style={styles.emptyText}>Hiện tại chưa có giao dịch nào.</Text>
+                ) : (
+                    transactions.map((txn) => {
+                        let statusColor = "#999";
+                        if (txn.status === "Unpaid") statusColor = "#FF9800";
+                        if (txn.status === "Paid") statusColor = "#72C15F";
+                        if (txn.status === "Expired") statusColor = "#FF4D4D";
 
-                <PaymentCard
-                    status="Gói đang sử dụng"
-                    statusColor="#4CAF50"
-                    transactionId="1234567789"
-                    purchaseTime="10:00 PM 20/11/2025"
-                    expiryTime="10:00 PM 20/12/2025"
-                />
-
-                <PaymentCard
-                    status="Gói đã hết thời hạn"
-                    statusColor="#FF4D4D"
-                    transactionId="1234567789"
-                    purchaseTime="11:00 PM 20/11/2025"
-                    expiryTime="11:00 PM 20/12/2025"
-                />
+                        return (
+                            <PaymentCard
+                                key={txn.transactionId}
+                                status={txn.status}
+                                statusColor={statusColor}
+                                transactionId={txn.transactionCode}
+                                purchaseTime={txn.purchasedAtFormatted}
+                                expiryTime={txn.expiryDate}
+                                packageName={txn.packageName}
+                                price={txn.priceDisplay}
+                                onDetailPress={() =>
+                                    userId && router.push(`/(setting)/payDetail?transactionId=${txn.transactionId}&userId=${userId}`)
+                                } />
+                        );
+                    })
+                )}
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -63,18 +137,24 @@ function PaymentCard({
     transactionId,
     purchaseTime,
     expiryTime,
+    packageName,
+    price,
+    onDetailPress,
 }: {
     status: string;
     statusColor: string;
     transactionId: string;
     purchaseTime: string;
     expiryTime: string;
+    packageName: string;
+    price: string;
+    onDetailPress?: () => void;
 }) {
     return (
         <View style={cardStyles.card}>
             <View style={cardStyles.header}>
-                <Text style={cardStyles.packageName}>Gói tháng</Text>
-                <Text style={cardStyles.price}>49.000 VND</Text>
+                <Text style={cardStyles.packageName}>{packageName}</Text>
+                <Text style={cardStyles.price}>{price}</Text>
             </View>
 
             <View style={cardStyles.row}>
@@ -98,9 +178,14 @@ function PaymentCard({
                 <Text style={cardStyles.label}>Ngày hết hạn:</Text>
                 <Text style={cardStyles.value}>{expiryTime}</Text>
             </View>
+
+            <TouchableOpacity style={cardStyles.locationContainer} onPress={onDetailPress}>
+                <Text style={cardStyles.location}>Xem chi tiết &gt;</Text>
+            </TouchableOpacity>
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -110,7 +195,7 @@ const styles = StyleSheet.create({
     content: {
         padding: 24,
         paddingTop: 65,
-        paddingBottom: 120,
+        paddingBottom: 32,
     },
     backIcon: {
         position: "absolute",
@@ -123,6 +208,13 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         marginBottom: 20,
+    },
+    emptyText: {
+        marginTop: 10,
+        fontSize: 16,
+        textAlign: "center",
+        color: "#999",
+        fontStyle: "italic",
     },
 });
 
@@ -173,5 +265,15 @@ const cardStyles = StyleSheet.create({
         paddingVertical: 2,
         borderRadius: 8,
         borderWidth: 1,
+    },
+    locationContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        marginTop: 8,
+    },
+    location: {
+        fontSize: 12,
+        color: "#888",
     },
 });
