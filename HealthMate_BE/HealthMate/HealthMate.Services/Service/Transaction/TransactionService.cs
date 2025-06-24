@@ -281,6 +281,7 @@ namespace HealthMate.Services.Service.Transaction
         public async Task<TransactionDTONew> UpdateStatuePaidAsync(int transactionId, int userId, int packageId)
         {
             var transaction = await _repo.GetByIdAsync(transactionId, userId);
+            var user = await _userRepo.GetByIdAsync(userId);
             if (transaction == null) throw new ArgumentException("Transaction not found", nameof(transactionId));
             var package = await _packageRepo.GetByIdAsync(packageId);
             if (package == null) throw new ArgumentException("Package not found", nameof(packageId));
@@ -288,8 +289,19 @@ namespace HealthMate.Services.Service.Transaction
             transaction.PurchasedAt = DateTime.UtcNow;
             transaction.ExpiredDate = new DateTime(transaction.PurchasedAt.Year, transaction.PurchasedAt.Month, transaction.PurchasedAt.Day)
                 .AddDays(package.DurationDays);
+            user.PremiumExpiry = transaction.ExpiredDate; 
+            await _userRepo.UpdateUserAsync(user);
             var updatedTransaction = await _repo.UpdateTransactionAsync(transaction);
             if (updatedTransaction == null) throw new InvalidOperationException("Failed to update transaction status");
+            List<Repository.Models.Transaction> transactions = await _repo.GetAllByUserIdAsync(userId);
+            foreach (var item in transactions)
+            {
+                if (item.Status == "Unpaid")
+                {
+                    item.Status = "Expired"; // Expire other paid transactions
+                    await _repo.UpdateTransactionAsync(item);
+                }
+            }
             return updatedTransaction;
         }
 
