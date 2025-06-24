@@ -12,11 +12,10 @@ import { useRouter } from "expo-router";
 import { API_URL, GOOGLE_CLIENT_ID } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Eye, EyeOff } from "lucide-react-native";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { makeRedirectUri } from "expo-auth-session";
+import { GoogleSignin,statusCodes  } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
-WebBrowser.maybeCompleteAuthSession();
+
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -25,46 +24,10 @@ export default function LoginScreen() {
   const [agree, setAgree] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: GOOGLE_CLIENT_ID,
-    iosClientId: GOOGLE_CLIENT_ID,
-    androidClientId: GOOGLE_CLIENT_ID,
-    scopes: ["profile", "email"],
-    redirectUri: makeRedirectUri({
-      native: "com.healthmate:/oauthredirect",
-    }),
-  });
-
   useEffect(() => {
-    if (response?.type === "success" && response.authentication?.idToken) {
-      handleGoogleLogin(response.authentication.idToken);
-    }
-  }, [response]);
-
-  const handleGoogleLogin = async (idToken: string) => {
-    try {
-      const res = await fetch(`${API_URL}/Auth/login/google`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ idToken }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Đăng nhập bằng Google thất bại.");
-      }
-
-      const data = await res.json();
-      await AsyncStorage.setItem("token", data.token);
-      router.replace("/(tabs)/home");
-    } catch (error: any) {
-      Alert.alert("Đăng nhập bằng Google thất bại.", error.message || "Đăng nhập bằng Google thất bại.");
-    }
-  };
-
-  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_CLIENT_ID,
+    });
     const loadRememberedData = async () => {
       const savedEmail = await AsyncStorage.getItem("email");
       const savedPassword = await AsyncStorage.getItem("password");
@@ -78,6 +41,73 @@ export default function LoginScreen() {
     };
     loadRememberedData();
   }, []);
+
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const result = await GoogleSignin.signIn();
+      
+      // Lấy idToken đúng cách theo chuẩn thư viện
+      if (result.type === 'success' && result.data && result.data.idToken) {
+        const idToken = result.data.idToken;
+        
+        // Đăng nhập Firebase
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        const firebaseUserCredential = await auth().signInWithCredential(googleCredential);
+
+        // Lấy thông tin user từ Firebase
+        const user = firebaseUserCredential.user;
+        const email = user.email;
+        const fullName = user.displayName;
+
+        if (!email) {
+          Alert.alert("Lỗi", "Không lấy được email từ Google");
+          return;
+        }
+
+        // Gọi API backend để tạo/đăng nhập user Google
+        const response = await fetch(`${API_URL}/Auth/login/google`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, fullName }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Đăng nhập backend thất bại");
+        }
+
+        const data = await response.json();
+        
+        // Lưu token từ backend
+        if (data.token) {
+          await AsyncStorage.setItem("token", data.token);
+        }
+        
+        // Lưu thông tin user nếu cần
+        if (data.user) {
+          await AsyncStorage.setItem("userInfo", JSON.stringify(data.user));
+        }
+
+        Alert.alert("Thành công", "Đăng nhập Google thành công!");
+        router.replace("/(tabs)/home");
+      } else {
+        Alert.alert("Lỗi", "Không lấy được idToken từ Google");
+      }
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        Alert.alert("Thông báo", "Bạn đã hủy đăng nhập Google.");
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        Alert.alert("Thông báo", "Đang xử lý đăng nhập Google.");
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert("Thông báo", "Google Play Services không khả dụng hoặc đã lỗi thời.");
+      } else {
+        Alert.alert("Lỗi", error.message || "Đăng nhập Google thất bại.");
+      }
+      console.error(error);
+    }
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -180,6 +210,9 @@ export default function LoginScreen() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Đăng nhập</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleGoogleSignIn}>
+        <Text style={styles.buttonText}>Đăng nhập bằng Google</Text>
+      </TouchableOpacity>
 
       <Text style={styles.loginLink}>
         <Text style={{ color: "black" }}>Chưa có tài khoản? </Text>
@@ -190,25 +223,6 @@ export default function LoginScreen() {
           Đăng ký
         </Text>
       </Text>
-
-      <View style={styles.orContainer}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>HOẶC</Text>
-        <View style={styles.line} />
-      </View>
-
-      <TouchableOpacity
-        style={styles.googleButton}
-        onPress={() => promptAsync()}
-      >
-        <Image
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/800px-Google_%22G%22_logo.svg.png",
-          }}
-          style={styles.googleIcon}
-        />
-        <Text style={styles.googleButtonText}>Đăng nhập bằng Google</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -302,45 +316,4 @@ const styles = StyleSheet.create({
     color: "#72C15F",
     paddingLeft: 100,
   },
-  orContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 16,
-  },
-
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#ccc",
-    marginHorizontal: 10,
-  },
-
-  orText: {
-    color: "#666",
-    fontSize: 14,
-  },
-
-  googleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-
-  googleIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-
-  googleButtonText: {
-    fontSize: 16,
-    color: "#000",
-    fontWeight: "500",
-  },
-
 });

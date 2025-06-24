@@ -347,5 +347,13 @@ namespace HealthMate.Services.Service.User
                 throw new InvalidOperationException("User not found.");
             return await _userRepository.UpdateProfileAsync(dto);
         }
+
+        public async Task<Repository.Models.User> GoogleLoginAsync(string email, string fullName)
+        {
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentException("Email is required.");
+
+            return await _userRepository.CreateGoogleUserAsync(email, fullName);
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace HealthMate.Services.Interface.User
         Task<List<Repository.DTOs.UserDTO.UserDTO>> GetAllUsersByGoogleAsync(bool isGoogle);
         Task<List<Repository.DTOs.UserDTO.UserDTO>> GetAllUsersWithRoleAsync(int roleId);
         Task<List<Repository.DTOs.UserDTO.UserDTO>> GetAllUsersWithNameAsync(string fullName);
+        Task<Repository.Models.User> GoogleLoginAsync(string email, string fullName);
         Task<Repository.DTOs.UserDTO.UserDTO> UpdateUserAsync(UserUpdateDTO updatedUser);
         Task<bool> DeleteUserAsync(int userId);
         Task<Repository.DTOs.UserDTO.UserDTO> UpdateUserStatusAsync(int userId, bool isActive);
