@@ -33,13 +33,29 @@ namespace HealthMate.Services.Service.Transaction
         public async Task<List<TransactionDTO>> GetAllByUserIdAsync(int userId)
         {
             var transactions = await _repo.GetAllByUserIdAsync(userId);
-            return transactions.Select(MapToDTO).ToList();
+            var user = await _userRepo.GetByIdAsync(userId);
+            List<TransactionDTO> transactionDTOs = new List<TransactionDTO>();
+            foreach (var transaction in transactions)
+            {
+                transactionDTOs.Add(MapToDTO(transaction));
+            }
+            foreach (var dto in transactionDTOs)
+            {
+                dto.FullName = user?.FullName ?? "Unknown";
+                dto.Email = user?.Email ?? "Unknown";
+            }
+            return transactionDTOs;
         }
 
         public async Task<TransactionDTO?> GetByIdAsync(int transactionId, int userId)
         {
             var transaction = await _repo.GetByIdAsync(transactionId, userId);
-            return transaction != null ? MapToDTO(transaction) : null;
+            if (transaction == null) return null;
+            var user = await _userRepo.GetByIdAsync(userId);
+            TransactionDTO transactionDTO = MapToDTO(transaction);
+            transactionDTO.FullName = user?.FullName ?? "Unknown";
+            transactionDTO.Email = user?.Email ?? "Unknown";
+            return transactionDTO;
         }
 
         public async Task<TransactionDTO> CreateAsync(int userId, CreateTransactionRequest request)
@@ -124,6 +140,8 @@ namespace HealthMate.Services.Service.Transaction
                 Amount = transaction.Amount,
                 Status = transaction.Status,
                 PurchasedAt = transaction.PurchasedAt,
+                CreatedDate = transaction.CreatedDate ?? transaction.PurchasedAt,
+                ExpiryDate = transaction.ExpiredDate,
                 PackageName = transaction.Package?.PackageName ?? "Unknown",
                 PaymentMethodName = transaction.PaymentMethod?.MethodName ?? "Unknown"
             };
@@ -167,12 +185,13 @@ namespace HealthMate.Services.Service.Transaction
             foreach (var item in list)
             {
                 var package = await _packageRepo.GetByIdAsync(item.PackageId);
+                var user = await _userRepo.GetByIdAsync(item.UserId);
                 transactions.Add(new TransactionDTONew
                 {
                     TransactionId = item.TransactionId,
                     UserId = item.UserId,
-                    FullName = item.User?.FullName ?? "Unknown",
-                    Email = item.User?.Email ?? "Unknown",
+                    FullName = user?.FullName ?? "Unknown",
+                    Email = user?.Email ?? "Unknown",
                     PackagePrice = item.Package?.Price ?? 0,
                     PackageName = package?.PackageName ?? "Unknown",
                     Status = item.Status,
@@ -217,12 +236,13 @@ namespace HealthMate.Services.Service.Transaction
             var transaction = await _repo.GetTransactionByIdAsync(transactionId);
             if (transaction == null) return null;
             var package = await _packageRepo.GetByIdAsync(transaction.PackageId);
+            var user = await _userRepo.GetByIdAsync(transaction.UserId);
             TransactionDTONew transactionDTO = new TransactionDTONew
             {
                 TransactionId = transaction.TransactionId,
                 UserId = transaction.UserId,
-                FullName = transaction.User?.FullName ?? "Unknown",
-                Email = transaction.User?.Email ?? "Unknown",
+                FullName = user?.FullName ?? "Unknown",
+                Email = user?.Email ?? "Unknown",
                 PackagePrice = package?.Price ?? 0,
                 PackageName = package?.PackageName ?? "Unknown",
                 Status = transaction.Status,
@@ -281,6 +301,11 @@ namespace HealthMate.Services.Service.Transaction
             var updatedTransaction = await _repo.UpdateTransactionAsync(trans);
             if (updatedTransaction == null) throw new InvalidOperationException("Failed to update transaction status");
             return updatedTransaction;
+        }
+
+        public async Task<bool> DeleteTransactionAsync(int transactionId)
+        {
+            return await _repo.DeleteTransactionAsync(transactionId);
         }
     }
 }

@@ -20,5 +20,6 @@ namespace HealthMate.Services.Interface.Transaction
         Task<List<TransactionDTONew>?> GetTransactionByUserIdAsync(int userId);
         Task<TransactionDTONew> UpdateStatuePaidAsync(int transactionId, int userId, int packageId);
         Task<TransactionDTONew> UpdateStatueExpiredAsync(int transactionId);
+        Task<bool> DeleteTransactionAsync(int transactionId);
     }
 } 

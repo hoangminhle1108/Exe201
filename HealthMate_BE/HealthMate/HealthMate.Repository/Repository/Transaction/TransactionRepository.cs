@@ -115,5 +115,14 @@ namespace HealthMate.Repository.Repository.Transaction
                 ExpiryDate = existing.ExpiredDate
             };
         }
+
+        public async Task<bool> DeleteTransactionAsync(int transactionId)
+        {
+            var transaction = _ctx.Transactions
+                .FirstOrDefault(t => t.TransactionId == transactionId);
+            if (transaction == null) return (false);
+            _ctx.Transactions.Remove(transaction);
+            return await _ctx.SaveChangesAsync() > 0;
+        }
     }
 } 
