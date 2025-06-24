@@ -33,7 +33,18 @@ namespace HealthMate.Services.Service.Transaction
         public async Task<List<TransactionDTO>> GetAllByUserIdAsync(int userId)
         {
             var transactions = await _repo.GetAllByUserIdAsync(userId);
-            return transactions.Select(MapToDTO).ToList();
+            var user = await _userRepo.GetByIdAsync(userId);
+            List<TransactionDTO> transactionDTOs = new List<TransactionDTO>();
+            foreach (var transaction in transactions)
+            {
+                transactionDTOs.Add(MapToDTO(transaction));
+            }
+            foreach (var dto in transactionDTOs)
+            {
+                dto.FullName = user?.FullName ?? "Unknown";
+                dto.Email = user?.Email ?? "Unknown";
+            }
+            return transactionDTOs;
         }
 
         public async Task<TransactionDTO?> GetByIdAsync(int transactionId, int userId)
@@ -124,6 +135,8 @@ namespace HealthMate.Services.Service.Transaction
                 Amount = transaction.Amount,
                 Status = transaction.Status,
                 PurchasedAt = transaction.PurchasedAt,
+                CreatedDate = transaction.CreatedDate ?? transaction.PurchasedAt,
+                ExpiryDate = transaction.ExpiredDate,
                 PackageName = transaction.Package?.PackageName ?? "Unknown",
                 PaymentMethodName = transaction.PaymentMethod?.MethodName ?? "Unknown"
             };
@@ -281,6 +294,11 @@ namespace HealthMate.Services.Service.Transaction
             var updatedTransaction = await _repo.UpdateTransactionAsync(trans);
             if (updatedTransaction == null) throw new InvalidOperationException("Failed to update transaction status");
             return updatedTransaction;
+        }
+
+        public async Task<bool> DeleteTransactionAsync(int transactionId)
+        {
+            return await _repo.DeleteTransactionAsync(transactionId);
         }
     }
 }

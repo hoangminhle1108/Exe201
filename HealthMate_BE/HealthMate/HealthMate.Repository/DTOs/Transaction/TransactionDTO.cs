@@ -6,12 +6,16 @@ namespace HealthMate.Repository.DTOs.Transaction
     {
         public int TransactionId { get; set; }
         public int UserId { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
         public int PackageId { get; set; }
         public int PaymentMethodId { get; set; }
         public string TransactionCode { get; set; } = null!;
         public decimal Amount { get; set; }
         public string Status { get; set; } = null!;
+        public DateTime CreatedDate { get; set; }
         public DateTime PurchasedAt { get; set; }
+        public DateTime? ExpiryDate { get; set; }
         public string PackageName { get; set; } = null!;
         public string PaymentMethodName { get; set; } = null!;
     }

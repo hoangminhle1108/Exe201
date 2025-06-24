@@ -17,5 +17,6 @@ namespace HealthMate.Repository.Interface.Transaction
         Task<List<Models.Transaction>> GetAllTransactionAsync();
         Task<Models.Transaction?> GetTransactionByIdAsync(int transactionId);
         Task<TransactionDTONew> UpdateTransactionAsync(Models.Transaction transaction);
+        Task<bool> DeleteTransactionAsync(int transactionId);
     }
 } 
