@@ -26,6 +26,7 @@ import {
 } from "context";
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
+import userService from "services/userService";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -33,6 +34,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   // Map route names to custom display names
   const routeNameMap = {
@@ -43,6 +46,18 @@ function DashboardNavbar({ absolute, light, isMini }) {
     "danh-sach-goi-tra-phi": "Danh sách gói trả phí",
     "chi-tiet-cong-thuc": "Chi tiết công thức",
     "chi-tiet-bai-dang": "Chi tiết bài đăng",
+  };
+
+  const handleSearchChange = async (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value.trim().length > 0) {
+      const data = await userService.getUserByEmail(value);
+      setSearchResults(data);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   // Capitalize fallback titles
@@ -136,12 +151,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
             light={light}
           />
         </SoftBox>
-        {route.length === 1 && ["danh-sach-nguoi-dung", "danh-sach-goi-tra-phi", "danh-sach-bai-dang", "danh-sach-cong-thuc"].includes(route[0]) ? (
+        {route.length === 1 && ["danh-sach-bai-dang", "danh-sach-cong-thuc"].includes(route[0]) ? (
           <SoftBox sx={(theme) => navbarRow(theme, { isMini })}>
             <SoftBox pr={1} sx={{ width: "300px" }}>
               <SoftInput
                 placeholder="Tìm kiếm..."
                 icon={{ component: "search", direction: "left" }}
+                value={searchTerm}
+                onChange={handleSearchChange}
               />
             </SoftBox>
           </SoftBox>

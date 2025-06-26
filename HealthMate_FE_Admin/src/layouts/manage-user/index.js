@@ -10,6 +10,7 @@ import userService from "services/userService";
 import { useEffect, useState } from "react";
 import SoftAvatar from "components/SoftAvatar";
 import PropTypes from "prop-types";
+import SoftInput from "components/SoftInput";
 
 function Author({ image, name, email }) {
   return (
@@ -38,21 +39,44 @@ Author.propTypes = {
 function UserList() {
   const [users, setUsers] = useState([]);
   const [admins, setAdmins] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // ✅ add currentPage state
+  const usersPerPage = 4; // ✅ 4 per page
 
   useEffect(() => {
     userService.getAllUsers().then(setUsers);
     userService.getAdmins().then(setAdmins);
   }, []);
 
+  const formatDate = (isoDate) => {
+    if (!isoDate) return "";
+    const d = new Date(isoDate);
+    if (isNaN(d)) return isoDate;
+    return `${String(d.getDate()).padStart(2, "0")}/${String(
+      d.getMonth() + 1
+    ).padStart(2, "0")}/${d.getFullYear()}`;
+  };
+
+  // ✅ filter
+  const filteredUsers = users.filter((u) =>
+    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // ✅ paginate
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage); // ✅ totalPages
+
   const userColumns = [
     { name: "Người dùng", align: "left" },
     { name: "Email", align: "left" },
     { name: "Ngày sinh", align: "center" },
-    { name: "Ngày tạo tài khoản", align: "center" },
   ];
-
-  const userRows = users.map(u => ({
-    "Người dùng": <Author image={u.avatarUrl || undefined} name={u.fullName} email={u.email} />,
+  const userRows = currentUsers.map((u) => ({
+    "Người dùng": (
+      <Author image={u.avatarUrl || undefined} name={u.fullName} email={u.email} />
+    ),
     "Email": (
       <SoftTypography variant="caption" color="text" fontWeight="medium">
         {u.email}
@@ -60,12 +84,7 @@ function UserList() {
     ),
     "Ngày sinh": (
       <SoftTypography variant="caption" color="text" fontWeight="medium">
-        {u.dateOfBirth}
-      </SoftTypography>
-    ),
-    "Ngày tạo tài khoản": (
-      <SoftTypography variant="caption" color="text" fontWeight="medium">
-        {u.createdAt}
+        {formatDate(u.dateOfBirth)}
       </SoftTypography>
     ),
   }));
@@ -74,11 +93,11 @@ function UserList() {
     { name: "Quản trị viên", align: "left" },
     { name: "Email", align: "left" },
     { name: "Ngày sinh", align: "center" },
-    { name: "Ngày tạo tài khoản", align: "center" },
   ];
-
-  const adminRows = admins.map(a => ({
-    "Quản trị viên": <Author image={a.avatarUrl || undefined} name={a.fullName} email={a.email} />,
+  const adminRows = admins.map((a) => ({
+    "Quản trị viên": (
+      <Author image={a.avatarUrl || undefined} name={a.fullName} email={a.email} />
+    ),
     "Email": (
       <SoftTypography variant="caption" color="text" fontWeight="medium">
         {a.email}
@@ -86,12 +105,7 @@ function UserList() {
     ),
     "Ngày sinh": (
       <SoftTypography variant="caption" color="text" fontWeight="medium">
-        {a.dateOfBirth}
-      </SoftTypography>
-    ),
-    "Ngày tạo tài khoản": (
-      <SoftTypography variant="caption" color="text" fontWeight="medium">
-        {a.createdAt}
+        {formatDate(a.dateOfBirth)}
       </SoftTypography>
     ),
   }));
@@ -100,9 +114,15 @@ function UserList() {
     <DashboardLayout>
       <DashboardNavbar />
       <SoftBox py={3}>
+        {/* ADMIN TABLE */}
         <SoftBox mb={3}>
           <Card>
-            <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
+            <SoftBox
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              p={3}
+            >
               <SoftTypography variant="h6">Quản trị viên</SoftTypography>
             </SoftBox>
             <SoftBox
@@ -119,9 +139,27 @@ function UserList() {
             </SoftBox>
           </Card>
         </SoftBox>
+
+        {/* USER TABLE */}
         <Card>
-          <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
+          <SoftBox
+            p={3}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <SoftTypography variant="h6">Danh sách người dùng</SoftTypography>
+            <SoftBox pr={1} sx={{ width: "300px" }}>
+              <SoftInput
+                placeholder="Tìm kiếm người dùng bằng email..."
+                icon={{ component: "search", direction: "left" }}
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1); // reset page on search
+                }}
+              />
+            </SoftBox>
           </SoftBox>
           <SoftBox
             sx={{
@@ -136,15 +174,36 @@ function UserList() {
             <Table columns={userColumns} rows={userRows} />
           </SoftBox>
         </Card>
+
+        {/* ✅ PAGINATION */}
         <SoftBox display="flex" justifyContent="flex-end" p={2}>
           <SoftPagination>
-            <SoftPagination item>{"<"}</SoftPagination>
-            <SoftPagination item>1</SoftPagination>
-            <SoftPagination item>2</SoftPagination>
-            <SoftPagination item>3</SoftPagination>
-            <SoftPagination item>...</SoftPagination>
-            <SoftPagination item>10</SoftPagination>
-            <SoftPagination item>{">"}</SoftPagination>
+            <SoftPagination
+              item
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            >
+              {"<"}
+            </SoftPagination>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+              <SoftPagination
+                key={number}
+                item
+                active={number === currentPage}
+                onClick={() => setCurrentPage(number)}
+              >
+                {number}
+              </SoftPagination>
+            ))}
+
+            <SoftPagination
+              item
+              onClick={() =>
+                setCurrentPage((p) => Math.min(p + 1, totalPages))
+              }
+            >
+              {">"}
+            </SoftPagination>
           </SoftPagination>
         </SoftBox>
       </SoftBox>
