@@ -15,6 +15,7 @@ namespace HealthMate.Repository.Repository.User
     public class UserRepository : IUserRepository
     {
         private readonly NutritionAppContext _ctx;
+
         public UserRepository(NutritionAppContext ctx) => _ctx = ctx;
 
         public async Task<Models.User> CreateGoogleUserAsync(string email, string fullName)
@@ -58,7 +59,7 @@ namespace HealthMate.Repository.Repository.User
             {
                 _ctx.Users.Add(user);
                 await _ctx.SaveChangesAsync();
-                
+
                 // Reload the user with role information
                 return await _ctx.Users
                     .Include(u => u.Role)
@@ -72,20 +73,40 @@ namespace HealthMate.Repository.Repository.User
 
         public async Task<bool> DeleteUserAsync(int userId)
         {
-            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            var user = await _ctx.Users
+            .Include(u => u.HealthMetrics)
+            .Include(u => u.Recipes)
+            .Include(u => u.Transactions)
+             .FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null)
             {
                 throw new InvalidOperationException("User not found");
             }
             try
             {
+                // Xóa HealthMetrics liên quan
+                if (user.HealthMetrics != null && user.HealthMetrics.Any())
+                {
+                    _ctx.HealthMetrics.RemoveRange(user.HealthMetrics);
+                }
+                // Xóa Recipes liên quan
+                if (user.Recipes != null && user.Recipes.Any())
+                {
+                    _ctx.Recipes.RemoveRange(user.Recipes);
+                }
+                // Xóa Transactions liên quan
+                if (user.Transactions != null && user.Transactions.Any())
+                {
+                    _ctx.Transactions.RemoveRange(user.Transactions);
+                }
+                // Xóa user
                 _ctx.Users.Remove(user);
                 await _ctx.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to delete user ({user.UserId}, {user.FullName}): {ex.Message}", ex);
+                throw new InvalidOperationException($"Failed to delete user ({userId}): {ex.Message}", ex);
             }
         }
 
@@ -204,7 +225,7 @@ namespace HealthMate.Repository.Repository.User
             {
                 _ctx.Users.Add(user);
                 await _ctx.SaveChangesAsync();
-                
+
                 // Reload the user with role information
                 return await _ctx.Users
                     .Include(u => u.Role)
@@ -237,7 +258,7 @@ namespace HealthMate.Repository.Repository.User
                 existingUser.UpdatedAt = DateTime.UtcNow;
                 _ctx.Users.Update(existingUser);
                 _ctx.SaveChanges();
-                
+
                 return await _ctx.Users
                     .Include(u => u.Role)
                     .FirstOrDefaultAsync(u => u.UserId == existingUser.UserId);
@@ -247,6 +268,7 @@ namespace HealthMate.Repository.Repository.User
                 throw new InvalidOperationException($"Failed to update user ({user.UserId}, {user.FullName}): {ex.Message}", ex);
             }
         }
+
         public async Task SetResetPasswordTokenAsync(string email, string token, DateTime expiry)
         {
             var user = await _ctx.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -295,6 +317,7 @@ namespace HealthMate.Repository.Repository.User
             await _ctx.SaveChangesAsync();
             return true;
         }
+
         public async Task<bool> UpdateProfileAsync(UpdateProfileDTO dto)
         {
             var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == dto.UserId);
