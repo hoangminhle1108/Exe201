@@ -80,7 +80,7 @@ export default function FavoriteRecipe() {
                                 <View style={styles.bottomRow}>
                                     <View style={styles.likesContainer}>
                                         <Heart size={12} color={Colors.rating} fill={Colors.rating} />
-                                        <Text style={styles.likesText}>{item.likesCount ?? 0}</Text>
+                                        <Text style={styles.likesText}>{item.likes ?? 0}</Text>
                                     </View>
                                     <TouchableOpacity onPress={() => router.push(`/(recipe)/recipeDetail?id=${item.recipeId}`)}>
                                         <Text style={styles.detailLink}>Xem chi tiết &gt;</Text>
