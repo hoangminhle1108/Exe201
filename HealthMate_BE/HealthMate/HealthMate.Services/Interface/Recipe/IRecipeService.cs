@@ -24,7 +24,8 @@ namespace HealthMate.Services.Interface.Recipe
         Task<RecipeCategoryDTO> CreateRecipeCategoryAsync(CreateRecipeCategoryRequest request);
         Task<RecipeCategoryDTO?> UpdateRecipeCategoryAsync(int categoryId, UpdateRecipeCategoryRequest request);
         Task<bool> DeleteRecipeCategoryAsync(int categoryId);
-        
+        Task<bool> DeleteRecipeAsync(int recipeId);
+
         // Thêm methods cho Like/Unlike
         Task<bool> LikeRecipeAsync(int recipeId);
         Task<bool> UnlikeRecipeAsync(int recipeId);
