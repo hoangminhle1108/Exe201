@@ -193,5 +193,10 @@ namespace HealthMate.Services.Service.Recipe
            var recipes = await _repo.GetMostLikedRecipesAsync(count);
             return recipes.Select(MapToDTO).ToList();
         }
+
+        public async Task<bool> DeleteRecipeAsync(int recipeId)
+        {
+            return await _repo.DeleteRecipeAsync(recipeId);
+        }
     }
 }

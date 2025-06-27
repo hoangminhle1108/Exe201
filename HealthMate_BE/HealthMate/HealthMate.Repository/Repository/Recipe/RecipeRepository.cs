@@ -1,6 +1,7 @@
 ﻿using HealthMate.Repository.Interface.Recipe;
 using HealthMate.Repository.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -146,6 +147,22 @@ namespace HealthMate.Repository.Repository.Recipe
                 .Take(count)
                 .Include(r => r.Categories)
                 .ToListAsync();
+        }
+
+        public async Task<bool> DeleteRecipeAsync(int recipeId)
+        {
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.RecipeId == recipeId);
+            if (recipe == null) return false;
+            try
+            {
+                _context.Recipes.Remove(recipe);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error deleting recipe: {recipeId}. It may be in use or not found. " + ex.ToString());
+            }
         }
     }
 }

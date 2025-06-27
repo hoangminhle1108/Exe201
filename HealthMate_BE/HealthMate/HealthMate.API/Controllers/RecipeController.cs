@@ -99,7 +99,17 @@ namespace HealthMate.API.Controllers
 
             return NoContent();
         }
-        
+
+        [HttpDelete("{recipeId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteRecipe(int recipeId)
+        {
+            var result = await _service.DeleteRecipeAsync(recipeId);
+            if (!result)
+                return NotFound();
+            return NoContent();
+        }
+
         // Thêm endpoints cho Like/Unlike
         [HttpPost("{id}/like")]
         public async Task<ActionResult> LikeRecipe(int id)
