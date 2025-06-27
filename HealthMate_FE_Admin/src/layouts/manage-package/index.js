@@ -151,7 +151,7 @@ function PackageList() {
                 </Card>
             </SoftBox>
 
-            {/* Add Modal */}
+            {/* Add Package Modal */}
             <Dialog
                 open={openModal}
                 onClose={(e, reason) => reason !== "backdropClick" && reason !== "escapeKeyDown" && handleCloseModal()}
