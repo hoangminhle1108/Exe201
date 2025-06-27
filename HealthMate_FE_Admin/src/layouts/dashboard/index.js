@@ -26,9 +26,9 @@ function Dashboard() {
       <SoftBox py={3}>
         <SoftBox mb={3}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} xl={3}>
+            <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
-                title={{ text: "today's money", fontWeight: "medium" }}
+                title={{ text: "Số tiền thu hôm nay", fontWeight: "medium" }}
                 count="$53,000"
                 percentage={{ color: "success", text: "+55%" }}
                 icon={{ color: "info", component: "paid" }}
@@ -36,9 +36,9 @@ function Dashboard() {
                 countColor="success"
               />
             </Grid>
-            <Grid item xs={12} sm={6} xl={3}>
+            <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
-                title={{ text: "today's users" }}
+                title={{ text: "Số người dùng hôm nay" }}
                 count="2,300"
                 percentage={{ color: "success", text: "+3%" }}
                 icon={{ color: "info", component: "public" }}
@@ -46,16 +46,16 @@ function Dashboard() {
                 countColor="success"
               />
             </Grid>
-            <Grid item xs={12} sm={6} xl={3}>
+            <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
-                title={{ text: "new clients" }}
+                title={{ text: "Số gói trả phí đã được thanh toán" }}
                 count="+3,462"
                 percentage={{ color: "error", text: "-2%" }}
                 icon={{ color: "info", component: "emoji_events" }}
                 titleColor="text"
               />
             </Grid>
-            <Grid item xs={12} sm={6} xl={3}>
+            {/* <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "sales" }}
                 count="$103,430"
@@ -67,7 +67,7 @@ function Dashboard() {
                 titleColor="text"
                 countColor="success"
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </SoftBox>
         {/* <SoftBox mb={3}>
