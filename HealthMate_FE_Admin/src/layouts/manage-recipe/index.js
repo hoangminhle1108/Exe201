@@ -41,6 +41,76 @@ function RecipeList() {
     const [openModal, setOpenModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const recipesPerPage = 3;
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedRecipeToDelete, setSelectedRecipeToDelete] = useState(null);
+
+    const handleOpenDeleteModal = (recipe) => {
+        setSelectedRecipeToDelete(recipe);
+        setOpenDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setOpenDeleteModal(false);
+        setSelectedRecipeToDelete(null);
+    };
+
+    const handleDeleteRecipe = async () => {
+        try {
+            await recipeService.deleteRecipe(selectedRecipeToDelete.recipeId);
+            handleCloseDeleteModal();
+            const updated = await recipeService.getAllRecipe();
+            setAllRecipes(updated);
+        } catch (error) {
+            console.error("Delete failed:", error);
+        }
+    };
+
+
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [editRecipeId, setEditRecipeId] = useState(null);
+    const [editFormValues, setEditFormValues] = useState({
+        title: "",
+        description: "",
+        ingredients: "",
+        instructions: "",
+        cookingTime: 0,
+        servings: 0,
+        calories: 0,
+        difficulty: "",
+        imageUrl: ""
+    });
+
+    const handleEditOpen = (recipe) => {
+        setEditFormValues({
+            title: recipe.title,
+            description: recipe.description,
+            ingredients: recipe.ingredients,
+            instructions: recipe.instructions,
+            cookingTime: recipe.cookingTime,
+            servings: recipe.servings,
+            calories: recipe.calories,
+            difficulty: recipe.difficulty,
+            imageUrl: recipe.imageUrl,
+        });
+        setEditRecipeId(recipe.recipeId);
+        setOpenEditModal(true);
+    };
+
+    const handleEditChange = (e) => {
+        setEditFormValues({ ...editFormValues, [e.target.name]: e.target.value });
+    };
+
+    const handleEditSubmit = async () => {
+        try {
+            await recipeService.updateRecipe(editRecipeId, editFormValues);
+            setOpenEditModal(false);
+            const updated = await recipeService.getAllRecipe();
+            setAllRecipes(updated);
+        } catch (error) {
+            console.error("Update failed:", error);
+        }
+    };
 
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
@@ -56,11 +126,19 @@ function RecipeList() {
             calories: 0,
             difficulty: "",
             imageUrl: "",
+            categories: [],
             createdBy: 1,
         },
         onSubmit: async (values) => {
             try {
-                await recipeService.createRecipe(values);
+                const formatted = {
+                    ...values,
+                    categories: values.categories.map((id) => {
+                        const cat = categoryOptions.find((c) => c.categoryId === id);
+                        return { categoryId: cat.categoryId, categoryName: cat.categoryName };
+                    }),
+                };
+                await recipeService.createRecipe(formatted);
                 handleCloseModal();
                 const data = await recipeService.getAllRecipe();
                 setAllRecipes(data);
@@ -68,6 +146,7 @@ function RecipeList() {
                 console.error("Failed to create recipe:", error);
             }
         },
+
     });
 
     useEffect(() => {
@@ -80,6 +159,16 @@ function RecipeList() {
             }
         };
 
+        const fetchCategories = async () => {
+            try {
+                const data = await recipeService.getAllCategory();
+                setCategoryOptions(data);
+            } catch (error) {
+                console.error("Failed to fetch categories:", error);
+            }
+        };
+
+        fetchCategories();
         fetchRecipes();
     }, []);
 
@@ -132,10 +221,15 @@ function RecipeList() {
                     >
                         <Icon>visibility</Icon>&nbsp;Xem chi tiết
                     </SoftButton>
-                    <SoftButton variant="text" color="error">
+                    <SoftButton variant="text" color="error" onClick={() => handleOpenDeleteModal(recipe)}>
                         <Icon>delete</Icon>&nbsp;Xóa
                     </SoftButton>
-                    <SoftButton variant="text" color="dark">
+
+                    <SoftButton
+                        variant="text"
+                        color="dark"
+                        onClick={() => handleEditOpen(recipe)}
+                    >
                         <Icon>edit</Icon>&nbsp;Chỉnh sửa
                     </SoftButton>
                 </SoftBox>
@@ -323,13 +417,47 @@ function RecipeList() {
                                 onChange={formik.handleChange}
                             />
 
-                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Độ khó:</SoftTypography>
-                            <TextField
-                                fullWidth
-                                name="difficulty"
-                                value={formik.values.difficulty}
-                                onChange={formik.handleChange}
-                            />
+                            <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                    <SoftTypography sx={{ fontSize: "15px", mb: "7px" }}>Độ khó:</SoftTypography>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            name="difficulty"
+                                            value={formik.values.difficulty}
+                                            onChange={formik.handleChange}
+                                            displayEmpty
+                                        >
+                                            <MenuItem value="Dễ">Dễ</MenuItem>
+                                            <MenuItem value="Trung bình">Trung bình</MenuItem>
+                                            <MenuItem value="Khó">Khó</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    <SoftTypography sx={{ fontSize: "15px", mb: "7px" }}>Thẻ:</SoftTypography>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            multiple
+                                            name="categories"
+                                            value={formik.values.categories}
+                                            onChange={formik.handleChange}
+                                            renderValue={(selected) => selected
+                                                .map((id) =>
+                                                    categoryOptions.find((cat) => cat.categoryId === id)?.categoryName
+                                                ).join(", ")
+                                            }
+                                        >
+                                            {categoryOptions.map((cat) => (
+                                                <MenuItem key={cat.categoryId} value={cat.categoryId}>
+                                                    {cat.categoryName}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+
 
                             <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>URL hình ảnh:</SoftTypography>
                             <TextField
@@ -351,6 +479,159 @@ function RecipeList() {
                     </form>
                 </DialogContent>
             </Dialog>
+
+            {/* UPDATE MODAL  */}
+            <Dialog
+                open={openEditModal}
+                onClose={(e, reason) =>
+                    reason !== "backdropClick" && reason !== "escapeKeyDown" && setOpenEditModal(false)
+                }
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle sx={{ m: 0, p: 2 }}>
+                    Chỉnh sửa công thức
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => setOpenEditModal(false)}
+                        sx={{ position: "absolute", right: 8, top: 8, color: (theme) => theme.palette.grey[500] }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+
+                <DialogContent dividers>
+                    <form onSubmit={(e) => { e.preventDefault(); handleEditSubmit(); }}>
+                        <Box display="flex" flexDirection="column" gap={2} mb={2}>
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Tên công thức:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                name="title"
+                                value={editFormValues.title}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Mô tả:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                multiline
+                                minRows={2}
+                                name="description"
+                                value={editFormValues.description}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Nguyên liệu:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                multiline
+                                minRows={3}
+                                name="ingredients"
+                                value={editFormValues.ingredients}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Hướng dẫn:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                multiline
+                                minRows={3}
+                                name="instructions"
+                                value={editFormValues.instructions}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Thời gian nấu (phút):</SoftTypography>
+                            <TextField
+                                fullWidth
+                                type="number"
+                                name="cookingTime"
+                                value={editFormValues.cookingTime}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Khẩu phần:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                type="number"
+                                name="servings"
+                                value={editFormValues.servings}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Calories:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                type="number"
+                                name="calories"
+                                value={editFormValues.calories}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>Độ khó:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                name="difficulty"
+                                value={editFormValues.difficulty}
+                                onChange={handleEditChange}
+                            />
+
+                            <SoftTypography sx={{ fontSize: "15px", mb: "-10px" }}>URL hình ảnh:</SoftTypography>
+                            <TextField
+                                fullWidth
+                                name="imageUrl"
+                                value={editFormValues.imageUrl}
+                                onChange={handleEditChange}
+                            />
+                        </Box>
+
+                        <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+                            <SoftButton variant="outlined" color="secondary" onClick={() => setOpenEditModal(false)}>
+                                Hủy
+                            </SoftButton>
+                            <SoftButton variant="gradient" color="info" type="submit">
+                                Cập nhật
+                            </SoftButton>
+                        </Box>
+                    </form>
+                </DialogContent>
+            </Dialog>
+            {/* DELETE MODAL */}
+            <Dialog
+                open={openDeleteModal}
+                onClose={(e, reason) =>
+                    reason !== "backdropClick" && reason !== "escapeKeyDown" && handleCloseDeleteModal()
+                }
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle sx={{ m: 0, p: 2 }}>
+                    Xác nhận xóa công thức
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleCloseDeleteModal}
+                        sx={{ position: "absolute", right: 8, top: 8, color: (theme) => theme.palette.grey[500] }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent dividers>
+                    <SoftTypography>
+                        Bạn có chắc chắn muốn xóa công thức &quot;
+                        <strong>{selectedRecipeToDelete?.title}</strong>
+                        &quot; không?
+                    </SoftTypography>
+                    <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                        <SoftButton variant="outlined" color="secondary" onClick={handleCloseDeleteModal}>
+                            Hủy
+                        </SoftButton>
+                        <SoftButton variant="gradient" color="error" onClick={handleDeleteRecipe}>
+                            Xóa
+                        </SoftButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
         </DashboardLayout>
     );
 }

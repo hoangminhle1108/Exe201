@@ -22,6 +22,11 @@ const recipeService = {
         const response = await axios.put(`${API_URL}/Recipe/${id}`, updatedRecipe);
         return response.data;
     },
+
+    getAllCategory: async () => {
+        const response = await axios.get(`${API_URL}/Recipe/categories`);
+        return response.data;
+    },
 };
 
 export default recipeService;

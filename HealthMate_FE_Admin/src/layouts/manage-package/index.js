@@ -221,7 +221,7 @@ function PackageList() {
                 maxWidth="sm"
             >
                 <DialogTitle sx={{ m: 0, p: 2 }}>
-                    Xóa gói trả phí
+                    Xác nhận xóa gói trả phí
                     <IconButton
                         aria-label="close"
                         onClick={handleCloseDeleteModal}
