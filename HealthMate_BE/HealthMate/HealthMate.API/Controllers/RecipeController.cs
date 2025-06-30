@@ -101,7 +101,7 @@ namespace HealthMate.API.Controllers
         }
 
         [HttpDelete("{recipeId}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteRecipe(int recipeId)
         {
             var result = await _service.DeleteRecipeAsync(recipeId);

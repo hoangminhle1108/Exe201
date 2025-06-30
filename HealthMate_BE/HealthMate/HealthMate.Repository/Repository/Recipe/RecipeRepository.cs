@@ -151,10 +151,13 @@ namespace HealthMate.Repository.Repository.Recipe
 
         public async Task<bool> DeleteRecipeAsync(int recipeId)
         {
-            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.RecipeId == recipeId);
+            var recipe = await _context.Recipes.Include(r => r.Categories)
+                .FirstOrDefaultAsync(r => r.RecipeId == recipeId);
             if (recipe == null) return false;
             try
             {
+                recipe.Categories.Clear();
+                await _context.SaveChangesAsync();
                 _context.Recipes.Remove(recipe);
                 await _context.SaveChangesAsync();
                 return true;
