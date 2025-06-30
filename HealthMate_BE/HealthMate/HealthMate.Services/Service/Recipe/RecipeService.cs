@@ -26,7 +26,7 @@ namespace HealthMate.Services.Service.Recipe
             return recipe != null ? MapToDTO(recipe) : null;
         }
 
-        
+
         public async Task<RecipeDTO> CreateRecipeAsync(CreateRecipeRequest request)
         {
             var recipe = new Repository.Models.Recipe
@@ -41,9 +41,23 @@ namespace HealthMate.Services.Service.Recipe
                 Difficulty = request.Difficulty,
                 ImageUrl = request.ImageUrl,
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = request.CreatedBy
+                CreatedBy = request.CreatedBy,
+                Categories = new List<Repository.Models.RecipeCategory>()
             };
-
+            if (request.Categories != null && request.Categories.Any())
+            {
+                var categoryIds = request.Categories.Select(c => c.CategoryId).ToList();
+                var categories = new List<Repository.Models.RecipeCategory>();
+                foreach (var categoryId in categoryIds)
+                {
+                    var category = await _repo.GetRecipeCategoryByIdAsync(categoryId);
+                    if (category != null)
+                    {
+                        categories.Add(category);
+                    }
+                }
+                recipe.Categories = categories;
+            }
             var created = await _repo.CreateRecipeAsync(recipe);
             return MapToDTO(created);
         }
@@ -63,11 +77,25 @@ namespace HealthMate.Services.Service.Recipe
             recipe.Difficulty = request.Difficulty;
             recipe.ImageUrl = request.ImageUrl;
             recipe.UpdatedAt = DateTime.UtcNow;
-
+            recipe.Categories.Clear();
+            if (request.Categories != null && request.Categories.Any())
+            {
+                var categoryIds = request.Categories.Select(c => c.CategoryId).ToList();
+                var categories = new List<Repository.Models.RecipeCategory>();
+                foreach (var categoryId in categoryIds)
+                {
+                    var category = await _repo.GetRecipeCategoryByIdAsync(categoryId);
+                    if (category != null)
+                    {
+                        categories.Add(category);
+                    }
+                }
+                recipe.Categories = categories;
+            }
             var updated = await _repo.UpdateRecipeAsync(recipe);
             return updated != null ? MapToDTO(updated) : null;
         }
-        
+
         // Implementation cho category operations
         public async Task<List<RecipeCategoryDTO>> GetAllRecipeCategoriesAsync()
         {
@@ -86,7 +114,7 @@ namespace HealthMate.Services.Service.Recipe
             var recipes = await _repo.GetRecipesByCategoryAsync(categoryId);
             return recipes.Select(MapToDTO).ToList();
         }
-        
+
         // Implementation cho CRUD Recipe Categories
         public async Task<RecipeCategoryDTO?> GetRecipeCategoryByIdAsync(int categoryId)
         {
@@ -144,7 +172,7 @@ namespace HealthMate.Services.Service.Recipe
         {
             return await _repo.DeleteRecipeCategoryAsync(categoryId);
         }
-        
+
         // Implementation cho Like/Unlike
         public async Task<bool> LikeRecipeAsync(int recipeId)
         {
@@ -155,7 +183,7 @@ namespace HealthMate.Services.Service.Recipe
         {
             return await _repo.UnlikeRecipeAsync(recipeId);
         }
-        
+
         private static RecipeDTO MapToDTO(Repository.Models.Recipe recipe) => new RecipeDTO
         {
             RecipeId = recipe.RecipeId,
@@ -190,7 +218,7 @@ namespace HealthMate.Services.Service.Recipe
 
         public async Task<List<RecipeDTO>> GetMostLikedRecipesAsync(int count)
         {
-           var recipes = await _repo.GetMostLikedRecipesAsync(count);
+            var recipes = await _repo.GetMostLikedRecipesAsync(count);
             return recipes.Select(MapToDTO).ToList();
         }
 

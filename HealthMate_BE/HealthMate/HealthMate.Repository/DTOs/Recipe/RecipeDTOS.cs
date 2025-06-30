@@ -12,6 +12,11 @@ namespace HealthMate.Repository.DTOs.Recipe
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
     }
+
+    public class RecipeCategoriesDTO
+    {
+        public int CategoryId { get; set; }
+    }
     
     // Thêm CategoryDTO riêng cho category operations
     public class RecipeCategoryDTO
@@ -73,6 +78,7 @@ namespace HealthMate.Repository.DTOs.Recipe
         public string Difficulty { get; set; } = null!;
         public string? ImageUrl { get; set; }
         public int CreatedBy { get; set; } // UserId
+        public List<RecipeCategoriesDTO> Categories { get; set; } = new(); // Danh sách CategoryId
     }
 
     // DTOs/Recipe/UpdateRecipeRequest.cs
@@ -87,5 +93,6 @@ namespace HealthMate.Repository.DTOs.Recipe
         public int? Calories { get; set; }
         public string Difficulty { get; set; } = null!;
         public string? ImageUrl { get; set; }
+        public List<CategoryDTO> Categories { get; set; } = new(); // Danh sách CategoryId
     }
 }
