@@ -1,4 +1,5 @@
 using HealthMate.Repository.Interface.Article;
+using HealthMate.Repository.Interface.Dashboard;
 using HealthMate.Repository.Interface.HealthMetric;
 using HealthMate.Repository.Interface.PremiumPackage;
 using HealthMate.Repository.Interface.Recipe;
@@ -6,18 +7,21 @@ using HealthMate.Repository.Interface.Transaction;
 using HealthMate.Repository.Interface.User;
 using HealthMate.Repository.Models;
 using HealthMate.Repository.Repository.Article;
+using HealthMate.Repository.Repository.Dashboard;
 using HealthMate.Repository.Repository.HealthMetric;
 using HealthMate.Repository.Repository.PremiumPackage;
 using HealthMate.Repository.Repository.Recipe;
 using HealthMate.Repository.Repository.Transaction;
 using HealthMate.Repository.Repository.User;
 using HealthMate.Services.Interface.Article;
+using HealthMate.Services.Interface.Dashboard;
 using HealthMate.Services.Interface.HealthMetric;
 using HealthMate.Services.Interface.PremiumPackage;
 using HealthMate.Services.Interface.Recipe;
 using HealthMate.Services.Interface.Transaction;
 using HealthMate.Services.Interface.User;
 using HealthMate.Services.Service.Article;
+using HealthMate.Services.Service.Dashboard;
 using HealthMate.Services.Service.HealthMetric;
 using HealthMate.Services.Service.PremiumPackage;
 using HealthMate.Services.Service.Recipe;
@@ -131,6 +135,8 @@ builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
