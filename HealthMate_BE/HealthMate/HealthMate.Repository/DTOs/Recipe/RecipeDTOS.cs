@@ -93,6 +93,6 @@ namespace HealthMate.Repository.DTOs.Recipe
         public int? Calories { get; set; }
         public string Difficulty { get; set; } = null!;
         public string? ImageUrl { get; set; }
-        public List<CategoryDTO> Categories { get; set; } = new(); // Danh sách CategoryId
+        public List<RecipeCategoriesDTO> Categories { get; set; } = new(); // Danh sách CategoryId
     }
 }
