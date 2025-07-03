@@ -40,8 +40,8 @@ function UserList() {
   const [users, setUsers] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // ✅ add currentPage state
-  const usersPerPage = 4; // ✅ 4 per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 4;
 
   useEffect(() => {
     userService.getAllUsers().then(setUsers);
@@ -57,12 +57,10 @@ function UserList() {
     ).padStart(2, "0")}/${d.getFullYear()}`;
   };
 
-  // ✅ filter
   const filteredUsers = users.filter((u) =>
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // ✅ paginate
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -114,7 +112,6 @@ function UserList() {
     <DashboardLayout>
       <DashboardNavbar />
       <SoftBox py={3}>
-        {/* ADMIN TABLE */}
         <SoftBox mb={3}>
           <Card>
             <SoftBox
@@ -140,7 +137,6 @@ function UserList() {
           </Card>
         </SoftBox>
 
-        {/* USER TABLE */}
         <Card>
           <SoftBox
             p={3}
@@ -156,7 +152,7 @@ function UserList() {
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
-                  setCurrentPage(1); // reset page on search
+                  setCurrentPage(1);
                 }}
               />
             </SoftBox>
@@ -175,7 +171,6 @@ function UserList() {
           </SoftBox>
         </Card>
 
-        {/* ✅ PAGINATION */}
         <SoftBox display="flex" justifyContent="flex-end" p={2}>
           <SoftPagination>
             <SoftPagination

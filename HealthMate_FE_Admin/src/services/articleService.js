@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://localhost:7015/api/Article";
+const API_URL = 'https://healthmate-dpdpf4dgb2fhdubs.southeastasia-01.azurewebsites.net/api/Article';
 
 // Helper function to get auth header
 const getAuthHeader = () => {

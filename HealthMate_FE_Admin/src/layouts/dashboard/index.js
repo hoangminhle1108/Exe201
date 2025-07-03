@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
 import SoftBox from "components/SoftBox";
@@ -8,17 +9,30 @@ import Footer from "examples/Footer";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
 import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
-import typography from "assets/theme/base/typography";
-// import BuildByDevelopers from "layouts/dashboard/components/BuildByDevelopers";
-// import WorkWithTheRockets from "layouts/dashboard/components/WorkWithTheRockets";
 import Projects from "layouts/dashboard/components/Projects";
 import OrderOverview from "layouts/dashboard/components/OrderOverview";
 import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
 import gradientLineChartData from "layouts/dashboard/data/gradientLineChartData";
+import dashboardService from "services/dashboardService";
+import typography from "assets/theme/base/typography";
 
 function Dashboard() {
   const { size } = typography;
   const { chart, items } = reportsBarChartData;
+
+  const [overview, setOverview] = useState(null);
+
+  useEffect(() => {
+    const fetchOverview = async () => {
+      try {
+        const data = await dashboardService.getOverview();
+        setOverview(data);
+      } catch (error) {
+        console.error("Failed to fetch overview:", error);
+      }
+    };
+    fetchOverview();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -28,9 +42,9 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
-                title={{ text: "Số tiền thu hôm nay", fontWeight: "medium" }}
-                count="$53,000"
-                percentage={{ color: "success", text: "+55%" }}
+                title={{ text: "Tổng doanh thu", fontWeight: "medium" }}
+                count={`${overview?.totalRevenue ?? 0}`}
+                percentage={{ color: "success", text: "VND" }}
                 icon={{ color: "info", component: "paid" }}
                 titleColor="text"
                 countColor="success"
@@ -38,48 +52,27 @@ function Dashboard() {
             </Grid>
             <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
-                title={{ text: "Số người dùng hôm nay" }}
-                count="2,300"
-                percentage={{ color: "success", text: "+3%" }}
+                title={{ text: "Tổng số người dùng" }}
+                count={overview?.totalUsers ?? 0}
+                percentage={{ color: "info", text: "Người dùng" }}
                 icon={{ color: "info", component: "public" }}
                 titleColor="text"
-                countColor="success"
+                countColor="info"
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
-                title={{ text: "Số gói trả phí đã được thanh toán" }}
-                count="+3,462"
-                percentage={{ color: "error", text: "-2%" }}
+                title={{ text: "Tổng số người dùng gói Premium" }}
+                count={overview?.premiumUsers ?? 0}
+                percentage={{ color: "warning", text: "Người dùng" }}
                 icon={{ color: "info", component: "emoji_events" }}
                 titleColor="text"
+                countColor="warning"
               />
             </Grid>
-            {/* <Grid item xs={12} sm={6} xl={3}>
-              <MiniStatisticsCard
-                title={{ text: "sales" }}
-                count="$103,430"
-                percentage={{ color: "success", text: "+5%" }}
-                icon={{
-                  color: "info",
-                  component: "shopping_cart",
-                }}
-                titleColor="text"
-                countColor="success"
-              />
-            </Grid> */}
           </Grid>
         </SoftBox>
-        {/* <SoftBox mb={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} lg={7}>
-              <BuildByDevelopers />
-            </Grid>
-            <Grid item xs={12} lg={5}>
-              <WorkWithTheRockets />
-            </Grid>
-          </Grid>
-        </SoftBox> */}
+
         <SoftBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={5}>
@@ -117,10 +110,10 @@ function Dashboard() {
           </Grid>
         </SoftBox>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={7} lg={9}>
             <Projects />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={5} lg={3}>
             <OrderOverview />
           </Grid>
         </Grid>
