@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -10,34 +12,220 @@ import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCar
 import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
 import Projects from "layouts/dashboard/components/Projects";
-import OrderOverview from "layouts/dashboard/components/OrderOverview";
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-import gradientLineChartData from "layouts/dashboard/data/gradientLineChartData";
 import dashboardService from "services/dashboardService";
 import typography from "assets/theme/base/typography";
+import dayjs from "dayjs";
 
 function Dashboard() {
   const { size } = typography;
-  const { chart, items } = reportsBarChartData;
 
   const [overview, setOverview] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(dayjs().format("M/YYYY"));
+  const [lastSixMonths, setLastSixMonths] = useState([]);
+  const [userGrowthChart, setUserGrowthChart] = useState({
+    chart: { labels: [], datasets: {} },
+    items: [],
+  });
+  const [revenueChartData, setRevenueChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "Doanh thu",
+        data: [],
+        tension: 0.4,
+        borderWidth: 3,
+        pointRadius: 0,
+        fill: true,
+        maxBarThickness: 6,
+      },
+    ],
+  });
 
   useEffect(() => {
-    const fetchOverview = async () => {
-      try {
-        const data = await dashboardService.getOverview();
-        setOverview(data);
-      } catch (error) {
-        console.error("Failed to fetch overview:", error);
-      }
-    };
-    fetchOverview();
+    const now = dayjs();
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const m = now.subtract(i, "month");
+      months.push(m.format("M/YYYY"));
+    }
+    setLastSixMonths(months);
   }, []);
+
+  const fetchOverview = async (monthYear) => {
+    const [month, year] = monthYear.split("/").map(Number);
+    const startDate = dayjs(`${year}-${month}-01`).startOf("month").toISOString();
+    const endDate = dayjs(`${year}-${month}-01`).endOf("month").toISOString();
+
+    try {
+      const data = await dashboardService.getOverview(startDate, endDate);
+      setOverview(data);
+    } catch (error) {
+      console.error("Failed to fetch overview:", error);
+    }
+  };
+
+  // Hardcoded fake user growth data
+  const hardCodeBarChartData = [
+    {
+      date: "2025-06-24T00:00:00",
+      newUsers: 2,
+      totalUsers: 3,
+    },
+    {
+      date: "2025-06-26T00:00:00",
+      newUsers: 1,
+      totalUsers: 5,
+    },
+    {
+      date: "2025-06-27T00:00:00",
+      newUsers: 2,
+      totalUsers: 6,
+    },
+    {
+      date: "2025-06-28T00:00:00",
+      newUsers: 3,
+      totalUsers: 9,
+    },
+  ];
+
+  // Commented out API call for user growth due to limited data
+  // const fetchUserGrowth = async (monthYear) => {
+  //   const [month, year] = monthYear.split("/").map(Number);
+  //   const startDate = dayjs(`${year}-${month}-01`).startOf("month").toISOString();
+  //   const endDate = dayjs(`${year}-${month}-01`).endOf("month").toISOString();
+
+  //   try {
+  //     const data = await dashboardService.getUserGrowth(startDate, endDate);
+  //     processUserGrowthData(data);
+  //   } catch (error) {
+  //     console.error("Failed to fetch user growth:", error);
+  //   }
+  // };
+
+  const processUserGrowthData = (data) => {
+    const labels = data.map((item) => dayjs(item.date).format("D/M"));
+    const values = data.map((item) => item.newUsers);
+
+    setUserGrowthChart({
+      chart: {
+        labels,
+        datasets: {
+          label: "Người dùng mới",
+          data: values,
+          color: "primary",
+          borderRadius: 4,
+          maxBarThickness: 25,
+        },
+      },
+      // items: [
+      //   {
+      //     icon: { color: "primary", component: "library_books" },
+      //     label: "Tổng người dùng",
+      //     progress: {
+      //       content: `${data.reduce((acc, cur) => acc + cur.newUsers, 0)}`,
+      //       percentage: Math.min(100, data.reduce((acc, cur) => acc + cur.newUsers, 0) * 5),
+      //     },
+      //   },
+      // ],
+      items: [
+        {
+          icon: { color: "primary", component: "library_books" },
+          label: "người dùng",
+          progress: { content: "36", percentage: 36 },
+        },
+        {
+          icon: { color: "warning", component: "touch_app" },
+          label: "người mới",
+          progress: { content: "30", percentage: 90 },
+        },
+        {
+          icon: { color: "error", component: "extension" },
+          label: "Số lượt tải",
+          progress: { content: "36", percentage: 36 },
+        },
+        {
+          icon: { color: "info", component: "payment" },
+          label: "Đang dùng",
+          progress: { content: "43", percentage: 50 },
+        },
+      ],
+    });
+  };
+
+  // Hardcoded fake revenue chart data
+  const hardCodedRevenueData = [
+    { date: "2025-07-01T00:00:00", revenue: 1000000, transactionCount: 3 },
+    { date: "2025-07-02T00:00:00", revenue: 2500000, transactionCount: 5 },
+    { date: "2025-07-03T00:00:00", revenue: 3000000, transactionCount: 7 },
+    { date: "2025-07-04T00:00:00", revenue: 1200000, transactionCount: 2 },
+    { date: "2025-07-05T00:00:00", revenue: 500000, transactionCount: 1 },
+  ];
+
+  // Commented out real revenue API due to limited data
+  // const fetchRevenueChart = async (monthYear) => {
+  //   const [month, year] = monthYear.split("/").map(Number);
+  //   const startDate = dayjs(`${year}-${month}-01`).startOf("month").toISOString();
+  //   const endDate = dayjs(`${year}-${month}-01`).endOf("month").toISOString();
+
+  //   try {
+  //     const data = await dashboardService.getRevenueChart(startDate, endDate);
+  //     processRevenueChartData(data);
+  //   } catch (error) {
+  //     console.error("Failed to fetch revenue chart:", error);
+  //   }
+  // };
+
+  const processRevenueChartData = (data) => {
+    const labels = data.map((item) => dayjs(item.date).format("D/M"));
+    const values = data.map((item) => item.transactionCount);
+
+    setRevenueChartData({
+      labels,
+      datasets: [
+        {
+          label: "Lượt mua",
+          data: values,
+          tension: 0.4,
+          borderWidth: 3,
+          pointRadius: 0,
+          fill: true,
+          maxBarThickness: 6,
+        },
+      ],
+    });
+  };
+
+  useEffect(() => {
+    fetchOverview(selectedMonth);
+    // fetchUserGrowth(selectedMonth);
+    processUserGrowthData(hardCodeBarChartData);
+
+    // fetchRevenueChart(selectedMonth);
+    processRevenueChartData(hardCodedRevenueData);
+  }, [selectedMonth]);
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <SoftBox py={3}>
+        <SoftBox mb={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={3} xl={2}>
+              <Select value={selectedMonth} onChange={handleMonthChange} size="small">
+                {lastSixMonths.map((month) => (
+                  <MenuItem key={month} value={month}>
+                    {month}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+          </Grid>
+        </SoftBox>
+
         <SoftBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} xl={4}>
@@ -62,7 +250,7 @@ function Dashboard() {
             </Grid>
             <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
-                title={{ text: "Tổng số người dùng gói Premium" }}
+                title={{ text: "Tổng số người dùng Premium" }}
                 count={overview?.premiumUsers ?? 0}
                 percentage={{ color: "warning", text: "Người dùng" }}
                 icon={{ color: "info", component: "emoji_events" }}
@@ -77,44 +265,25 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} lg={5}>
               <ReportsBarChart
-                title="active users"
-                description={
-                  <>
-                    (<strong>+23%</strong>) than last week
-                  </>
-                }
-                chart={chart}
-                items={items}
+                title="Tăng trưởng người dùng"
+                description={`Dữ liệu tháng ${selectedMonth}`}
+                chart={userGrowthChart.chart}
+                items={userGrowthChart.items}
               />
             </Grid>
             <Grid item xs={12} lg={7}>
               <GradientLineChart
-                title="Sales Overview"
-                description={
-                  <SoftBox display="flex" alignItems="center">
-                    <SoftBox fontSize={size.lg} color="success" mb={0.3} mr={0.5} lineHeight={0}>
-                      <Icon className="font-bold">arrow_upward</Icon>
-                    </SoftBox>
-                    <SoftTypography variant="button" color="text" fontWeight="medium">
-                      4% more{" "}
-                      <SoftTypography variant="button" color="text" fontWeight="regular">
-                        in 2021
-                      </SoftTypography>
-                    </SoftTypography>
-                  </SoftBox>
-                }
+                title="Số Lượt Mua Gói Premium"
+                description={`Dữ liệu tháng ${selectedMonth}`}
                 height="20.25rem"
-                chart={gradientLineChartData}
+                chart={revenueChartData}
               />
             </Grid>
           </Grid>
         </SoftBox>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={7} lg={9}>
+          <Grid item xs={12} md={12} lg={12}>
             <Projects />
-          </Grid>
-          <Grid item xs={12} md={5} lg={3}>
-            <OrderOverview />
           </Grid>
         </Grid>
       </SoftBox>

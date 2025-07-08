@@ -201,7 +201,7 @@ function Projects() {
           p={3}
         >
           <SoftTypography variant="h6" gutterBottom>
-            Các đơn thanh toán
+            Các Đơn Thanh Toán
           </SoftTypography>
 
           <SoftButton

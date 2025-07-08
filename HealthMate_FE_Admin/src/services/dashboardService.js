@@ -12,8 +12,36 @@ const getAuthHeaders = () => {
 };
 
 const dashboardService = {
-    getOverview: async () => {
-        const response = await axios.get(`${API_URL}/Dashboard/overview`, getAuthHeaders());
+    getOverview: async (startDate, endDate) => {
+        const response = await axios.get(
+            `${API_URL}/Dashboard/overview`,
+            {
+                ...getAuthHeaders(),
+                params: { startDate, endDate },
+            }
+        );
+        return response.data;
+    },
+
+    getUserGrowth: async (startDate, endDate) => {
+        const response = await axios.get(
+            `${API_URL}/Dashboard/user-grownth`,
+            {
+                ...getAuthHeaders(),
+                params: { startDate, endDate },
+            }
+        );
+        return response.data;
+    },
+
+    getRevenueChart: async (startDate, endDate) => {
+        const response = await axios.get(
+            `${API_URL}/Dashboard/revenue-chart`,
+            {
+                ...getAuthHeaders(),
+                params: { startDate, endDate },
+            }
+        );
         return response.data;
     },
 
