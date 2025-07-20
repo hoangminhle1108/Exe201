@@ -190,7 +190,7 @@ export default function LoginScreen() {
           Đăng ký
         </Text>
       </Text>
-
+      {/* 
       <View style={styles.orContainer}>
         <View style={styles.line} />
         <Text style={styles.orText}>HOẶC</Text>
@@ -208,7 +208,7 @@ export default function LoginScreen() {
           style={styles.googleIcon}
         />
         <Text style={styles.googleButtonText}>Đăng nhập bằng Google</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }

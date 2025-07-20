@@ -165,7 +165,7 @@ export default function RegisterScreen() {
                 </Text>
             </Text>
 
-            <View style={styles.orContainer}>
+            {/* <View style={styles.orContainer}>
                 <View style={styles.line} />
                 <Text style={styles.orText}>HOẶC</Text>
                 <View style={styles.line} />
@@ -179,7 +179,7 @@ export default function RegisterScreen() {
                     style={styles.googleIcon}
                 />
                 <Text style={styles.googleButtonText}>Đăng nhập bằng Google</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 }
