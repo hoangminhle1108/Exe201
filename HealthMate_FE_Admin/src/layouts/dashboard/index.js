@@ -136,17 +136,17 @@ function Dashboard() {
         {
           icon: { color: "warning", component: "touch_app" },
           label: "người mới",
-          progress: { content: "30", percentage: 90 },
+          progress: { content: "32", percentage: 90 },
         },
         {
           icon: { color: "error", component: "extension" },
           label: "Số lượt tải",
-          progress: { content: "36", percentage: 36 },
+          progress: { content: "36", percentage: 90 },
         },
         {
           icon: { color: "info", component: "payment" },
           label: "Đang dùng",
-          progress: { content: "43", percentage: 50 },
+          progress: { content: "13", percentage: 13 },
         },
       ],
     });
@@ -231,7 +231,7 @@ function Dashboard() {
             <Grid item xs={12} sm={6} xl={4}>
               <MiniStatisticsCard
                 title={{ text: "Tổng doanh thu", fontWeight: "medium" }}
-                count={`${overview?.totalRevenue ?? 0}`}
+                count="1,020,000"
                 percentage={{ color: "success", text: "VND" }}
                 icon={{ color: "info", component: "paid" }}
                 titleColor="text"

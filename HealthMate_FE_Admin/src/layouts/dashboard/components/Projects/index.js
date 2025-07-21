@@ -11,12 +11,14 @@ import SoftButton from "components/SoftButton";
 function Projects() {
   const [columns] = useState([
     { name: "email", align: "center" },
+    { name: "mã đơn", align: "center" },
     { name: "gói", align: "center" },
     { name: "giá", align: "center" },
     { name: "ngày tạo", align: "center" },
     { name: "ngày thanh toán", align: "center" },
     { name: "tình trạng", align: "center" },
     { name: "đã nhận tiền", align: "center" },
+
   ]);
 
   const [allTransactions, setAllTransactions] = useState([]);
@@ -155,6 +157,11 @@ function Projects() {
         {transaction.email}
       </SoftTypography>
     ),
+    "mã đơn": (
+      <SoftTypography variant="caption" color="text">
+        {transaction.transactionCode}
+      </SoftTypography>
+    ),
     gói: (
       <SoftTypography variant="caption" color="text">
         {transaction.packageName}
@@ -174,7 +181,7 @@ function Projects() {
       <SoftTypography variant="caption" color="text">
         {transaction.status === "Paid" && transaction.paymentDate
           ? formatDate(transaction.paymentDate)
-          : "None"}
+          : "-"}
       </SoftTypography>
     ),
     "tình trạng": renderStatus(transaction.status),
