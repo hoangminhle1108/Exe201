@@ -40,6 +40,7 @@ namespace HealthMate.Repository.DTOs.Transaction
     public class TransactionDTONew
     {
         public int TransactionId { get; set; }
+        public string TransactionCode { get; set; } = null!;
         public int UserId { get; set; }
         public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
