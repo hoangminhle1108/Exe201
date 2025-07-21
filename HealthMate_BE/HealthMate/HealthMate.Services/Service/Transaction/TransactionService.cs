@@ -189,6 +189,7 @@ namespace HealthMate.Services.Service.Transaction
                 transactions.Add(new TransactionDTONew
                 {
                     TransactionId = item.TransactionId,
+                    TransactionCode = item.TransactionCode,
                     UserId = item.UserId,
                     FullName = user?.FullName ?? "Unknown",
                     Email = user?.Email ?? "Unknown",
