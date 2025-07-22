@@ -67,24 +67,24 @@ function Dashboard() {
   // Hardcoded fake user growth data
   const hardCodeBarChartData = [
     {
-      date: "2025-06-24T00:00:00",
-      newUsers: 2,
-      totalUsers: 3,
+      date: "2025-07-05T00:00:00",
+      newUsers: 4,
+      totalUsers: 36,
     },
     {
-      date: "2025-06-26T00:00:00",
-      newUsers: 1,
-      totalUsers: 5,
-    },
-    {
-      date: "2025-06-27T00:00:00",
-      newUsers: 2,
-      totalUsers: 6,
-    },
-    {
-      date: "2025-06-28T00:00:00",
+      date: "2025-07-10T00:00:00",
       newUsers: 3,
-      totalUsers: 9,
+      totalUsers: 36,
+    },
+    {
+      date: "2025-07-15T00:00:00",
+      newUsers: 7,
+      totalUsers: 36,
+    },
+    {
+      date: "2025-07-20T00:00:00",
+      newUsers: 22,
+      totalUsers: 36,
     },
   ];
 
@@ -145,8 +145,8 @@ function Dashboard() {
         },
         {
           icon: { color: "info", component: "payment" },
-          label: "Đang dùng",
-          progress: { content: "13", percentage: 13 },
+          label: "Premium",
+          progress: { content: "20", percentage: 70 },
         },
       ],
     });
@@ -154,11 +154,11 @@ function Dashboard() {
 
   // Hardcoded fake revenue chart data
   const hardCodedRevenueData = [
-    { date: "2025-07-01T00:00:00", revenue: 1000000, transactionCount: 3 },
-    { date: "2025-07-02T00:00:00", revenue: 2500000, transactionCount: 5 },
-    { date: "2025-07-03T00:00:00", revenue: 3000000, transactionCount: 7 },
-    { date: "2025-07-04T00:00:00", revenue: 1200000, transactionCount: 2 },
-    { date: "2025-07-05T00:00:00", revenue: 500000, transactionCount: 1 },
+    { date: "2025-07-05T00:00:00", revenue: 1000000, transactionCount: 0 },
+    { date: "2025-07-10T00:00:00", revenue: 2500000, transactionCount: 0 },
+    { date: "2025-07-15T00:00:00", revenue: 3000000, transactionCount: 3 },
+    { date: "2025-07-20T00:00:00", revenue: 1200000, transactionCount: 4 },
+    { date: "2025-07-22T00:00:00", revenue: 500000, transactionCount: 13 },
   ];
 
   // Commented out real revenue API due to limited data
@@ -212,7 +212,7 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <SoftBox py={3}>
-        <SoftBox mb={3}>
+        {/* <SoftBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={3} xl={2}>
               <Select value={selectedMonth} onChange={handleMonthChange} size="small">
@@ -224,7 +224,7 @@ function Dashboard() {
               </Select>
             </Grid>
           </Grid>
-        </SoftBox>
+        </SoftBox> */}
 
         <SoftBox mb={3}>
           <Grid container spacing={3}>
